@@ -1,0 +1,65 @@
+body {
+  /* font-family: 'Oswald', sans-serif; */
+}
+.side_nav_bg {
+  background-color: #683091;
+  /* position: fixed ; */
+  height: 100vh !important;
+}
+.side_nav {
+  height: 100vh !important;
+}
+
+#navigation_part .accordion {
+  --bs-accordion-border-color: none;
+}
+#navigation_part .accordion-body {
+  padding-top: 5px;
+  padding-bottom: 0px;
+}
+#navigation_part .accordion-button {
+  padding: 0px !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+#navigation_part .accordion-button:focus {
+  box-shadow: none !important;
+}
+#navigation_part .accordion-item {
+  background: transparent;
+  border: none !important;
+  width: 230px;
+}
+.accordion-button::after {
+  transform: rotate(-90deg);
+  filter: brightness(0) invert(1);
+  width: 20px !important;
+  height: 25px !important;
+}
+.accordion-button.collapsed {
+  padding-bottom: 10px !important;
+}
+
+/* topbar start*/
+
+.add_btn_color {
+  background-color: #575866 !important;
+}
+.form_border_focus {
+  box-shadow: none !important;
+}
+.add_employ .nav-link {
+  color: black !important;
+}
+.add_employ .nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  font-weight: 600 !important;
+}
+.table_head {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.logo {
+  height: 30px;
+  width: 50px;
+}

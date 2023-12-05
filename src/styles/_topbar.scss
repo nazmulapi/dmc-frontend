@@ -1,0 +1,29 @@
+.content {
+  height: 100vh !important;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+.topbar {
+  height: 70px;
+  background-color: #ffffff;
+}
+.profile_img {
+  height: 40px;
+  width: 40px;
+  line-height: 70px;
+  border-radius: 50%;
+}
+.topbar .btn-primary {
+  --bs-btn-bg: none !important;
+}
+.topbar .btn:hover {
+  background-color: transparent !important;
+  border-color: 1px solid transparent !important;
+}
+.topbar .btn.show,
+.btn:first-child:active,
+:not(.btn-check) + .btn:active {
+  color: var(--bs-btn-active-color);
+  background-color: transparent !important;
+  border-color: var(--bs-btn-active-border-color);
+}

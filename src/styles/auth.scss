@@ -1,0 +1,36 @@
+.login_bg {
+  height: 100vh;
+  background: linear-gradient(
+      0deg,
+      rgba(255, 0, 150, 0.3),
+      rgba(255, 0, 150, 0.3)
+    ),
+    url(../../public/login.jpg);
+  background-size: cover;
+}
+.div_height {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+.login_form {
+  margin-left: 50%;
+  transform: translate(-50%);
+}
+.form_padding {
+  padding: 13px 10px;
+}
+
+/* forgot_password */
+.forgot_password {
+  background: linear-gradient(
+      0deg,
+      rgba(255, 0, 150, 0.3),
+      rgba(255, 0, 150, 0.3)
+    ),
+    url(../../public/login.jpg);
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,22 @@
+.screen_one {
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(104, 48, 145);
+  background: linear-gradient(
+    0deg,
+    rgba(104, 48, 145, 1) 0%,
+    rgba(55, 157, 177, 1) 100%
+  );
+  overflow: hidden;
+  transition: all linear 0.3s;
+}
+.screen_one:hover {
+  transform: scale(1.1);
+}
+.screen_img {
+  height: 60px;
+  /* margin-left: 50%;
+  transform: translate(-50%)!important; */
+}

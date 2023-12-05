@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap");
+
+html,
+body {
+  overflow-x: hidden;
+  /* background: url(../../public/bg.jpg); */
+  font-family: "Open Sans", sans-serif !important;
+}
+P {
+  font-size: 14px !important;
+}
+.side_font {
+  font-size: 14px !important;
+}
+.font_20 {
+  font-size: 20px;
+}
+.side_nav {
+  width: 275px;
+  height: 100%;
+  background-color: #575866 !important;
+  /* position: fixed; */
+}
+.wrapper {
+  display: flex;
+  background-size: cover;
+}
+.content {
+  height: 100vh;
+  width: calc(100% - 275px);
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* add employee */
+.multi_select button.btn.dropdown-toggle.btn-light {
+  border-radius: 5px;
+  border: 1px solid #acacac;
+  padding: 10px;
+}
+.sync_btn {
+  padding: 10px 30px;
+  border-radius: 5px;
+  margin-left: 10px;
+  border: 1px solid #acacac;
+}
+button.actions-btn.btn.btn-light {
+  margin-left: 10px;
+  background-color: #0d6efd;
+  color: #fff;
+}
