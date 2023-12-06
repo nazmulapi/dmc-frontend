@@ -22,12 +22,14 @@ export const setAuthToken = (token) => {
 export const checkIsAuthenticated = async () => {
   const cookieStore = cookies();
   let token = cookieStore.get(authTokenKey);
+  // let user = cookieStore.get("user");
 
   if (token === undefined || token === null) {
     return false;
   } else {
     setAuthToken(token);
-    const check = await api.get("/employee_permission/check");
+    // const check = await api.get("/employee/" + user.employee_id);
+    return true;
     if (check?.data?.Access) {
       return true;
     } else {

@@ -1,9 +1,63 @@
 "use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { Oval } from "react-loader-spinner";
 import { Col, Container, Row } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
+import { login } from "../../../lib/auth";
 
-const page = () => {
+const Page = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [employeeId, setEmployeeId] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    // Basic form validation
+    if (!employeeId || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { access, refresh, user } = await login({
+        employee_id: employeeId,
+        password,
+      });
+
+      setLoading(false);
+
+      if (!access) {
+        console.log("Wrong username or password");
+        return;
+      } else if (!rememberMe) {
+        // should be updated
+        localStorage.setItem("user", JSON.stringify(user));
+        Cookies.set(process.env.NEXT_PUBLIC_AUTH_TOKEN_KEY, access, {
+          expires: 30,
+        }); // Expires in 30 days
+      } else {
+        localStorage.setItem("user", JSON.stringify(user));
+        Cookies.set(process.env.NEXT_PUBLIC_AUTH_TOKEN_KEY, access);
+      }
+      router.push("/dashboard");
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setError("Invalid credentials. Please try again.");
+    }
+    return;
+  };
+
   return (
     <>
       <section className="login_bg">
@@ -16,33 +70,39 @@ const page = () => {
                 </div>
 
                 <div className="px-5">
-                  <Form>
+                  <Form onSubmit={(e) => handleLogin(e)}>
                     <div className="mb-3">
-                      <label
-                        htmlFor="exampleFormControlInput1"
-                        className="form-label"
-                      >
-                        Email address <span className="text-danger">*</span>
+                      <label htmlFor="employeeId" className="form-label">
+                        Employee ID <span className="text-danger">*</span>
                       </label>
                       <input
-                        type="email"
+                        id="employeeId"
+                        name="employeeId"
+                        type="text"
                         className="form-control rounded-1 form_padding"
-                        id=""
-                        placeholder="Enter your mail"
+                        placeholder="Enter your employee id"
+                        value={employeeId}
+                        onChange={(e) => {
+                          setError(null);
+                          setEmployeeId(e.target.value);
+                        }}
                       />
                     </div>
                     <div className="mb-3">
-                      <label
-                        htmlFor="exampleFormControlInput1"
-                        className="form-label"
-                      >
+                      <label htmlFor="password" className="form-label">
                         Password <span className="text-danger">*</span>
                       </label>
                       <input
-                        type="email"
+                        id="password"
+                        name="password"
+                        type="password"
                         className="form-control rounded-1 form_padding"
-                        id=""
                         placeholder="Enter password"
+                        value={password}
+                        onChange={(e) => {
+                          setError(null);
+                          setPassword(e.target.value);
+                        }}
                       />
                     </div>
                     <div className="col-auto">
@@ -50,12 +110,29 @@ const page = () => {
                         type="submit"
                         className="btn btn-primary mb-3 rounded-1 w-100 py-2"
                       >
+                        {/* {!loading && (
+                          <span className="position-absolute">
+                            <Oval
+                              height={18}
+                              width={18}
+                              color="#ffffff"
+                              wrapperStyle={{}}
+                              wrapperClass=""
+                              visible={true}
+                              ariaLabel="oval-loading"
+                              secondaryColor="#999999"
+                              strokeWidth={6}
+                              strokeWidthSecondary={6}
+                            />
+                          </span>
+                        )} */}
                         Login
                       </button>
                     </div>
+                    {error && <p className="text-danger">{error}</p>}
                   </Form>
                   <div className="text-end">
-                    <Link href="/">Forgot Password?</Link>
+                    <Link href="/forgot-password">Forgot Password?</Link>
                   </div>
                 </div>
               </div>
@@ -67,4 +144,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
