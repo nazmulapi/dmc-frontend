@@ -132,7 +132,7 @@ const Page = () => {
                     {error && <p className="text-danger">{error}</p>}
                   </Form>
                   <div className="text-end">
-                    <Link href="/forgot-password">Forgot Password?</Link>
+                    <Link href="/auth/forgot-password">Forgot Password?</Link>
                   </div>
                 </div>
               </div>

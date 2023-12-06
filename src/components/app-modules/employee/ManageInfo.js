@@ -1,10 +1,23 @@
 "use client";
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { fetchEmployee } from "../../../lib/fetch";
 
 const ManageInfo = () => {
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetchEmployee();
+      setEmployees(response?.data);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <section>
@@ -69,41 +82,26 @@ const ManageInfo = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>API00000</td>
-                <td>Md Azad </td>
-                <td>08:00:00</td>
-                <td>08:00:00</td>
-                <td>Doctor</td>
-                <td>Active</td>
-                <td>
-                  <button className="add_btn_color border-0 rounded-1 me-2">
-                    <FaRegEdit color="white" />
-                  </button>
-                  <button className="bg-danger border-0 rounded-1">
-                    <RiDeleteBin6Line color="white" />
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>API00001</td>
-                <td>Md Mamun </td>
-                <td>08:00:00</td>
-                <td>08:00:00</td>
-                <td>Nurse</td>
-                <td>Inactive</td>
-
-                <td>
-                  <button className="add_btn_color border-0 rounded-1 me-2">
-                    <FaRegEdit color="white" />
-                  </button>
-                  <button className="bg-danger border-0 rounded-1">
-                    <RiDeleteBin6Line color="white" />
-                  </button>
-                </td>
-              </tr>
+              {employees &&
+                employees.map((item, index) => (
+                  <tr>
+                    <th scope="row">{index + 1}</th>
+                    <td>{item.employee_id}</td>
+                    <td>{item.username}</td>
+                    <td>{item.in_time}</td>
+                    <td>{item.out_time}</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>
+                      <button className="add_btn_color border-0 rounded-1 me-2">
+                        <FaRegEdit color="white" />
+                      </button>
+                      <button className="bg-danger border-0 rounded-1">
+                        <RiDeleteBin6Line color="white" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
