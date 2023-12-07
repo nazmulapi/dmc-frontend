@@ -3,7 +3,8 @@
 html,
 body {
   overflow-x: hidden;
-  background: url(/bg.jpg);
+  background: url("/bg.jpg") no-repeat center;
+  background-size: cover;
   font-family: "Open Sans", sans-serif !important;
 }
 P {
@@ -12,8 +13,15 @@ P {
 .side_font {
   font-size: 14px !important;
 }
+.font_14 {
+  font-size: 14px;
+}
 .font_20 {
   font-size: 20px;
+}
+.theme_color{
+  background-color: #683091!important;
+
 }
 .side_nav {
   width: 275px;
@@ -57,3 +65,14 @@ button.actions-btn.btn.btn-light {
   background-color: #0d6efd;
   color: #fff;
 }
+
+/*======================
+employee manage css start
+========================*/
+.table_user_img {
+  height: 30px;
+  width: 30px;
+}
+/*=====================
+employee manage css end
+=======================*/

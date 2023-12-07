@@ -42,7 +42,7 @@ const page = () => {
                           href="/add-employee"
                           className="text-decoration-none text-white side_font"
                         >
-                          add new
+                          add employee
                         </Link>
                       </li>
                       <li className="text-capitalize text-white text-decoration-none">
@@ -50,7 +50,7 @@ const page = () => {
                           href="/manage-info"
                           className="text-decoration-none text-white side_font"
                         >
-                          manage info
+                          manage employee
                         </Link>
                       </li>
                     </ul>
