@@ -116,9 +116,37 @@ const page = () => {
                     </ul>
                   </Accordion.Body>
                 </Accordion.Item>
+                <Accordion.Item eventKey="3" className="pt-2">
+                  <Accordion.Header className="p-0 m-0 text-capitalize">
+                    <MdDeviceHub className="text-light" />
+                    <span className="ms-2 text-white text-capitalize side_font">
+                      employee Shift
+                    </span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <ul className="text-decoration-none mb-0">
+                      <li className="text-capitalize text-white">
+                        <Link
+                          href="/employee_shift"
+                          className="text-decoration-none text-white side_font"
+                        >
+                          Create Shift
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-white text-decoration-none">
+                        <Link
+                          href="/assign_shift"
+                          className="text-decoration-none text-white side_font"
+                        >
+                          Assign Shift
+                        </Link>
+                      </li>
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
 
                 {/* Attendance item 2 */}
-                <Accordion.Item eventKey="3" className="pt-2">
+                <Accordion.Item eventKey="4" className="pt-2">
                   <Accordion.Header className="p-0 m-0 text-capitalize">
                     <LuNewspaper className="text-light" />
                     <span className="ms-2 text-white text-capitalize side_font">
@@ -148,7 +176,7 @@ const page = () => {
                 </Accordion.Item>
 
                 {/* Settings item 2 */}
-                <Accordion.Item eventKey="4" className="pt-2">
+                <Accordion.Item eventKey="5" className="pt-2">
                   <Accordion.Header className="p-0 m-0 text-capitalize">
                     <FiSettings className="text-light" />
                     <span className="ms-2 text-white text-capitalize side_font">
@@ -170,7 +198,7 @@ const page = () => {
                 </Accordion.Item>
 
                 {/* Settings item 2 */}
-                <Accordion.Item eventKey="5" className="pt-2">
+                <Accordion.Item eventKey="6" className="pt-2">
                   <Accordion.Header className="p-0 m-0 text-capitalize">
                     <FiSettings className="text-light" />
                     <span className="ms-2 text-white text-capitalize side_font">
