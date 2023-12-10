@@ -1,25 +1,32 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import useSWR from "swr";
 import Button from "react-bootstrap/Button";
-import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { fetchEmployee } from "../../../lib/fetch";
+// import { FaRegEdit } from "react-icons/fa";
+// import { RiDeleteBin6Line } from "react-icons/ri";
 import EditEmployee from "./EditEmployee";
-import Form from "react-bootstrap/Form";
-import { Row, Col } from "react-bootstrap";
+// import Form from "react-bootstrap/Form";
+// import { Row, Col } from "react-bootstrap";
+import { fetcher } from "../../../lib/fetcher";
+import Pagination from "../../utils/Pagination";
 
 const ManageInfo = () => {
-  const [employees, setEmployees] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetchEmployee();
-      setEmployees(response?.data);
-    };
+  const { data, error, isLoading } = useSWR(`/employee/`, fetcher);
 
-    fetchData();
-  }, []);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const displayedData = data?.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil((data?.length || 0) / itemsPerPage);
+
+  const onPageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <>
@@ -77,7 +84,12 @@ const ManageInfo = () => {
               <tr>
                 <th scope="col">
                   <div className="form-check p-0">
-                    <input className="" type="checkbox" value="" id="" />
+                    <input
+                      className=""
+                      type="checkbox"
+                      value=""
+                      id="EmployeeListAllCheckbox"
+                    />
                   </div>
                 </th>
                 <th scope="col">SL</th>
@@ -91,15 +103,31 @@ const ManageInfo = () => {
               </tr>
             </thead>
             <tbody>
-              {employees &&
-                employees.map((item, index) => (
-                  <tr>
+              {error && (
+                <tr>
+                  <td colSpan={9}>Failed to load</td>
+                </tr>
+              )}
+              {isLoading && (
+                <tr>
+                  <td colSpan={9}>Loading...</td>
+                </tr>
+              )}
+
+              {data?.length &&
+                displayedData.map((item, index) => (
+                  <tr key={index}>
                     <th scope="row">
                       <div className="form-check p-0">
-                        <input className="" type="checkbox" value="" id="" />
+                        <input
+                          className=""
+                          type="checkbox"
+                          value=""
+                          id={item.employee_id}
+                        />
                       </div>
                     </th>
-                    <th scope="row">{index + 1}</th>
+                    <th scope="row">{startIndex + index + 1}</th>
                     <th scope="row" className="text-center">
                       <img
                         src="/images.png"
@@ -113,9 +141,8 @@ const ManageInfo = () => {
                     <td>N/A</td>
                     <td>N/A</td>
                     <td>
-                      <button className="add_btn_color border-0 rounded-1 me-2">
-                        <EditEmployee />
-                      </button>
+                      <EditEmployee />
+
                       {/* <button className="bg-danger border-0 rounded-1">
                         <RiDeleteBin6Line color="white" />
                       </button> */}
@@ -124,6 +151,12 @@ const ManageInfo = () => {
                 ))}
             </tbody>
           </table>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
         </div>
       </section>
     </>

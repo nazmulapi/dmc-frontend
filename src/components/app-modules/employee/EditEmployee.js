@@ -29,7 +29,7 @@ function MyVerticallyCenteredModal(props) {
             <option value="2">inactive</option>
           </Form.Select>
 
-          <Button className="theme_color float-end border-0" type="submit" >
+          <Button className="theme_color float-end border-0" type="submit">
             Submit
           </Button>
         </Form>
@@ -50,7 +50,7 @@ function EditEmployee() {
         onClick={() => setModalShow(true)}
         className="bg-transparent border-0 p-0 m-0"
       >
-        <FaRegEdit color="white" />
+        <FaRegEdit color="#585858" />
       </Button>
 
       <MyVerticallyCenteredModal
