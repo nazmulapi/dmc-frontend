@@ -76,3 +76,32 @@ employee manage css start
 /*=====================
 employee manage css end
 =======================*/
+
+
+
+/* CSS */
+.button-16 {
+  background-color: rgba(199, 199, 199, 0.643);
+  border: 1px solid #f8f9fa;
+  border-radius: 4px;
+  color: #3c4043;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 25px;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: pre;
+}
+
+.button-16:hover {
+  border-color: #dadce0;
+  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+  color: #202124;
+}
+
+.button-16:focus {
+  border-color: #4285f4;
+  outline: none;
+}

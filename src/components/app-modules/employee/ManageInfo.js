@@ -84,8 +84,7 @@ const ManageInfo = () => {
                 <th scope="col">image</th>
                 <th scope="col">Employee ID</th>
                 <th scope="col">Employee Name</th>
-                <th scope="col">Shift Start</th>
-                <th scope="col">Shift End</th>
+                <th scope="col">Shift</th>
                 <th scope="col">Deasignation</th>
                 <th scope="col">Status </th>
                 <th scope="col">Action</th>
@@ -111,7 +110,6 @@ const ManageInfo = () => {
                     <td>{item.employee_id}</td>
                     <td>{item.username}</td>
                     <td>{item.in_time}</td>
-                    <td>{item.out_time}</td>
                     <td>N/A</td>
                     <td>N/A</td>
                     <td>
