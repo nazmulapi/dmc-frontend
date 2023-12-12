@@ -1,10 +1,18 @@
 "use client";
+
 import React from "react";
+import useSWR from "swr";
 import Button from "react-bootstrap/Button";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { fetcher } from "../../../lib/fetcher";
 
 const DesignationManager = () => {
+  const { data, error, isLoading } = useSWR(`/department/`, fetcher, {
+    errorRetryCount: 2,
+  });
+  console.log(data);
+
   return (
     <>
       <section>
@@ -65,32 +73,33 @@ const DesignationManager = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>API00000</td>
-                <td>Md Azad </td>
-                <td>
-                  <button className="add_btn_color border-0 rounded-1 me-2">
-                    <FaRegEdit color="white" />
-                  </button>
-                  <button className="bg-danger border-0 rounded-1">
-                    <RiDeleteBin6Line color="white" />
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>API00000</td>
-                <td>Md Azad </td>
-                <td>
-                  <button className="add_btn_color border-0 rounded-1 me-2">
-                    <FaRegEdit color="white" />
-                  </button>
-                  <button className="bg-danger border-0 rounded-1">
-                    <RiDeleteBin6Line color="white" />
-                  </button>
-                </td>
-              </tr>
+              {error && (
+                <tr>
+                  <td colSpan={4}>Failed to load</td>
+                </tr>
+              )}
+              {isLoading && (
+                <tr>
+                  <td colSpan={4}>Loading...</td>
+                </tr>
+              )}
+
+              {data?.length &&
+                data.map((item, index) => (
+                  <tr key={index}>
+                    <th scope="row">{index + 1}</th>
+                    <td>{item.department}</td>
+                    <td>{item.description}</td>
+                    <td>
+                      <button className="add_btn_color border-0 rounded-1 me-2">
+                        <FaRegEdit color="#585858" />
+                      </button>
+                      <button className="bg-danger border-0 rounded-1">
+                        <RiDeleteBin6Line color="#DB3545" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

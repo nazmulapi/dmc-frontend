@@ -1,7 +1,7 @@
 import React from "react";
 import Employee from "../../../components/app-modules/employee/Employee";
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       <Employee />
@@ -9,4 +9,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -19,9 +19,8 @@ P {
 .font_20 {
   font-size: 20px;
 }
-.theme_color{
-  background-color: #683091!important;
-
+.theme_color {
+  background-color: #683091 !important;
 }
 .side_nav {
   width: 275px;
@@ -77,8 +76,6 @@ employee manage css start
 employee manage css end
 =======================*/
 
-
-
 /* CSS */
 .button-16 {
   background-color: rgba(199, 199, 199, 0.643);
@@ -97,11 +94,66 @@ employee manage css end
 
 .button-16:hover {
   border-color: #dadce0;
-  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 1px;
   color: #202124;
 }
 
 .button-16:focus {
   border-color: #4285f4;
   outline: none;
+}
+
+.employee_table {
+  position: relative;
+}
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+// .employee_table tr th:nth-child(1) {
+//   width: 44px;
+// }
+// .employee_table tr th:nth-child(2) {
+//   width: 44px;
+// }
+// .employee_table tr th:nth-child(3) {
+//   width: 88px;
+// }
+// .employee_table tr th:nth-child(4),
+// .employee_table tr th:nth-child(5),
+// .employee_table tr th:nth-child(6) {
+//   width: 150px;
+// }
+
+// .spinner {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+.app-button {
+  transition: all 0.5s !important;
+  min-width: 92px;
+}
+.app-button.loading {
+}
+.spinner {
+  margin-left: 5px;
+}
+.invalid-feedback {
+}
+.success-feedback {
+  color: #198754;
 }

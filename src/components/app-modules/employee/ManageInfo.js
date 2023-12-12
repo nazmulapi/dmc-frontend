@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import Button from "react-bootstrap/Button";
 // import { FaRegEdit } from "react-icons/fa";
@@ -15,18 +15,50 @@ const ManageInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const { data, error, isLoading } = useSWR(`/employee/`, fetcher);
+  // const { data, error, isLoading } = useSWR(
+  //   `/employee/?page=${currentPage}&page_size=${itemsPerPage}`,
+  //   fetcher
+  // );
+  const {
+    data: apiData,
+    error,
+    isValidating,
+    isLoading,
+  } = useSWR(
+    `/employee/?page=${currentPage}&page_size=${itemsPerPage}`,
+    fetcher,
+    {
+      errorRetryCount: 2,
+    }
+  );
+
+  const totalPages = Math.ceil(apiData?.count / itemsPerPage);
+  // const displayedData = apiData && apiData?.results;
+
+  // const isLoading = isValidating && displayedData.length === 0;
+
+  // const totalPages = Math.ceil(data?.length / itemsPerPage);
+
+  // const { data, error, isLoading } = useSWR(`/employee/`, fetcher);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  const displayedData = data?.slice(startIndex, endIndex);
+  // const displayedData = data?.slice(startIndex, endIndex);
 
-  const totalPages = Math.ceil((data?.length || 0) / itemsPerPage);
+  // const totalPages = Math.ceil((data?.length || 0) / itemsPerPage);
 
   const onPageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  const [displayedData, setDisplayedData] = useState([]);
+
+  useEffect(() => {
+    if (!isLoading && !error) {
+      setDisplayedData(apiData?.results || []);
+    }
+  }, [isLoading, isValidating]);
 
   return (
     <>
@@ -108,49 +140,57 @@ const ManageInfo = () => {
                   <td colSpan={9}>Failed to load</td>
                 </tr>
               )}
-              {isLoading && (
-                <tr>
-                  <td colSpan={9}>Loading...</td>
-                </tr>
-              )}
 
-              {data?.length &&
-                displayedData.map((item, index) => (
-                  <tr key={index}>
-                    <th scope="row">
-                      <div className="form-check p-0">
-                        <input
-                          className=""
-                          type="checkbox"
-                          value=""
-                          id={item.employee_id}
+              {displayedData && !error
+                ? displayedData.map((item, index) => (
+                    <tr key={index}>
+                      <th scope="row">
+                        <div className="form-check p-0">
+                          <input
+                            className=""
+                            type="checkbox"
+                            value=""
+                            id={item.employee_id}
+                          />
+                        </div>
+                      </th>
+                      <th scope="row">{startIndex + index + 1}</th>
+                      <th scope="row" className="text-center">
+                        <img
+                          src="/images.png"
+                          alt=""
+                          className="table_user_img"
                         />
-                      </div>
-                    </th>
-                    <th scope="row">{startIndex + index + 1}</th>
-                    <th scope="row" className="text-center">
-                      <img
-                        src="/images.png"
-                        alt=""
-                        className="table_user_img"
-                      />
-                    </th>
-                    <td>{item.employee_id}</td>
-                    <td>{item.username}</td>
-                    <td>{item.in_time}</td>
-                    <td>N/A</td>
-                    <td>N/A</td>
-                    <td>
-                      <EditEmployee />
+                      </th>
+                      <td>{item.employee_id}</td>
+                      <td>{item.username}</td>
+                      <td>{item.in_time}</td>
+                      <td>N/A</td>
+                      <td>N/A</td>
+                      <td>
+                        <EditEmployee />
 
-                      {/* <button className="bg-danger border-0 rounded-1">
+                        {/* <button className="bg-danger border-0 rounded-1">
                         <RiDeleteBin6Line color="white" />
                       </button> */}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                    </tr>
+                  ))
+                : ""}
             </tbody>
           </table>
+
+          {isLoading && (
+            <div className="loading-overlay">
+              <p>Loading...</p>
+            </div>
+          )}
+
+          {/* {isValidating && (
+            <div className="loading-overlay">
+              <p>Loading...</p>
+            </div>
+          )} */}
 
           <Pagination
             currentPage={currentPage}
