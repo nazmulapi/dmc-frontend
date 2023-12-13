@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { Col, Row, Tab, Tabs } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
+import classEase from "classease";
 import { fetcher } from "../../../lib/fetcher";
 import { submit } from "../../../lib/submit";
 
@@ -16,6 +18,7 @@ const initialValues = {
   username: "",
   email: "",
   password: "",
+  confirm_password: "",
   phone_number: "",
   shift_id: "",
   image: "",
@@ -24,10 +27,12 @@ const initialValues = {
   designation: "",
 };
 
-const Page = () => {
+const AddEmployee = () => {
   const [key, setKey] = useState("home");
   const [formValues, setFormValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     data: departments,
@@ -53,11 +58,18 @@ const Page = () => {
     errorRetryCount: 2,
   });
 
+  const {
+    data: groups,
+    error: groupsFetchError,
+    isLoading: groupsFetchIsLoading,
+  } = useSWR(`/empgrp/`, fetcher, {
+    errorRetryCount: 2,
+  });
+
   const validateForm = () => {
     let valid = true;
     const newErrors = {};
 
-    // Add your validation logic here
     if (!formValues.employee_id.trim()) {
       newErrors.employee_id = "Employee ID is required";
       valid = false;
@@ -68,49 +80,46 @@ const Page = () => {
       valid = false;
     }
 
-    if (!formValues.email.trim()) {
-      newErrors.email = "Email is required";
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formValues.email)) {
-      newErrors.email = "Email is invalid";
-      valid = false;
+    // if (!formValues.email.trim()) {
+    //   newErrors.email = "Email is required";
+    //   valid = false;
+    // } else if (!/\S+@\S+\.\S+/.test(formValues.email)) {
+    //   newErrors.email = "Email is invalid";
+    //   valid = false;
+    // }
+
+    if (formValues.is_superuser) {
+      if (!formValues.password.trim()) {
+        newErrors.password = "Password is required";
+        valid = false;
+      } else if (formValues.password.length < 5) {
+        newErrors.password = "Password must be at least 5 characters long";
+        valid = false;
+      } else if (!/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/.test(formValues.password)) {
+        newErrors.password = "Password must contain both letters and numbers";
+        valid = false;
+      }
+
+      if (formValues.password !== formValues.confirm_password) {
+        newErrors.confirm_password = "Passwords do not match";
+        valid = false;
+      }
     }
 
-    if (!formValues.password.trim()) {
-      newErrors.password = "Password is required";
-      valid = false;
-    }
+    // const phoneNumberRegex = /^(?:\+88|01)?\d{11}$/;
 
-    // Phone Number validation
-    const phoneNumberRegex = /^(?:\+88|01)?\d{11}$/;
-    if (!formValues.phone_number.trim()) {
-      newErrors.phone_number = "Phone Number is required";
-      valid = false;
-    } else if (!phoneNumberRegex.test(formValues.phone_number)) {
-      newErrors.phone_number = "Invalid Phone Number format";
-      valid = false;
-    }
+    // if (!formValues.phone_number.trim()) {
+    //   newErrors.phone_number = "Phone Number is required";
+    //   valid = false;
+    // } else if (!phoneNumberRegex.test(formValues.phone_number)) {
+    //   newErrors.phone_number = "Invalid Phone Number format";
+    //   valid = false;
+    // }
 
-    // Shift ID validation
     if (!formValues.shift_id.trim()) {
       newErrors.shift_id = "Shift ID is required";
       valid = false;
     }
-
-    // Group ID validation
-    if (!formValues.group_id.trim()) {
-      newErrors.group_id = "Group ID is required";
-      valid = false;
-    }
-
-    // // Date Joined validation (assuming it's a date format)
-    // if (!formValues.date_joined.trim()) {
-    //   newErrors.date_joined = "Date Joined is required";
-    //   valid = false;
-    // } else if (!isValidDate(formValues.date_joined)) {
-    //   newErrors.date_joined = "Invalid date format";
-    //   valid = false;
-    // }
 
     // Image validation (assuming it's a file upload)
     // if (!formValues.image) {
@@ -153,6 +162,12 @@ const Page = () => {
       }
     }
 
+    // Group ID validation
+    if (!formValues.group_id.trim()) {
+      newErrors.group_id = "Group ID is required";
+      valid = false;
+    }
+
     // Department validation
     if (!formValues.department.trim()) {
       newErrors.department = "Department is required";
@@ -166,29 +181,36 @@ const Page = () => {
     }
 
     setErrors(newErrors);
+
     return valid;
   };
 
   const handleInputChange = (e) => {
+    // e.preventDefault();
+    setSuccess("");
+
     // const { name, value } = e.target;
     const { name, value, type, files } = e.target;
 
-    // setFormValues((prev) => ({
-    //   ...prev,
-    //   [name]: value,
-    // }));
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
 
-    // For regular inputs
-    if (type !== "file") {
+    if (type === "checkbox") {
+      setFormValues((prev) => ({
+        ...prev,
+        [name]: e.target.checked,
+      }));
+    } else if (type === "file") {
+      setFormValues((prev) => ({
+        ...prev,
+        [name]: files[0],
+      }));
+    } else {
       setFormValues((prev) => ({
         ...prev,
         [name]: value,
-      }));
-    } else {
-      // For file inputs (e.g., image upload)
-      setFormValues((prev) => ({
-        ...prev,
-        [name]: files[0], // Use the first file if multiple files are selected
       }));
     }
   };
@@ -200,63 +222,49 @@ const Page = () => {
   //   }));
   // };
 
-  const isShown = formValues.is_superuser;
-
-  // const handleClick = () => {
-  //   setIsShown((current) => !current);
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccess("");
 
     const valid = validateForm();
 
-    console.log("submit data", formValues, errors);
+    console.log("Form Value: ", formValues);
+    console.log("Error: ", errors);
 
     if (valid) {
+      setIsLoading(true);
+
       const formData = new FormData();
 
       // Append form data
       Object.entries(formValues).forEach(([key, value]) => {
-        formData.append(key, value);
+        if (key !== "image") {
+          formData.append(key, value);
+        }
       });
 
       // Append image file
       formData.append("image", formValues.image);
-      console.log("submit data", formData);
-
-      // return;
+      console.log("Form data", formData);
 
       const response = await submit("/employee/", formData, true);
+
       console.log(response);
-      // if (response) {
-      //   setTimeout(() => {
-      //     setSuccess("Employee created successfully");
-      //     // setIsLoading(false);
-      //     // setFormValues(initialValues);
-      //   }, 1000);
-      // }
 
-      return;
-
-      // You can now submit formData to your server or perform further actions
-      try {
-        const response = await fetch("your_upload_endpoint", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (response.ok) {
-          console.log("Image uploaded successfully");
+      if (response?.employee_id) {
+        setTimeout(() => {
+          setSuccess("Employee created successfully");
+          setIsLoading(false);
+          // setErrors({});
           setFormValues(initialValues);
-          setErrors({});
-        } else {
-          console.error("Image upload failed");
-          // Handle error logic here
-        }
-      } catch (error) {
-        console.error("Error uploading image", error);
-        // Handle error logic here
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          setSuccess("Something went wrong!");
+          setIsLoading(false);
+          // setErrors({});
+          // setFormValues(initialValues);
+        }, 1000);
       }
     }
   };
@@ -281,36 +289,61 @@ const Page = () => {
                     name="employee_id"
                     value={formValues.employee_id}
                     onChange={(e) => handleInputChange(e)}
-                    className="rounded-1 form_border_focus form-control"
+                    className={classEase(
+                      "rounded-1 form_border_focus form-control",
+                      errors.employee_id && "is-invalid"
+                    )}
                   />
+                  {errors.employee_id && (
+                    <div className="invalid-feedback">{errors.employee_id}</div>
+                  )}
                 </div>
+
                 <div className="mb-2">
                   <div className="mb-2">Employee Name</div>
                   <input
                     type="text"
                     placeholder=""
+                    autoComplete="off"
                     name="username"
                     value={formValues.username}
                     onChange={(e) => handleInputChange(e)}
-                    className="rounded-1 form_border_focus form-control"
+                    className={classEase(
+                      "rounded-1 form_border_focus form-control",
+                      errors.username && "is-invalid"
+                    )}
                   />
+                  {errors.username && (
+                    <div className="invalid-feedback">{errors.username}</div>
+                  )}
                 </div>
+
                 <div className="mb-2">
                   <div className="mb-2">Email</div>
                   <input
                     type="email"
                     placeholder=""
+                    autoComplete="off"
                     name="email"
                     value={formValues.email}
                     onChange={(e) => handleInputChange(e)}
-                    className="rounded-1 form_border_focus form-control"
+                    className={classEase(
+                      "rounded-1 form_border_focus form-control",
+                      errors.email && "is-invalid"
+                    )}
                   />
+                  {errors.email && (
+                    <div className="invalid-feedback">{errors.email}</div>
+                  )}
                 </div>
 
                 <div className="mb-2">
                   <div className="mb-2">Designation</div>
                   <select
-                    className="form-select form-control rounded-1 form_border_focus"
+                    className={classEase(
+                      "form-select form-control rounded-1 form_border_focus",
+                      errors.designation && "is-invalid"
+                    )}
                     aria-label="Default select example"
                     name="designation"
                     value={formValues.designation}
@@ -324,26 +357,34 @@ const Page = () => {
                         </option>
                       ))}
                   </select>
+                  {errors.designation && (
+                    <div className="invalid-feedback">{errors.designation}</div>
+                  )}
                 </div>
 
                 <div className="mb-2">
                   <div className="mb-2">Department</div>
                   <select
-                    className="form-select form-control rounded-1 form_border_focus"
+                    className={classEase(
+                      "form-select form-control rounded-1 form_border_focus",
+                      errors.department && "is-invalid"
+                    )}
                     aria-label="Default select example"
                     name="department"
                     value={formValues.department}
                     onChange={(e) => handleInputChange(e)}
                   >
-                    <option value="">Select Designation</option>
+                    <option value="">Select Department</option>
                     {departments &&
                       departments.map((d) => (
                         <option key={d.id} value={d.id}>
                           {d.department}
                         </option>
                       ))}
-                    <option value="3">Nazmul</option>
                   </select>
+                  {errors.department && (
+                    <div className="invalid-feedback">{errors.department}</div>
+                  )}
                 </div>
 
                 <div className="mb-2">
@@ -354,8 +395,16 @@ const Page = () => {
                     name="phone_number"
                     value={formValues.phone_number}
                     onChange={(e) => handleInputChange(e)}
-                    className="rounded-1 form_border_focus form-control"
+                    className={classEase(
+                      "rounded-1 form_border_focus form-control",
+                      errors.phone_number && "is-invalid"
+                    )}
                   />
+                  {errors.phone_number && (
+                    <div className="invalid-feedback">
+                      {errors.phone_number}
+                    </div>
+                  )}
                 </div>
               </Col>
 
@@ -365,32 +414,23 @@ const Page = () => {
                     id="employeeStatus"
                     type="checkbox"
                     name="is_active"
+                    checked={formValues.is_active}
                     // value={formValues.is_active}
-                    // onChange={(e) => handleInputChange(e)}
-                    // className="rounded-1 form_border_focus form-control"
+                    onChange={(e) => handleInputChange(e)}
+                    className="form-check-input"
                   />
                   <label className="mb-2 ms-2" htmlFor="employeeStatus">
                     Active
                   </label>
-                  {/* <select
-                    className="form-select form-control rounded-1 form_border_focus"
-                    aria-label="Default select example"
-                    name="is_active"
-                    value={formValues.is_active}
-                    onChange={(e) =>
-                      handleSelectChange("status", e.target.value)
-                    }
-                  >
-                    <option>Select Status</option>
-                    <option value="1">Active</option>
-                    <option value="2">Inactive</option>
-                  </select> */}
                 </div>
 
                 <div className="mb-2">
                   <div className="mb-2">Shift</div>
                   <select
-                    className="form-select form-control rounded-1 form_border_focus"
+                    className={classEase(
+                      "form-select form-control rounded-1 form_border_focus",
+                      errors.shift_id && "is-invalid"
+                    )}
                     aria-label="Default select example"
                     name="shift_id"
                     value={formValues.shift_id}
@@ -401,63 +441,79 @@ const Page = () => {
                     {shifts &&
                       shifts.map((s) => (
                         <option key={s.shift_id} value={s.shift_id}>
-                          {s.shift_beginning}
+                          {s.shift_beginning} - {s.shift_end}
                         </option>
                       ))}
                   </select>
+                  {errors.shift_id && (
+                    <div className="invalid-feedback">{errors.shift_id}</div>
+                  )}
                 </div>
 
                 <div className="mb-2">
                   <div className="mb-2">Group</div>
                   <select
-                    className="form-select form-control rounded-1 form_border_focus"
+                    className={classEase(
+                      "form-select form-control rounded-1 form_border_focus",
+                      errors.group_id && "is-invalid"
+                    )}
                     name="group_id"
                     aria-label="Default select example"
                     value={formValues.group_id}
                     onChange={(e) => handleInputChange(e)}
                   >
                     <option value="">Select Group</option>
-                    <option value="2">Doctor</option>
-                    <option value="3">Nurse</option>
+
+                    {groups &&
+                      groups.map((g) => (
+                        <option key={g.group_id} value={g.group_id}>
+                          {g.group_name}
+                        </option>
+                      ))}
                   </select>
+                  {errors.group_id && (
+                    <div className="invalid-feedback">{errors.group_id}</div>
+                  )}
                 </div>
+
                 <div className="mb-2">
                   <div className="mb-2">Upload Photo</div>
-                  {/* <input
-                    type="file"
-                    placeholder=""
-                    name="image"
-                    value={formValues.image}
-                    onChange={(e) => handleInputChange(e)}
-                    className="rounded-1 form_border_focus form-control"
-                  /> */}
-
                   <input
                     type="file"
                     accept="image/*"
                     name="image"
                     onChange={(e) => handleInputChange(e)}
-                    className="rounded-1 form_border_focus form-control"
+                    className={classEase(
+                      "rounded-1 form_border_focus form-control",
+                      errors.image && "is-invalid"
+                    )}
                   />
+                  {errors.image && (
+                    <div className="invalid-feedback">{errors.image}</div>
+                  )}
                 </div>
+
                 <div className="mb-2">
                   <div className="mb-2">Employee Role</div>
                   <div>
                     <div className="d-flex">
                       <div className="form-check me-2">
                         <input
-                          className="form-check-input"
-                          // onClick={handleClick}
-                          type="checkbox"
-                          value=""
-                          name="employee_role"
                           id="employee_role_admin"
-                          onChange={(e) =>
-                            setFormValues((prev) => ({
-                              ...prev,
-                              is_superuser: e.target.checked,
-                            }))
-                          }
+                          type="checkbox"
+                          name="is_superuser"
+                          checked={formValues.is_superuser}
+                          onChange={(e) => {
+                            handleInputChange(e);
+                            if (!e.target.checked) {
+                              setFormValues((prev) => ({
+                                ...prev,
+                                password: "",
+                                confirm_password: "",
+                              }));
+                            }
+                          }}
+                          className="form-check-input"
                         />
                         <label
                           className="form-check-label"
@@ -469,15 +525,12 @@ const Page = () => {
                       <div>
                         <div className="form-check">
                           <input
-                            className="form-check-input"
-                            type="checkbox"
                             id="employee_role_staff"
-                            onChange={(e) =>
-                              setFormValues((prev) => ({
-                                ...prev,
-                                is_staff: e.target.checked,
-                              }))
-                            }
+                            type="checkbox"
+                            name="is_staff"
+                            checked={formValues.is_staff}
+                            onChange={(e) => handleInputChange(e)}
+                            className="form-check-input"
                           />
                           <label
                             className="form-check-label"
@@ -489,7 +542,7 @@ const Page = () => {
                       </div>
                     </div>
 
-                    {isShown && (
+                    {formValues?.is_superuser && (
                       <div className="">
                         <div className="mb-2">
                           <label className="mb-2">
@@ -498,13 +551,22 @@ const Page = () => {
                           <input
                             type="password"
                             placeholder=""
-                            className="form-control rounded-1 form_border_focus"
                             name="password"
                             value={formValues.password}
                             onChange={(e) => handleInputChange(e)}
+                            className={classEase(
+                              "rounded-1 form_border_focus form-control",
+                              errors.password && "is-invalid"
+                            )}
                           />
+                          {errors.password && (
+                            <div className="invalid-feedback">
+                              {errors.password}
+                            </div>
+                          )}
                           <div className="text-danger"></div>
                         </div>
+
                         <div className="mb-2">
                           <label className="mb-2">
                             Confirm Password
@@ -513,14 +575,19 @@ const Page = () => {
                           <input
                             type="password"
                             placeholder=""
-                            className="form-control rounded-1 form_border_focus"
                             name="confirm_password"
+                            value={formValues.confirm_password}
+                            onChange={(e) => handleInputChange(e)}
+                            className={classEase(
+                              "rounded-1 form_border_focus form-control",
+                              errors.confirm_password && "is-invalid"
+                            )}
                           />
-                          <div className="text-danger">
-                            {" "}
-                            {/* Provide appropriate error message logic */}
-                            {/* Error message for confirm_password */}
-                          </div>
+                          {errors.confirm_password && (
+                            <div className="invalid-feedback">
+                              {errors.confirm_password}
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -529,11 +596,31 @@ const Page = () => {
               </Col>
             </Row>
 
+            {success && success !== "" && (
+              <div className="success-feedback mb-3">{success}</div>
+            )}
+
             <Button
               type="submit"
-              className="rounded-1 mt-2 px-4 add_btn_color border-0"
+              // className="rounded-1 mt-2 px-4 add_btn_color border-0"
+              className={classEase(
+                "rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button",
+                isLoading ? "loading" : ""
+              )}
             >
               + Add
+              {isLoading && (
+                <div className="spinner">
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              )}
             </Button>
           </form>
         </Tab>
@@ -542,4 +629,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default AddEmployee;

@@ -5,20 +5,22 @@ export const submit = async (route, data, hasFile = false) => {
   try {
     let token = Cookies.get(authTokenKey);
     // console.log(token);
-
     // console.log(data);
+    // for (var pair of data.entries()) {
+    //   console.log(pair[0] + ": " + pair[1]);
+    // }
     // return data;
 
     const headers = {
       Authorization: `Bearer ${token}`,
     };
 
-    if (hasFile) {
-      // If you have files, set Content-Type to "multipart/form-data"
-      headers["Content-Type"] = "multipart/form-data";
-    } else {
+    if (!hasFile) {
       headers["Content-Type"] = "application/json";
     }
+    // else {
+    //   headers["Content-Type"] = "multipart/form-data";
+    // }
 
     const response = await fetch(apiBaseUrl + route, {
       method: "POST",
@@ -26,24 +28,23 @@ export const submit = async (route, data, hasFile = false) => {
       body: hasFile ? data : JSON.stringify(data),
     });
 
-    console.log(response);
+    // console.log(response);
 
-    // if (!response.ok) {
-    //   throw new Error("Failed to fetch data");
-    // }
-    // if (response.ok) {
-    //   // Department created successfully
-    //   // Optionally, you can redirect or perform other actions
-    //   // console.log("Department created successfully");
-    //   // console.log(response.json());
-    // } else {
-    //   // Handle errors from the API response
-    //   console.error("Error creating department");
-    // }
+    if (!response.ok) {
+      throw new Error("Failed to submit data");
+    }
+    if (response.ok) {
+      console.log("Successful");
+      // console.log(response.json());
+    } else {
+      console.error("Error");
+    }
 
-    return response.json();
+    const responseData = await response.json();
+
+    return responseData;
   } catch (error) {
-    console.error("API request failed:", error);
+    console.error("Failed: ", error);
     throw error;
   }
 };

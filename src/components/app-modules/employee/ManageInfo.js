@@ -129,8 +129,8 @@ const ManageInfo = () => {
                 <th scope="col">Employee ID</th>
                 <th scope="col">Employee Name</th>
                 <th scope="col">Shift</th>
-                <th scope="col">Deasignation</th>
-                <th scope="col">Status </th>
+                <th scope="col">Designation</th>
+                <th scope="col">Status</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
