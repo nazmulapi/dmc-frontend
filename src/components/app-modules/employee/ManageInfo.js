@@ -168,7 +168,8 @@ const ManageInfo = () => {
                       <td>N/A</td>
                       <td>N/A</td>
                       <td>
-                        <EditEmployee />
+                        {/* {console.log(item)} */}
+                        <EditEmployee employee={item} />
 
                         {/* <button className="bg-danger border-0 rounded-1">
                         <RiDeleteBin6Line color="white" />

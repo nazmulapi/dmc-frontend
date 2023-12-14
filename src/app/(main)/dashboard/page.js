@@ -1,10 +1,50 @@
 "use client";
-import React, { useState } from "react";
-import Link from "next/link";
-import { Col, Row, Form } from "react-bootstrap";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
-const page = () => {
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import useSWR from "swr";
+import { Col, Row } from "react-bootstrap";
+import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { fetcher } from "../../../lib/fetcher";
+import { submit } from "../../../lib/submit";
+
+const Page = () => {
+  const { data, error, isLoading } = useSWR(`/devices/`, fetcher, {
+    errorRetryCount: 2,
+  });
+
+  const [optionsUpdated, setOptionsUpdated] = useState(false);
+  const [devices, setDevices] = useState([]);
+  const [selectedDevices, setSelectedDevices] = useState([]);
+
+  useEffect(() => {
+    if (data?.length) {
+      const options = data.map((d) => ({
+        key: d.device_id,
+        label: d.device_name,
+      }));
+      setDevices(options);
+      setOptionsUpdated(true);
+    }
+  }, [data]);
+
+  // Reset the optionsUpdated state once the dropdown is rendered
+  useEffect(() => {
+    if (optionsUpdated) {
+      setOptionsUpdated(false);
+    }
+  }, [optionsUpdated]);
+
+  const handleChange = (selected) => {
+    setSelectedDevices(selected);
+    console.log("Selected devices:", selected);
+  };
+
+  const handleSync = async (e) => {
+    const response = await submit("/log/", selectedDevices);
+    console.log(response);
+  };
+
   return (
     <>
       <Row>
@@ -12,154 +52,49 @@ const page = () => {
           <Col lg={4}>
             <div className="mb-4 rounded-1 multi_select">
               <DropdownMultiselect
-                options={[
-                  "Screen One",
-                  "Screen Two",
-                  "Screen Three",
-                  "Screen Four",
-                  "Screen Five",
-                  "Screen Six",
-                  "Screen Seven",
-                  "Screen Eight",
-                  "Screen Nine",
-                  "Screen Ten",
-                ]}
-                name="countries"
+                options={devices}
+                name="device"
                 placeholder="Select screen"
                 selectDeselectLabel="Select / Deselect ALL"
+                handleOnChange={(selected) => {
+                  handleChange(selected);
+                }}
+                key={optionsUpdated}
               />
             </div>
           </Col>
 
+          {console.log(devices)}
+
           <div>
-            <button type="submit" className="sync_btn btn btn-primary">
+            <button
+              type="submit"
+              className="sync_btn btn btn-primary"
+              onClick={(e) => handleSync(e)}
+            >
               Sync
             </button>
           </div>
         </div>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
-        <Col lg={3}>
-          <Link href="#" className="text-decoration-none">
-            <div className="screen_one rounded-1 p-4 text-center mb-3">
-              <div>
-                <img src="/face.png" alt="" className="screen_img " />
-                <p className="m-0 text-capitalize text-white font_20">
-                  screen one
-                </p>
-              </div>
-            </div>
-          </Link>
-        </Col>
+
+        {data &&
+          data.map((d) => (
+            <Col lg={3} key={d.device_id}>
+              <Link href="#" className="text-decoration-none">
+                <div className="screen_one rounded-1 p-4 text-center mb-3">
+                  <div>
+                    <img src="/face.png" alt="" className="screen_img" />
+                    <p className="m-0 text-capitalize text-white font_20">
+                      {d.device_name}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </Col>
+          ))}
       </Row>
     </>
   );
 };
 
-export default page;
+export default Page;
