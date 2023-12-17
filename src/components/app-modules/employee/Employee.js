@@ -8,6 +8,7 @@ import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
 import { fetcher } from "../../../lib/fetcher";
 import { submit } from "../../../lib/submit";
+import GetDataMis from './GetDataMis'
 
 const initialValues = {
   employee_id: "",
@@ -271,360 +272,361 @@ const AddEmployee = () => {
 
   return (
     <div className="add_employ">
-      <Tabs
-        id="controlled-tab-example"
-        activeKey={key}
-        onSelect={(k) => setKey(k)}
-        className="mb-2"
-      >
-        <Tab eventKey="home" title="Home">
-          <form onSubmit={(e) => handleSubmit(e)} method="POST">
-            <Row>
-              <Col lg={6}>
-                <div className="mb-2">
-                  <div className="mb-2">Employee ID</div>
-                  <input
-                    type="text"
-                    placeholder=""
-                    name="employee_id"
-                    value={formValues.employee_id}
-                    onChange={(e) => handleInputChange(e)}
-                    className={classEase(
-                      "rounded-1 form_border_focus form-control",
-                      errors.employee_id && "is-invalid"
-                    )}
-                  />
-                  {errors.employee_id && (
-                    <div className="invalid-feedback">{errors.employee_id}</div>
-                  )}
-                </div>
+      <div className="border-bottom d-flex justify-content-between align-items-center">
+        <div className=" text-capitalize font_20 fw-bold pb-2">
+          add employee
+        </div>
+        <div>
+          <GetDataMis/>
+        </div>
+      </div>
 
-                <div className="mb-2">
-                  <div className="mb-2">Employee Name</div>
-                  <input
-                    type="text"
-                    placeholder=""
-                    autoComplete="off"
-                    name="username"
-                    value={formValues.username}
-                    onChange={(e) => handleInputChange(e)}
-                    className={classEase(
-                      "rounded-1 form_border_focus form-control",
-                      errors.username && "is-invalid"
-                    )}
-                  />
-                  {errors.username && (
-                    <div className="invalid-feedback">{errors.username}</div>
+      <div className="mt-4">
+       
+        <form onSubmit={(e) => handleSubmit(e)} method="POST">
+          <Row>
+            <Col lg={6}>
+              <div className="mb-2">
+                <div className="mb-2">Employee ID</div>
+                <input
+                  type="text"
+                  placeholder=""
+                  name="employee_id"
+                  value={formValues.employee_id}
+                  onChange={(e) => handleInputChange(e)}
+                  className={classEase(
+                    "rounded-1 form_border_focus form-control",
+                    errors.employee_id && "is-invalid"
                   )}
-                </div>
+                />
+                {errors.employee_id && (
+                  <div className="invalid-feedback">{errors.employee_id}</div>
+                )}
+              </div>
 
-                <div className="mb-2">
-                  <div className="mb-2">Email</div>
-                  <input
-                    type="email"
-                    placeholder=""
-                    autoComplete="off"
-                    name="email"
-                    value={formValues.email}
-                    onChange={(e) => handleInputChange(e)}
-                    className={classEase(
-                      "rounded-1 form_border_focus form-control",
-                      errors.email && "is-invalid"
-                    )}
-                  />
-                  {errors.email && (
-                    <div className="invalid-feedback">{errors.email}</div>
+              <div className="mb-2">
+                <div className="mb-2">Employee Name</div>
+                <input
+                  type="text"
+                  placeholder=""
+                  autoComplete="off"
+                  name="username"
+                  value={formValues.username}
+                  onChange={(e) => handleInputChange(e)}
+                  className={classEase(
+                    "rounded-1 form_border_focus form-control",
+                    errors.username && "is-invalid"
                   )}
-                </div>
+                />
+                {errors.username && (
+                  <div className="invalid-feedback">{errors.username}</div>
+                )}
+              </div>
 
-                <div className="mb-2">
-                  <div className="mb-2">Designation</div>
-                  <select
-                    className={classEase(
-                      "form-select form-control rounded-1 form_border_focus",
-                      errors.designation && "is-invalid"
-                    )}
-                    aria-label="Default select example"
-                    name="designation"
-                    value={formValues.designation}
-                    onChange={(e) => handleInputChange(e)}
-                  >
-                    <option value="">Select Designation</option>
-                    {designations &&
-                      designations.map((d) => (
-                        <option key={d.id} value={d.id}>
-                          {d.designation}
-                        </option>
-                      ))}
-                  </select>
-                  {errors.designation && (
-                    <div className="invalid-feedback">{errors.designation}</div>
+              <div className="mb-2">
+                <div className="mb-2">Email</div>
+                <input
+                  type="email"
+                  placeholder=""
+                  autoComplete="off"
+                  name="email"
+                  value={formValues.email}
+                  onChange={(e) => handleInputChange(e)}
+                  className={classEase(
+                    "rounded-1 form_border_focus form-control",
+                    errors.email && "is-invalid"
                   )}
-                </div>
+                />
+                {errors.email && (
+                  <div className="invalid-feedback">{errors.email}</div>
+                )}
+              </div>
 
-                <div className="mb-2">
-                  <div className="mb-2">Department</div>
-                  <select
-                    className={classEase(
-                      "form-select form-control rounded-1 form_border_focus",
-                      errors.department && "is-invalid"
-                    )}
-                    aria-label="Default select example"
-                    name="department"
-                    value={formValues.department}
-                    onChange={(e) => handleInputChange(e)}
-                  >
-                    <option value="">Select Department</option>
-                    {departments &&
-                      departments.map((d) => (
-                        <option key={d.id} value={d.id}>
-                          {d.department}
-                        </option>
-                      ))}
-                  </select>
-                  {errors.department && (
-                    <div className="invalid-feedback">{errors.department}</div>
+              <div className="mb-2">
+                <div className="mb-2">Designation</div>
+                <select
+                  className={classEase(
+                    "form-select form-control rounded-1 form_border_focus",
+                    errors.designation && "is-invalid"
                   )}
-                </div>
+                  aria-label="Default select example"
+                  name="designation"
+                  value={formValues.designation}
+                  onChange={(e) => handleInputChange(e)}
+                >
+                  <option value="">Select Designation</option>
+                  {designations &&
+                    designations.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.designation}
+                      </option>
+                    ))}
+                </select>
+                {errors.designation && (
+                  <div className="invalid-feedback">{errors.designation}</div>
+                )}
+              </div>
 
-                <div className="mb-2">
-                  <div className="mb-2">Phone Number</div>
-                  <input
-                    type="number"
-                    placeholder=""
-                    name="phone_number"
-                    value={formValues.phone_number}
-                    onChange={(e) => handleInputChange(e)}
-                    className={classEase(
-                      "rounded-1 form_border_focus form-control",
-                      errors.phone_number && "is-invalid"
-                    )}
-                  />
-                  {errors.phone_number && (
-                    <div className="invalid-feedback">
-                      {errors.phone_number}
+              <div className="mb-2">
+                <div className="mb-2">Department</div>
+                <select
+                  className={classEase(
+                    "form-select form-control rounded-1 form_border_focus",
+                    errors.department && "is-invalid"
+                  )}
+                  aria-label="Default select example"
+                  name="department"
+                  value={formValues.department}
+                  onChange={(e) => handleInputChange(e)}
+                >
+                  <option value="">Select Department</option>
+                  {departments &&
+                    departments.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.department}
+                      </option>
+                    ))}
+                </select>
+                {errors.department && (
+                  <div className="invalid-feedback">{errors.department}</div>
+                )}
+              </div>
+
+              <div className="mb-2">
+                <div className="mb-2">Phone Number</div>
+                <input
+                  type="number"
+                  placeholder=""
+                  name="phone_number"
+                  value={formValues.phone_number}
+                  onChange={(e) => handleInputChange(e)}
+                  className={classEase(
+                    "rounded-1 form_border_focus form-control",
+                    errors.phone_number && "is-invalid"
+                  )}
+                />
+                {errors.phone_number && (
+                  <div className="invalid-feedback">{errors.phone_number}</div>
+                )}
+              </div>
+            </Col>
+
+            <Col lg={6}>
+              <div className="mb-2">
+                <input
+                  id="employeeStatus"
+                  type="checkbox"
+                  name="is_active"
+                  checked={formValues.is_active}
+                  // value={formValues.is_active}
+                  onChange={(e) => handleInputChange(e)}
+                  className="form-check-input"
+                />
+                <label className="mb-2 ms-2" htmlFor="employeeStatus">
+                  Active
+                </label>
+              </div>
+
+              <div className="mb-2">
+                <div className="mb-2">Shift</div>
+                <select
+                  className={classEase(
+                    "form-select form-control rounded-1 form_border_focus",
+                    errors.shift_id && "is-invalid"
+                  )}
+                  aria-label="Default select example"
+                  name="shift_id"
+                  value={formValues.shift_id}
+                  onChange={(e) => handleInputChange(e)}
+                >
+                  <option value="">Select Shift</option>
+
+                  {shifts &&
+                    shifts.map((s) => (
+                      <option key={s.shift_id} value={s.shift_id}>
+                        {s.shift_beginning} - {s.shift_end}
+                      </option>
+                    ))}
+                </select>
+                {errors.shift_id && (
+                  <div className="invalid-feedback">{errors.shift_id}</div>
+                )}
+              </div>
+
+              <div className="mb-2">
+                <div className="mb-2">Group</div>
+                <select
+                  className={classEase(
+                    "form-select form-control rounded-1 form_border_focus",
+                    errors.group_id && "is-invalid"
+                  )}
+                  name="group_id"
+                  aria-label="Default select example"
+                  value={formValues.group_id}
+                  onChange={(e) => handleInputChange(e)}
+                >
+                  <option value="">Select Group</option>
+
+                  {groups &&
+                    groups.map((g) => (
+                      <option key={g.group_id} value={g.group_id}>
+                        {g.group_name}
+                      </option>
+                    ))}
+                </select>
+                {errors.group_id && (
+                  <div className="invalid-feedback">{errors.group_id}</div>
+                )}
+              </div>
+
+              <div className="mb-2">
+                <div className="mb-2">Upload Photo</div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="image"
+                  onChange={(e) => handleInputChange(e)}
+                  className={classEase(
+                    "rounded-1 form_border_focus form-control",
+                    errors.image && "is-invalid"
+                  )}
+                />
+                {errors.image && (
+                  <div className="invalid-feedback">{errors.image}</div>
+                )}
+              </div>
+
+              <div className="mb-2">
+                <div className="mb-2">Employee Role</div>
+                <div>
+                  <div className="d-flex">
+                    <div className="form-check me-2">
+                      <input
+                        id="employee_role_admin"
+                        type="checkbox"
+                        name="is_superuser"
+                        checked={formValues.is_superuser}
+                        onChange={(e) => {
+                          handleInputChange(e);
+                          if (!e.target.checked) {
+                            setFormValues((prev) => ({
+                              ...prev,
+                              password: "",
+                              confirm_password: "",
+                            }));
+                          }
+                        }}
+                        className="form-check-input"
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="employee_role_admin"
+                      >
+                        Is Admin
+                      </label>
                     </div>
-                  )}
-                </div>
-              </Col>
-
-              <Col lg={6}>
-                <div className="mb-2">
-                  <input
-                    id="employeeStatus"
-                    type="checkbox"
-                    name="is_active"
-                    checked={formValues.is_active}
-                    // value={formValues.is_active}
-                    onChange={(e) => handleInputChange(e)}
-                    className="form-check-input"
-                  />
-                  <label className="mb-2 ms-2" htmlFor="employeeStatus">
-                    Active
-                  </label>
-                </div>
-
-                <div className="mb-2">
-                  <div className="mb-2">Shift</div>
-                  <select
-                    className={classEase(
-                      "form-select form-control rounded-1 form_border_focus",
-                      errors.shift_id && "is-invalid"
-                    )}
-                    aria-label="Default select example"
-                    name="shift_id"
-                    value={formValues.shift_id}
-                    onChange={(e) => handleInputChange(e)}
-                  >
-                    <option value="">Select Shift</option>
-
-                    {shifts &&
-                      shifts.map((s) => (
-                        <option key={s.shift_id} value={s.shift_id}>
-                          {s.shift_beginning} - {s.shift_end}
-                        </option>
-                      ))}
-                  </select>
-                  {errors.shift_id && (
-                    <div className="invalid-feedback">{errors.shift_id}</div>
-                  )}
-                </div>
-
-                <div className="mb-2">
-                  <div className="mb-2">Group</div>
-                  <select
-                    className={classEase(
-                      "form-select form-control rounded-1 form_border_focus",
-                      errors.group_id && "is-invalid"
-                    )}
-                    name="group_id"
-                    aria-label="Default select example"
-                    value={formValues.group_id}
-                    onChange={(e) => handleInputChange(e)}
-                  >
-                    <option value="">Select Group</option>
-
-                    {groups &&
-                      groups.map((g) => (
-                        <option key={g.group_id} value={g.group_id}>
-                          {g.group_name}
-                        </option>
-                      ))}
-                  </select>
-                  {errors.group_id && (
-                    <div className="invalid-feedback">{errors.group_id}</div>
-                  )}
-                </div>
-
-                <div className="mb-2">
-                  <div className="mb-2">Upload Photo</div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    name="image"
-                    onChange={(e) => handleInputChange(e)}
-                    className={classEase(
-                      "rounded-1 form_border_focus form-control",
-                      errors.image && "is-invalid"
-                    )}
-                  />
-                  {errors.image && (
-                    <div className="invalid-feedback">{errors.image}</div>
-                  )}
-                </div>
-
-                <div className="mb-2">
-                  <div className="mb-2">Employee Role</div>
-                  <div>
-                    <div className="d-flex">
-                      <div className="form-check me-2">
+                    <div>
+                      <div className="form-check">
                         <input
-                          id="employee_role_admin"
+                          id="employee_role_staff"
                           type="checkbox"
-                          name="is_superuser"
-                          checked={formValues.is_superuser}
-                          onChange={(e) => {
-                            handleInputChange(e);
-                            if (!e.target.checked) {
-                              setFormValues((prev) => ({
-                                ...prev,
-                                password: "",
-                                confirm_password: "",
-                              }));
-                            }
-                          }}
+                          name="is_staff"
+                          checked={formValues.is_staff}
+                          onChange={(e) => handleInputChange(e)}
                           className="form-check-input"
                         />
                         <label
                           className="form-check-label"
-                          htmlFor="employee_role_admin"
+                          htmlFor="employee_role_staff"
                         >
-                          Is Admin
+                          Is staff
                         </label>
                       </div>
-                      <div>
-                        <div className="form-check">
-                          <input
-                            id="employee_role_staff"
-                            type="checkbox"
-                            name="is_staff"
-                            checked={formValues.is_staff}
-                            onChange={(e) => handleInputChange(e)}
-                            className="form-check-input"
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="employee_role_staff"
-                          >
-                            Is staff
-                          </label>
-                        </div>
+                    </div>
+                  </div>
+
+                  {formValues?.is_superuser && (
+                    <div className="">
+                      <div className="mb-2">
+                        <label className="mb-2">
+                          Password<span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="password"
+                          placeholder=""
+                          name="password"
+                          value={formValues.password}
+                          onChange={(e) => handleInputChange(e)}
+                          className={classEase(
+                            "rounded-1 form_border_focus form-control",
+                            errors.password && "is-invalid"
+                          )}
+                        />
+                        {errors.password && (
+                          <div className="invalid-feedback">
+                            {errors.password}
+                          </div>
+                        )}
+                        <div className="text-danger"></div>
+                      </div>
+
+                      <div className="mb-2">
+                        <label className="mb-2">
+                          Confirm Password
+                          <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="password"
+                          placeholder=""
+                          name="confirm_password"
+                          value={formValues.confirm_password}
+                          onChange={(e) => handleInputChange(e)}
+                          className={classEase(
+                            "rounded-1 form_border_focus form-control",
+                            errors.confirm_password && "is-invalid"
+                          )}
+                        />
+                        {errors.confirm_password && (
+                          <div className="invalid-feedback">
+                            {errors.confirm_password}
+                          </div>
+                        )}
                       </div>
                     </div>
-
-                    {formValues?.is_superuser && (
-                      <div className="">
-                        <div className="mb-2">
-                          <label className="mb-2">
-                            Password<span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="password"
-                            placeholder=""
-                            name="password"
-                            value={formValues.password}
-                            onChange={(e) => handleInputChange(e)}
-                            className={classEase(
-                              "rounded-1 form_border_focus form-control",
-                              errors.password && "is-invalid"
-                            )}
-                          />
-                          {errors.password && (
-                            <div className="invalid-feedback">
-                              {errors.password}
-                            </div>
-                          )}
-                          <div className="text-danger"></div>
-                        </div>
-
-                        <div className="mb-2">
-                          <label className="mb-2">
-                            Confirm Password
-                            <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="password"
-                            placeholder=""
-                            name="confirm_password"
-                            value={formValues.confirm_password}
-                            onChange={(e) => handleInputChange(e)}
-                            className={classEase(
-                              "rounded-1 form_border_focus form-control",
-                              errors.confirm_password && "is-invalid"
-                            )}
-                          />
-                          {errors.confirm_password && (
-                            <div className="invalid-feedback">
-                              {errors.confirm_password}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
-              </Col>
-            </Row>
+              </div>
+            </Col>
+          </Row>
 
-            {success && success !== "" && (
-              <div className="success-feedback mb-3">{success}</div>
+          {success && success !== "" && (
+            <div className="success-feedback mb-3">{success}</div>
+          )}
+
+          <Button
+            type="submit"
+            // className="rounded-1 mt-2 px-4 add_btn_color border-0"
+            className={classEase(
+              "rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button",
+              isLoading ? "loading" : ""
             )}
-
-            <Button
-              type="submit"
-              // className="rounded-1 mt-2 px-4 add_btn_color border-0"
-              className={classEase(
-                "rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button",
-                isLoading ? "loading" : ""
-              )}
-            >
-              + Add
-              {isLoading && (
-                <div className="spinner">
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-              )}
-            </Button>
-          </form>
-        </Tab>
-      </Tabs>
+          >
+            + Add
+            {isLoading && (
+              <div className="spinner">
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 };

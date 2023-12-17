@@ -157,18 +157,26 @@ const Page = () => {
                   <ul className="text-decoration-none mb-0">
                     <li className="text-capitalize text-white text-decoration-none">
                       <Link
-                        href="/attendance"
-                        className="text-decoration-none text-white side_font"
-                      >
-                        Manage Attendance
-                      </Link>
-                    </li>
-                    <li className="text-capitalize text-white text-decoration-none">
-                      <Link
                         href="/attendance-report"
                         className="text-decoration-none text-white side_font"
                       >
                         Attendance Report
+                      </Link>
+                    </li>
+                    <li className="text-capitalize text-white text-decoration-none">
+                      <Link
+                        href="/raw_employee"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        Employee Raw info
+                      </Link>
+                    </li>
+                    <li className="text-capitalize text-white text-decoration-none">
+                      <Link
+                        href="/attendance"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        Manage Attendance
                       </Link>
                     </li>
                   </ul>
