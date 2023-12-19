@@ -104,6 +104,16 @@ const AttendanceManage = () => {
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
+              <th scope="row">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id=""
+                    />
+                  </div>
+                </th>
                 <th scope="col">SL</th>
                 <th scope="col">Employee ID</th>
                 <th scope="col">Employee Name</th>
@@ -118,12 +128,22 @@ const AttendanceManage = () => {
             </thead>
             <tbody>
               <tr>
+                <th scope="row">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id=""
+                    />
+                  </div>
+                </th>
                 <th scope="row">1</th>
                 <td>API00000</td>
                 <td>Md Azad </td>
+                <td className="text-danger">00:00:00</td>
                 <td>00:00:00</td>
-                <td>00:00:00</td>
-                <td>00:00:00</td>
+                <td>00-00-0000</td>
                 {/*<td>00:00:00</td>
                  <td>00:00:00</td>
                 <td>00:00:00</td>
@@ -137,12 +157,22 @@ const AttendanceManage = () => {
                 </td> */}
               </tr>
               <tr>
+              <th scope="row">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id=""
+                    />
+                  </div>
+                </th>
                 <th scope="row">2</th>
                 <td>API00000</td>
                 <td>Md Mamun </td>
                 <td>00:00:00</td>
                 <td>00:00:00</td>
-                <td>00:00:00</td>
+                <td>00-00-0000</td>
                 {/*<td>00:00:00</td>
                  <td>00:00:00</td>
                 <td>00:00:00</td>
@@ -156,12 +186,22 @@ const AttendanceManage = () => {
                 </td> */}
               </tr>
               <tr>
+              <th scope="row">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id=""
+                    />
+                  </div>
+                </th>
                 <th scope="row">3</th>
                 <td>API00000</td>
                 <td>Md Mihal </td>
                 <td>00:00:00</td>
                 <td>00:00:00</td>
-                <td>00:00:00</td>
+                <td>00-00-0000</td>
                 {/*<td>00:00:00</td>
                  <td>00:00:00</td>
                 <td>00:00:00</td>
