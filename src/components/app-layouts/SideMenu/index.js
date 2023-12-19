@@ -165,7 +165,7 @@ const Page = () => {
                     </li>
                     <li className="text-capitalize text-white text-decoration-none">
                       <Link
-                        href="/raw_employee"
+                        href="/raw-employee"
                         className="text-decoration-none text-white side_font"
                       >
                         Employee Raw info

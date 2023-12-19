@@ -14,7 +14,7 @@ P {
   font-size: 14px !important;
 }
 .font_14 {
-  font-size: 14px!important;
+  font-size: 14px !important;
 }
 .font_20 {
   font-size: 20px;
@@ -157,4 +157,23 @@ employee manage css end
 }
 .success-feedback {
   color: #198754;
+}
+
+.form-select,
+.form-control {
+  border-radius: 4px !important;
+  min-height: 38px;
+  border-color: hsl(0, 0%, 80%) !important;
+  transition: all 100ms !important;
+}
+.form-select:hover,
+.form-control:hover {
+  border-color: hsl(0, 0%, 70%) !important;
+}
+.form-select:focus,
+.form-control:focus {
+  border-color: #2684ff !important;
+}
+.select__control {
+  box-shadow: none !important;
 }

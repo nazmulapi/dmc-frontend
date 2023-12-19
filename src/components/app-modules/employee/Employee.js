@@ -2,13 +2,14 @@
 
 import React, { useState } from "react";
 import useSWR from "swr";
+import Select from "react-select";
 import { Col, Row, Tab, Tabs } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
 import { fetcher } from "../../../lib/fetcher";
 import { submit } from "../../../lib/submit";
-import GetDataMis from './GetDataMis'
+import GetDataMis from "./GetDataMis";
 
 const initialValues = {
   employee_id: "",
@@ -29,43 +30,72 @@ const initialValues = {
 };
 
 const AddEmployee = () => {
-  const [key, setKey] = useState("home");
   const [formValues, setFormValues] = useState(initialValues);
+  const [selectFormValues, setSelectFormValues] = useState({
+    department: "",
+    designation: "",
+    shift_id: "",
+    group_id: "",
+  });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    data: departments,
+    data: departmentsData,
     error: departmentsFetchError,
     isLoading: departmentsFetchIsLoading,
   } = useSWR(`/department/`, fetcher, {
     errorRetryCount: 2,
   });
 
+  const departments = departmentsData?.map((item) => ({
+    name: "department",
+    label: item.department,
+    value: item.id,
+  }));
+
   const {
-    data: designations,
+    data: designationsData,
     error: designationsFetchError,
     isLoading: designationsFetchIsLoading,
   } = useSWR(`/designation/`, fetcher, {
     errorRetryCount: 2,
   });
 
+  const designations = designationsData?.map((item) => ({
+    name: "designation",
+    label: item.designation,
+    value: item.id,
+  }));
+
   const {
-    data: shifts,
+    data: shiftsData,
     error: shiftsFetchError,
     isLoading: shiftsFetchIsLoading,
   } = useSWR(`/shift/`, fetcher, {
     errorRetryCount: 2,
   });
 
+  const shifts = shiftsData?.map((item) => ({
+    name: "shift_id",
+    label: item.shift_name,
+    value: item.shift_id,
+  }));
+
   const {
-    data: groups,
+    data: groupsData,
     error: groupsFetchError,
     isLoading: groupsFetchIsLoading,
   } = useSWR(`/empgrp/`, fetcher, {
     errorRetryCount: 2,
   });
+
+  const groups = groupsData?.map((item) => ({
+    name: "group_id",
+    label: item.group_name,
+    value: item.group_id,
+  }));
 
   const validateForm = () => {
     let valid = true;
@@ -186,6 +216,51 @@ const AddEmployee = () => {
     return valid;
   };
 
+  const handleSelectChange = async (selectedOption, key) => {
+    setSuccess("");
+
+    // when cleared
+    if (!selectedOption || !selectedOption.value) {
+      setErrors({
+        ...errors,
+        [key]: "",
+      });
+
+      setFormValues((prev) => ({
+        ...prev,
+        [key]: "",
+      }));
+
+      setSelectFormValues((prev) => ({
+        ...prev,
+        [key]: "",
+      }));
+      return;
+    }
+
+    const { name, value } = selectedOption;
+
+    console.log(name, value);
+
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: String(value),
+    }));
+
+    setSelectFormValues((prev) => ({
+      ...prev,
+      [name]: selectedOption,
+    }));
+
+    console.log(formValues);
+    return;
+  };
+
   const handleInputChange = (e) => {
     // e.preventDefault();
     setSuccess("");
@@ -277,12 +352,11 @@ const AddEmployee = () => {
           add employee
         </div>
         <div>
-          <GetDataMis/>
+          <GetDataMis />
         </div>
       </div>
 
       <div className="mt-4">
-       
         <form onSubmit={(e) => handleSubmit(e)} method="POST">
           <Row>
             <Col lg={6}>
@@ -344,7 +418,23 @@ const AddEmployee = () => {
 
               <div className="mb-2">
                 <div className="mb-2">Designation</div>
-                <select
+                <Select
+                  className={classEase(
+                    "rounded-1 form_border_focus",
+                    errors.designation && "is-invalid"
+                  )}
+                  classNamePrefix="select"
+                  isDisabled={false}
+                  isLoading={false}
+                  isClearable={true}
+                  isSearchable={true}
+                  value={selectFormValues.designation}
+                  options={designations}
+                  onChange={(selectedOption) =>
+                    handleSelectChange(selectedOption, "designation")
+                  }
+                />
+                {/* <select
                   className={classEase(
                     "form-select form-control rounded-1 form_border_focus",
                     errors.designation && "is-invalid"
@@ -361,7 +451,7 @@ const AddEmployee = () => {
                         {d.designation}
                       </option>
                     ))}
-                </select>
+                </select> */}
                 {errors.designation && (
                   <div className="invalid-feedback">{errors.designation}</div>
                 )}
@@ -369,7 +459,23 @@ const AddEmployee = () => {
 
               <div className="mb-2">
                 <div className="mb-2">Department</div>
-                <select
+                <Select
+                  className={classEase(
+                    "rounded-1 form_border_focus",
+                    errors.department && "is-invalid"
+                  )}
+                  classNamePrefix="select"
+                  isDisabled={false}
+                  isLoading={false}
+                  isClearable={true}
+                  isSearchable={true}
+                  value={selectFormValues.department}
+                  options={departments}
+                  onChange={(selectedOption) =>
+                    handleSelectChange(selectedOption, "department")
+                  }
+                />
+                {/* <select
                   className={classEase(
                     "form-select form-control rounded-1 form_border_focus",
                     errors.department && "is-invalid"
@@ -386,7 +492,7 @@ const AddEmployee = () => {
                         {d.department}
                       </option>
                     ))}
-                </select>
+                </select> */}
                 {errors.department && (
                   <div className="invalid-feedback">{errors.department}</div>
                 )}
@@ -429,7 +535,23 @@ const AddEmployee = () => {
 
               <div className="mb-2">
                 <div className="mb-2">Shift</div>
-                <select
+                <Select
+                  className={classEase(
+                    "rounded-1 form_border_focus",
+                    errors.shift_id && "is-invalid"
+                  )}
+                  classNamePrefix="select"
+                  isDisabled={false}
+                  isLoading={false}
+                  isClearable={true}
+                  isSearchable={true}
+                  value={selectFormValues.shift_id}
+                  options={shifts}
+                  onChange={(selectedOption) =>
+                    handleSelectChange(selectedOption, "shift_id")
+                  }
+                />
+                {/* <select
                   className={classEase(
                     "form-select form-control rounded-1 form_border_focus",
                     errors.shift_id && "is-invalid"
@@ -447,7 +569,7 @@ const AddEmployee = () => {
                         {s.shift_beginning} - {s.shift_end}
                       </option>
                     ))}
-                </select>
+                </select> */}
                 {errors.shift_id && (
                   <div className="invalid-feedback">{errors.shift_id}</div>
                 )}
@@ -455,7 +577,23 @@ const AddEmployee = () => {
 
               <div className="mb-2">
                 <div className="mb-2">Group</div>
-                <select
+                <Select
+                  className={classEase(
+                    "rounded-1 form_border_focus",
+                    errors.shift_id && "is-invalid"
+                  )}
+                  classNamePrefix="select"
+                  isDisabled={false}
+                  isLoading={false}
+                  isClearable={true}
+                  isSearchable={true}
+                  value={selectFormValues.group_id}
+                  options={groups}
+                  onChange={(selectedOption) =>
+                    handleSelectChange(selectedOption, "group_id")
+                  }
+                />
+                {/* <select
                   className={classEase(
                     "form-select form-control rounded-1 form_border_focus",
                     errors.group_id && "is-invalid"
@@ -473,7 +611,7 @@ const AddEmployee = () => {
                         {g.group_name}
                       </option>
                     ))}
-                </select>
+                </select> */}
                 {errors.group_id && (
                   <div className="invalid-feedback">{errors.group_id}</div>
                 )}

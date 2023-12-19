@@ -12,7 +12,7 @@ export const submit = async (route, data, hasFile = false) => {
     // return data;
 
     const headers = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token ? token : ""}`,
     };
 
     if (!hasFile) {
@@ -36,6 +36,67 @@ export const submit = async (route, data, hasFile = false) => {
     if (response.ok) {
       console.log("Successful");
       // console.log(response.json());
+    } else {
+      console.error("Error");
+    }
+
+    const responseData = await response.json();
+
+    return responseData;
+  } catch (error) {
+    console.error("Failed: ", error);
+    throw error;
+  }
+};
+
+export const forgotEmailSubmit = async (route, data) => {
+  try {
+    const response = await fetch(apiBaseUrl + route, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    console.log(response);
+
+    if (!response.ok) {
+      throw new Error("Failed to submit data");
+    }
+    if (response.ok) {
+      console.log("Successful");
+    } else {
+      console.error("Error");
+    }
+
+    const responseData = await response.json();
+
+    return responseData;
+  } catch (error) {
+    console.error("Failed: ", error);
+    throw error;
+  }
+};
+
+export const forgotPasswordSubmit = async (route, data, token) => {
+  try {
+    const response = await fetch(apiBaseUrl + route, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Reset-Token": token,
+      },
+      body: JSON.stringify(data),
+    });
+
+    console.log(response);
+
+    if (!response.ok) {
+      throw new Error("Failed to submit data");
+    }
+    if (response.ok) {
+      console.log("Successful");
     } else {
       console.error("Error");
     }
