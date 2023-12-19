@@ -28,9 +28,10 @@ export const checkIsAuthenticated = async () => {
     return false;
   } else {
     setAuthToken(token);
-    // const check = await api.get("/employee/" + user.employee_id);
+    // const check = await api.get("/employee/DMC24/");
+    // console.log(check);
     return true;
-    if (check?.data?.Access) {
+    if (check?.employee_id) {
       return true;
     } else {
       return false;

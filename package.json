@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H 10.10.23.89",
     "build": "next build",
     "export": "next build && next export",
     "start": "next start",
@@ -26,6 +26,7 @@
     "react-loader-spinner": "^5.4.5",
     "react-multiselect-dropdown-bootstrap": "^1.1.0",
     "react-router-dom": "^6.15.0",
+    "react-select": "^5.8.0",
     "swr": "^2.2.4",
     "yup": "^1.2.0"
   },
