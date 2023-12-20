@@ -4,10 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { Oval } from "react-loader-spinner";
+import Spinner from "react-bootstrap/Spinner";
 import { Col, Container, Row } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import classEase from "classease";
 import { login } from "../../../lib/auth";
+import { authTokenKey, authUserKey } from "../../../lib/config";
 
 const Page = () => {
   const router = useRouter();
@@ -29,11 +32,13 @@ const Page = () => {
     setLoading(true);
 
     try {
-      const { access, refresh, user } = await login({
+      const { access, refresh, user, device_status } = await login({
         employee_id: employeeId,
         password,
       });
 
+      console.log(user, device_status);
+      // return;
       setLoading(false);
 
       if (!access) {
@@ -42,12 +47,16 @@ const Page = () => {
       } else if (!rememberMe) {
         // should be updated
         localStorage.setItem("user", JSON.stringify(user));
-        Cookies.set(process.env.NEXT_PUBLIC_AUTH_TOKEN_KEY, access, {
+        Cookies.set(authUserKey, user?.employee_id, {
+          expires: 30,
+        }); // Expires in 30 days
+        Cookies.set(authTokenKey, access, {
           expires: 30,
         }); // Expires in 30 days
       } else {
         localStorage.setItem("user", JSON.stringify(user));
-        Cookies.set(process.env.NEXT_PUBLIC_AUTH_TOKEN_KEY, access);
+        Cookies.set(authUserKey, user?.employee_id);
+        Cookies.set(authTokenKey, access);
       }
       router.push("/dashboard");
     } catch (error) {
@@ -106,28 +115,28 @@ const Page = () => {
                       />
                     </div>
                     <div className="col-auto">
-                      <button
+                      <Button
                         type="submit"
-                        className="btn btn-primary mb-3 rounded-1 w-100 py-2"
+                        // className="rounded-1 mt-2 px-4 add_btn_color border-0"
+                        className={classEase(
+                          "w-100 rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button py-2 mb-3",
+                          loading ? "loading" : ""
+                        )}
                       >
-                        {/* {!loading && (
-                          <span className="position-absolute">
-                            <Oval
-                              height={18}
-                              width={18}
-                              color="#ffffff"
-                              wrapperStyle={{}}
-                              wrapperClass=""
-                              visible={true}
-                              ariaLabel="oval-loading"
-                              secondaryColor="#999999"
-                              strokeWidth={6}
-                              strokeWidthSecondary={6}
-                            />
-                          </span>
-                        )} */}
                         Login
-                      </button>
+                        {loading && (
+                          <div className="spinner">
+                            <Spinner
+                              as="span"
+                              animation="border"
+                              size="sm"
+                              role="status"
+                              aria-hidden="true"
+                            />
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        )}
+                      </Button>
                     </div>
                     {error && <p className="text-danger">{error}</p>}
                   </Form>
