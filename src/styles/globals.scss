@@ -16,6 +16,9 @@ P {
 .font_14 {
   font-size: 14px !important;
 }
+.font_18 {
+  font-size: 18px !important;
+}
 .font_20 {
   font-size: 20px;
 }
@@ -177,3 +180,55 @@ employee manage css end
 .select__control {
   box-shadow: none !important;
 }
+
+// dynamic form 
+.form-inline {  
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.form-inline label {
+  margin: 5px 10px 5px 0;
+}
+
+.form-inline input {
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.button-section {
+  margin-left: 26%;
+}
+.button {
+  padding: 8px 20px;
+  background-color: #683091;
+  border: 1px solid #ddd;
+  color: white;
+  cursor: pointer;
+  transition: all linear 0.3s;
+}
+.dynami_button {
+  padding: 8px 20px;
+  background-color: #683091;
+  border: 1px solid #ddd;
+  color: white;
+  cursor: pointer;
+  transition: all linear 0.3s;
+}
+
+.button:hover {
+  background-color: #683091;
+}
+
+.remove {
+  background-color: rgb(192, 53, 53);
+}
+.remove:hover {
+  background-color: rgb(187, 43, 43);
+}
+
+

@@ -76,6 +76,14 @@ const ManageInfo = () => {
                   </select>
                 </div>
               </Col>
+              <div className="d-flex justify-content-center">
+                <button
+                  className="rounded-1 theme_color text-white px-3 py-2 border-0"
+                  type="submit"
+                >
+                  Submit
+                </button>
+              </div>
             </Row>
           </form>
         </div>
