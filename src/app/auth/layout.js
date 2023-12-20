@@ -1,5 +1,7 @@
-import { redirect } from "next/navigation";
-import { checkIsAuthenticated } from "../../lib/auth/server";
+import { cookies } from "next/headers";
+// import { redirect } from "next/navigation";
+import { authTokenKey } from "../../lib/config";
+import Accessible from "../../components/utils/CheckAccessibleForAuthPages";
 
 import "../../styles/auth.scss";
 
@@ -9,9 +11,16 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const isAuthenticated = await checkIsAuthenticated();
+  const cookieStore = cookies();
+  let token = cookieStore.get(authTokenKey);
+  // if (!(token === undefined || token === null)) {
+  //   redirect("/dashboard");
+  // }
 
-  if (isAuthenticated) redirect("/dashboard");
-
-  return <div>{children}</div>;
+  return (
+    <>
+      <Accessible />
+      <div>{children}</div>
+    </>
+  );
 }

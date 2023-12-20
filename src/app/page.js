@@ -1,15 +1,18 @@
 import { redirect } from "next/navigation";
-import { checkIsAuthenticated } from "../lib/auth/server";
-import CheckAuth from "../components/utils/CheckAuth";
+import { cookies } from "next/headers";
+import { authTokenKey } from "../lib/config";
 
 export default async function Home() {
-  const isAuthenticated = await checkIsAuthenticated();
+  const cookieStore = cookies();
+  let token = cookieStore.get(authTokenKey);
 
-  if (!isAuthenticated) {
+  if (token === undefined || token === null) {
     redirect("/auth/login");
   } else {
     redirect("/dashboard");
   }
 
-  return <CheckAuth />;
+  // redirect("/dashboard");
+
+  return <></>;
 }
