@@ -48,7 +48,7 @@ const Page = () => {
   return (
     <>
       <Row>
-        <div className="d-flex">
+        {/* <div className="d-flex">
           <Col lg={4}>
             <div className="mb-4 rounded-1 multi_select">
               <DropdownMultiselect
@@ -75,7 +75,7 @@ const Page = () => {
               Sync
             </button>
           </div>
-        </div>
+        </div> */}
 
         {data &&
           data.map((d) => (
@@ -83,9 +83,12 @@ const Page = () => {
               <Link href="#" className="text-decoration-none">
                 <div className="screen_one rounded-1 p-4 text-center mb-3">
                   <div>
-                    <img src="/face.png" alt="" className="screen_img" />
-                    <p className="m-0 text-capitalize text-white font_20">
-                      {d.device_name}
+                    {/* <img src="/face.png" alt="" className="screen_img" /> */}
+                    <h1 className="mt-1 m-0 fw-bold text-white">
+                      10
+                    </h1>
+                    <p className="mt-1 m-0 text-capitalize text-white font_20">
+                      Number of device
                     </p>
                   </div>
                 </div>

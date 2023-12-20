@@ -183,8 +183,31 @@ const Page = () => {
                 </Accordion.Body>
               </Accordion.Item>
 
-              {/* Settings item 2 */}
+              {/* Screen item 2 */}
+
               <Accordion.Item eventKey="5" className="pt-2">
+                <Accordion.Header className="p-0 m-0 text-capitalize">
+                  <LuNewspaper className="text-light" />
+                  <span className="ms-2 text-white text-capitalize side_font">
+                     manage Device
+                  </span>
+                </Accordion.Header>
+                <Accordion.Body>
+                  <ul className="text-decoration-none mb-0">
+                    <li className="text-capitalize text-white text-decoration-none">
+                      <Link
+                        href="/assign-screen"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        assign device
+                      </Link>
+                    </li>
+                  </ul>
+                </Accordion.Body>
+              </Accordion.Item>
+
+              {/* Settings item 2 */}
+              <Accordion.Item eventKey="6" className="pt-2">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <FiSettings className="text-light" />
                   <span className="ms-2 text-white text-capitalize side_font">
@@ -195,7 +218,7 @@ const Page = () => {
                   <ul className="text-decoration-none mb-0">
                     <li className="text-capitalize text-white text-decoration-none">
                       <Link
-                        href="/settings"
+                        href="/clean-raw-data"
                         className="text-decoration-none text-white side_font"
                       >
                         Clean Raw Data
@@ -214,7 +237,7 @@ const Page = () => {
               </Accordion.Item>
 
               {/* Settings item 2 */}
-              <Accordion.Item eventKey="6" className="pt-2">
+              <Accordion.Item eventKey="7" className="pt-2">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <FiSettings className="text-light" />
                   <span className="ms-2 text-white text-capitalize side_font">
@@ -233,7 +256,7 @@ const Page = () => {
                     </li>
                     <li className="text-capitalize text-white text-decoration-none">
                       <Link
-                        href="/sync-settings"
+                        href="/sync-now"
                         className="text-decoration-none text-white side_font"
                       >
                         Sync Now

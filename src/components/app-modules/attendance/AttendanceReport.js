@@ -9,7 +9,7 @@ const AttendanceManage = () => {
   return (
     <>
       <section>
-      <div>
+        <div>
           <h2 className="border-bottom pb-2 mb-4">Attendance Report</h2>
         </div>
         <div className="form_part mb-3">
@@ -70,6 +70,15 @@ const AttendanceManage = () => {
                   </select>
                 </div>
               </Col>
+
+              <div className="d-flex justify-content-center">
+                <button
+                  className="rounded-1 theme_color text-white px-3 py-2 border-0"
+                  type="submit"
+                >
+                  Submit
+                </button>
+              </div>
             </Row>
           </form>
         </div>
@@ -107,7 +116,7 @@ const AttendanceManage = () => {
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
-              <th scope="row">
+                <th scope="row">
                   <div class="form-check">
                     <input
                       class="form-check-input"
@@ -160,7 +169,7 @@ const AttendanceManage = () => {
                 </td> */}
               </tr>
               <tr>
-              <th scope="row">
+                <th scope="row">
                   <div class="form-check">
                     <input
                       class="form-check-input"
@@ -189,7 +198,7 @@ const AttendanceManage = () => {
                 </td> */}
               </tr>
               <tr>
-              <th scope="row">
+                <th scope="row">
                   <div class="form-check">
                     <input
                       class="form-check-input"
