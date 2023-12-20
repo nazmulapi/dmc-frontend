@@ -16,6 +16,9 @@ const DesignationManager = () => {
   return (
     <>
       <section>
+      <div>
+          <h2 className="border-bottom pb-2 mb-4">Manage Departments</h2>
+        </div>
         <div className="search_part border mb-3">
           <div className="d-flex justify-content-between p-2">
             <div className="">

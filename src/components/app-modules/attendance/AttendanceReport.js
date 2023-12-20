@@ -9,6 +9,9 @@ const AttendanceManage = () => {
   return (
     <>
       <section>
+      <div>
+          <h2 className="border-bottom pb-2 mb-4">Attendance Report</h2>
+        </div>
         <div className="form_part mb-3">
           <form>
             <Row>

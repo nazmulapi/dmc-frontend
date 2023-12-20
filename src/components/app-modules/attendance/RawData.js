@@ -15,6 +15,9 @@ const ManageInfo = () => {
   return (
     <>
       <section>
+      <div>
+          <h2 className="border-bottom pb-2 mb-4 text-capitalize">employee raw information</h2>
+        </div>
       <div className="form_part mb-3">
           <form>
             <Row>

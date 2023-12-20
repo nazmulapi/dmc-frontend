@@ -96,7 +96,7 @@ const CreateShift = () => {
               </div>
               <div className="mb-3">
                 <label htmlFor="" className="form-label">
-                  Select Shift<span className="text-danger"> *</span>
+                  Enter Shift Name<span className="text-danger"> *</span>
                 </label>
                 <input
                   type="text"

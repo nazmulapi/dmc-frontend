@@ -198,6 +198,14 @@ const Page = () => {
                         href="/settings"
                         className="text-decoration-none text-white side_font"
                       >
+                        Clean Raw Data
+                      </Link>
+                    </li>
+                    <li className="text-capitalize text-white text-decoration-none">
+                      <Link
+                        href="/settings"
+                        className="text-decoration-none text-white side_font"
+                      >
                         Manage
                       </Link>
                     </li>
@@ -210,7 +218,7 @@ const Page = () => {
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <FiSettings className="text-light" />
                   <span className="ms-2 text-white text-capitalize side_font">
-                    Sync Settings
+                    Sync log Settings
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -220,9 +228,18 @@ const Page = () => {
                         href="/sync-settings"
                         className="text-decoration-none text-white side_font"
                       >
-                        Log Data
+                        Sync Log Data
                       </Link>
                     </li>
+                    <li className="text-capitalize text-white text-decoration-none">
+                      <Link
+                        href="/sync-settings"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        Sync Now
+                      </Link>
+                    </li>
+                    
                   </ul>
                 </Accordion.Body>
               </Accordion.Item>
