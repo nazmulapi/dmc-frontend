@@ -1,5 +1,5 @@
 .screen_one {
-  height: 150px;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,7 +13,7 @@
   transition: all linear 0.3s;
 }
 .screen_one:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 .screen_img {
   height: 60px;

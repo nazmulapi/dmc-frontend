@@ -80,8 +80,8 @@ const Page = () => {
         {data &&
           data.map((d) => (
             <Col lg={3} key={d.device_id}>
-              <Link href="#" className="text-decoration-none">
-                <div className="screen_one rounded-1 p-4 text-center mb-3">
+              {/* <Link href="#" className="text-decoration-none"> */}
+                <div className="screen_one rounded-1 p-4 text-center mb-4">
                   <div>
                     {/* <img src="/face.png" alt="" className="screen_img" /> */}
                     <h1 className="mt-1 m-0 fw-bold text-white">
@@ -92,7 +92,7 @@ const Page = () => {
                     </p>
                   </div>
                 </div>
-              </Link>
+              {/* </Link> */}
             </Col>
           ))}
       </Row>

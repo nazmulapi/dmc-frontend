@@ -95,10 +95,10 @@ const DesignationManager = () => {
                     <td>{item.description}</td>
                     <td>
                       <button className="add_btn_color border-0 rounded-1 me-2">
-                        <FaRegEdit color="#585858" />
+                        <FaRegEdit color="#fff" />
                       </button>
                       <button className="bg-danger border-0 rounded-1">
-                        <RiDeleteBin6Line color="#DB3545" />
+                        <RiDeleteBin6Line color="#fff" />
                       </button>
                     </td>
                   </tr>
