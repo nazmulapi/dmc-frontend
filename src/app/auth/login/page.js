@@ -88,7 +88,7 @@ const Page = () => {
                         id="employeeId"
                         name="employeeId"
                         type="text"
-                        className="form-control rounded-1 form_padding"
+                        className="form-control rounded-1 form_padding form_border_focus"
                         placeholder="Enter your employee id"
                         value={employeeId}
                         onChange={(e) => {
@@ -105,7 +105,7 @@ const Page = () => {
                         id="password"
                         name="password"
                         type="password"
-                        className="form-control rounded-1 form_padding"
+                        className="form-control rounded-1 form_padding form_border_focus"
                         placeholder="Enter password"
                         value={password}
                         onChange={(e) => {
@@ -119,7 +119,7 @@ const Page = () => {
                         type="submit"
                         // className="rounded-1 mt-2 px-4 add_btn_color border-0"
                         className={classEase(
-                          "w-100 rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button py-2 mb-3",
+                          "w-100 rounded-1 mt-2 px-0 add_btn_color theme_color border-0 d-flex justify-content-center align-items-center app-button py-3 mb-3",
                           loading ? "loading" : ""
                         )}
                       >
