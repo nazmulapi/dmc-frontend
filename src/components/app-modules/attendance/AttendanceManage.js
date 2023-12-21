@@ -1,11 +1,64 @@
 "use client";
-import React from "react";
+
+import React, { useState, useEffect } from "react";
+import useSWR from "swr";
 import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import Pagination from "../../utils/Pagination";
+import { fetcher } from "../../../lib/fetcher";
+import { formatDate } from "../../../lib/helper";
 
 const AttendanceManage = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(1);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const {
+    data: apiData,
+    error,
+    isValidating,
+    isLoading,
+  } = useSWR(
+    formSubmitted
+      ? `/attendance_log/?page=${currentPage}&page_size=${pageSize}`
+      : null,
+    fetcher,
+    {
+      errorRetryCount: 2,
+    }
+  );
+
+  const totalPages = Math.ceil(apiData?.count / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+  };
+
+  const [employeeData, setEmployeeData] = useState([]);
+
+  useEffect(() => {
+    if (!isLoading && !error) {
+      setEmployeeData(apiData?.results || []);
+      console.log(apiData?.results);
+    }
+  }, [isLoading, isValidating]);
+
   return (
     <>
       <section>
@@ -15,7 +68,7 @@ const AttendanceManage = () => {
           </h2>
         </div>
         <div className="form_part mb-3">
-          <form>
+          <form onSubmit={handleFormSubmit}>
             <Row>
               <Col lg={6}>
                 <div>
@@ -93,6 +146,7 @@ const AttendanceManage = () => {
             </div>
           </div>
         </div> */}
+
         <div className="employee_table table-responsive">
           <table className="table table-bordered table-striped">
             <thead>
@@ -119,97 +173,92 @@ const AttendanceManage = () => {
                 <th scope="col">Action</th> */}
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th scope="row">
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id=""
-                    />
-                  </div>
-                </th>
-                <th scope="row">1</th>
-                <td>API00000</td>
-                <td>Md Nazmul </td>
-                <td>00:00:00</td>
-                <td>00:00:00</td>
-                <td>00-00-0000</td>
-                {/*<td>00:00:00</td>
-                 <td>00:00:00</td>
-                <td>00:00:00</td>
-                <td>
-                  <button className="add_btn_color border-0 rounded-1 me-2">
-                    <FaRegEdit color="white" />
-                  </button>
-                  <button className="bg-danger border-0 rounded-1">
-                    <RiDeleteBin6Line color="white" />
-                  </button>
-                </td> */}
-              </tr>
-              <tr>
-                <th scope="row">
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id=""
-                    />
-                  </div>
-                </th>
-                <th scope="row">2</th>
-                <td>API00000</td>
-                <td>Md Azad </td>
-                <td>00:00:00</td>
-                <td>00:00:00</td>
-                <td>00-00-0000</td>
-                {/*<td>00:00:00</td>
-                 <td>00:00:00</td>
-                <td>00:00:00</td>
-                <td>
-                  <button className="add_btn_color border-0 rounded-1 me-2">
-                    <FaRegEdit color="white" />
-                  </button>
-                  <button className="bg-danger border-0 rounded-1">
-                    <RiDeleteBin6Line color="white" />
-                  </button>
-                </td> */}
-              </tr>
-              <tr>
-                <th scope="row">
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id=""
-                    />
-                  </div>
-                </th>
-                <th scope="row">3</th>
-                <td>API00000</td>
-                <td>Md Imam </td>
-                <td>00:00:00</td>
-                <td>00:00:00</td>
-                <td>00-00-0000</td>
-                {/*<td>00:00:00</td>
-                 <td>00:00:00</td>
-                <td>00:00:00</td>
-                <td>
-                  <button className="add_btn_color border-0 rounded-1 me-2">
-                    <FaRegEdit color="white" />
-                  </button>
-                  <button className="bg-danger border-0 rounded-1">
-                    <RiDeleteBin6Line color="white" />
-                  </button>
-                </td> */}
-              </tr>
-            </tbody>
+            {formSubmitted && (
+              <tbody>
+                {employeeData?.map((employee, index) => (
+                  <tr>
+                    <th scope="row">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id=""
+                        />
+                      </div>
+                    </th>
+                    <th scope="row">{startIndex + index + 1}</th>
+                    <td>{employee.employee_id}</td>
+                    <td>{employee.username}</td>
+                    <td>{formatDate(employee.InTime)}</td>
+                    <td>{formatDate(employee.OutTime)}</td>
+                    <td>NA</td>
+                  </tr>
+                ))}
+
+                {/* <tr>
+                  <th scope="row">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id=""
+                      />
+                    </div>
+                  </th>
+                  <th scope="row">2</th>
+                  <td>API00000</td>
+                  <td>Md Azad </td>
+                  <td>00:00:00</td>
+                  <td>00:00:00</td>
+                  <td>00-00-0000</td>
+                  <td>00:00:00</td>
+                  <td>00:00:00</td>
+                  <td>00:00:00</td>
+                  <td>
+                    <button className="add_btn_color border-0 rounded-1 me-2">
+                      <FaRegEdit color="white" />
+                    </button>
+                    <button className="bg-danger border-0 rounded-1">
+                      <RiDeleteBin6Line color="white" />
+                    </button>
+                  </td>
+                </tr> */}
+              </tbody>
+            )}
           </table>
+
+          {isLoading && (
+            <div className="loading-overlay">
+              <p>Loading...</p>
+            </div>
+          )}
         </div>
+        <Row>
+          <Col xs lg="1">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </Col>
+          <Col xs lg="11">
+            <div className="w-100 d-flex align-items-center justify-content-end mb-3">
+              <label>Page Size</label>
+              <select
+                className="rounded-1 form_border_focus form-control w-50 ms-2"
+                value={pageSize}
+                onChange={(e) => handlePageSizeChange(e.target.value)}
+              >
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+              </select>
+            </div>
+          </Col>
+        </Row>
       </section>
     </>
   );
