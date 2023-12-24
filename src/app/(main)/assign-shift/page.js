@@ -1,7 +1,7 @@
 import React from "react";
-import AssignShift from "../../../components/app-modules/shifting-old/AssignShift";
+import AssignShift from "../../../components/app-modules/shifting/AssignShift";
 
-const page = () => {
+const Page = () => {
   return (
     <>
       <AssignShift />
@@ -9,4 +9,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
