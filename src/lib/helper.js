@@ -38,3 +38,24 @@ export const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleString("en-US", options);
 };
+
+export const getTime = (dateString) => {
+  const options = {
+    hour: "numeric",
+    minute: "numeric",
+  };
+
+  const date = new Date(dateString);
+  return date.toLocaleString("en-US", options);
+};
+
+export const getDate = (dateString) => {
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
+  const date = new Date(dateString);
+  return date.toLocaleString("en-US", options);
+};

@@ -1,10 +1,10 @@
 import React from "react";
-import AttendanceManage from "../../../components/app-modules/attendance/AttendanceManage";
+import StructuredInfo from "../../../components/app-modules/attendance/StructuredInfo";
 
 const page = () => {
   return (
     <>
-      <AttendanceManage />
+      <StructuredInfo />
     </>
   );
 };

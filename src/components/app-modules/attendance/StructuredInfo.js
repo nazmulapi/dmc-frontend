@@ -4,16 +4,30 @@ import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import Spinner from "react-bootstrap/Spinner";
+import Select from "react-select";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import classEase from "classease";
 import Pagination from "../../utils/Pagination";
 import { fetcher } from "../../../lib/fetcher";
+import { submit } from "../../../lib/submit";
 import { formatDate } from "../../../lib/helper";
 
 const AttendanceManage = () => {
+  const [formValues, setFormValues] = useState({
+    date: "",
+    group_id: "",
+  });
+  const [selectFormValues, setSelectFormValues] = useState({
+    group_id: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState("");
+  const [isInitialLoading, setIsLoading] = useState(false);
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const {
@@ -35,8 +49,69 @@ const AttendanceManage = () => {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
 
+  const {
+    data: groupsData,
+    error: groupsFetchError,
+    isLoading: groupsFetchIsLoading,
+  } = useSWR(`/empgrp/`, fetcher, {
+    errorRetryCount: 2,
+  });
+
+  const groups = groupsData?.map((item) => ({
+    name: "group_id",
+    label: item.group_name,
+    value: item.group_id,
+  }));
+
+  const handleSelectChange = async (selectedOption, key) => {
+    setSuccess("");
+
+    // when cleared
+    if (!selectedOption || !selectedOption.value) {
+      setErrors({
+        ...errors,
+        [key]: "",
+      });
+
+      setFormValues((prev) => ({
+        ...prev,
+        [key]: "",
+      }));
+
+      setSelectFormValues((prev) => ({
+        ...prev,
+        [key]: "",
+      }));
+      return;
+    }
+
+    const { name, value } = selectedOption;
+
+    console.log(name, value);
+
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: String(value),
+    }));
+
+    setSelectFormValues((prev) => ({
+      ...prev,
+      [name]: selectedOption,
+    }));
+
+    console.log(formValues);
+    return;
+  };
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    setSuccess("");
+    setIsLoading(true);
     setFormSubmitted(true);
   };
 
@@ -64,7 +139,7 @@ const AttendanceManage = () => {
       <section>
         <div>
           <h2 className="border-bottom pb-2 mb-4 text-capitalize">
-            attendance manage
+            attendance structured data
           </h2>
         </div>
         <div className="form_part mb-3">
@@ -72,21 +147,36 @@ const AttendanceManage = () => {
             <Row>
               <Col lg={6}>
                 <div>
-                  <select
-                    className="form-select rounded-1 mb-3 form_border_focus"
-                    aria-label="Default select example "
+                  <Select
+                    className={classEase("rounded-1 form_border_focus mb-3")}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.group_id}
+                    options={groups}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "group_id")
+                    }
+                    placeholder="Select group..."
+                  />
+
+                  {/* <select
+
+
                   >
                     <option>Select Department</option>
                     <option value="1">Doctor</option>
                     <option value="2">Staff</option>
-                  </select>
+                  </select> */}
                 </div>
 
                 <div className="col-auto">
                   <input
                     type="search"
                     id=""
-                    placeholder="search"
+                    placeholder="Employee ID"
                     className="form-control form_border_focus rounded-1"
                   />
                 </div>
@@ -236,14 +326,14 @@ const AttendanceManage = () => {
           )}
         </div>
         <Row>
-          <Col xs lg="1">
+          <Col xs lg="9">
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />
           </Col>
-          <Col xs lg="11">
+          <Col xs lg="3">
             <div className="w-100 d-flex align-items-center justify-content-end mb-3">
               <label>Page Size</label>
               <select

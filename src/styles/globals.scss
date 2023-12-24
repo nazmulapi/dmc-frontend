@@ -181,8 +181,8 @@ employee manage css end
   box-shadow: none !important;
 }
 
-// dynamic form 
-.form-inline {  
+// dynamic form
+.form-inline {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -230,5 +230,6 @@ employee manage css end
 .remove:hover {
   background-color: rgb(187, 43, 43);
 }
-
-
+.disabled {
+  cursor: no-drop;
+}
