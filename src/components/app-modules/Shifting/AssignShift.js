@@ -36,7 +36,7 @@ const AssignShift = () => {
                       className="form-select form_border_focus rounded-1"
                       aria-label="Default select example"
                     >
-                      <option selected>select shift</option>
+                      <option>select shift</option>
                       <option value="1">Morning shift</option>
                       <option value="2">Evening shift</option>
                       <option value="3">Night shift</option>
@@ -58,7 +58,7 @@ const AssignShift = () => {
                 </div>
               </Row>
               <button className="button-16 fw-semibold" role="button">
-                <span class="text">Assign</span>
+                <span className="text">Assign</span>
               </button>
             </form>
           </div>

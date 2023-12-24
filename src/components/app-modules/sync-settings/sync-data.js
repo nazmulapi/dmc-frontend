@@ -16,7 +16,7 @@ const Manage = () => {
                 className="form-select form_border_focus rounded-1"
                 aria-label="Default select example"
               >
-                <option selected> select menu</option>
+                <option> select menu</option>
                 <option value="1">Minutes</option>
                 <option value="2">Hours</option>
               </select>
@@ -66,7 +66,7 @@ const Manage = () => {
                 className="form-select form_border_focus rounded-1"
                 aria-label="Default select example"
               >
-                <option selected> select menu</option>
+                <option> select menu</option>
                 <option value="1">Minutes</option>
                 <option value="2">Hours</option>
               </select>

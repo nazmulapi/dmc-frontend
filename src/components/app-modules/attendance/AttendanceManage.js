@@ -76,7 +76,7 @@ const AttendanceManage = () => {
                     className="form-select rounded-1 mb-3 form_border_focus"
                     aria-label="Default select example "
                   >
-                    <option selected>Select Department</option>
+                    <option>Select Department</option>
                     <option value="1">Doctor</option>
                     <option value="2">Staff</option>
                   </select>
@@ -152,9 +152,9 @@ const AttendanceManage = () => {
             <thead>
               <tr>
                 <th scope="row">
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="checkbox"
                       value=""
                       id=""
@@ -178,9 +178,9 @@ const AttendanceManage = () => {
                 {employeeData?.map((employee, index) => (
                   <tr>
                     <th scope="row">
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value=""
                           id=""
@@ -198,9 +198,9 @@ const AttendanceManage = () => {
 
                 {/* <tr>
                   <th scope="row">
-                    <div class="form-check">
+                    <div className="form-check">
                       <input
-                        class="form-check-input"
+                        className="form-check-input"
                         type="checkbox"
                         value=""
                         id=""
