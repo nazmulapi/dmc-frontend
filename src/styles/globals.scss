@@ -181,8 +181,8 @@ employee manage css end
   box-shadow: none !important;
 }
 
-// dynamic form 
-.form-inline {  
+// dynamic form
+.form-inline {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -230,5 +230,17 @@ employee manage css end
 .remove:hover {
   background-color: rgb(187, 43, 43);
 }
+.disabled {
+  cursor: no-drop;
+}
 
-
+// reset
+.form-control.is-invalid,
+.was-validated .form-control:invalid {
+  border-color: var(--bs-form-invalid-border-color) !important;
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: none !important;
+}
+.is-invalid .select__control {
+  border-color: var(--bs-form-invalid-border-color) !important;
+}

@@ -1,12 +1,12 @@
-import React from 'react'
-import CreateShift from '../../../components/app-modules/Shifting/CreateShift'
+import React from "react";
+import CreateShift from "../../../components/app-modules/shifting/CreateShift";
 
-const page = () => {
+const Page = () => {
   return (
     <>
-      <CreateShift/>
+      <CreateShift />
     </>
-  )
-}
+  );
+};
 
-export default page
+export default Page;

@@ -7,13 +7,15 @@ import Button from "react-bootstrap/Button";
 // import { RiDeleteBin6Line } from "react-icons/ri";
 import EditEmployee from "./EditEmployee";
 // import Form from "react-bootstrap/Form";
-// import { Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
+import classEase from "classease";
 import { fetcher } from "../../../lib/fetcher";
 import Pagination from "../../utils/Pagination";
+import { formatDate, getDate, getTime } from "../../../lib/helper";
 
 const ManageInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [pageSize, setPageSize] = useState(10);
 
   // const { data, error, isLoading } = useSWR(
   //   `/employee/?page=${currentPage}&page_size=${itemsPerPage}`,
@@ -24,32 +26,37 @@ const ManageInfo = () => {
     error,
     isValidating,
     isLoading,
-  } = useSWR(
-    `/employee/?page=${currentPage}&page_size=${itemsPerPage}`,
-    fetcher,
-    {
-      errorRetryCount: 2,
-    }
-  );
+    mutate,
+  } = useSWR(`/employee/?page=${currentPage}&page_size=${pageSize}`, fetcher, {
+    errorRetryCount: 2,
+  });
 
-  const totalPages = Math.ceil(apiData?.count / itemsPerPage);
+  const totalPages = Math.ceil(apiData?.count / pageSize);
   // const displayedData = apiData && apiData?.results;
 
   // const isLoading = isValidating && displayedData.length === 0;
 
-  // const totalPages = Math.ceil(data?.length / itemsPerPage);
+  // const totalPages = Math.ceil(data?.length / pageSize);
 
   // const { data, error, isLoading } = useSWR(`/employee/`, fetcher);
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
 
   // const displayedData = data?.slice(startIndex, endIndex);
 
-  // const totalPages = Math.ceil((data?.length || 0) / itemsPerPage);
+  // const totalPages = Math.ceil((data?.length || 0) / pageSize);
 
-  const onPageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1);
+    mutate();
   };
 
   const [displayedData, setDisplayedData] = useState([]);
@@ -114,7 +121,7 @@ const ManageInfo = () => {
           <table className="table table-bordered table-striped font_14">
             <thead>
               <tr>
-                <th scope="col">
+                {/* <th scope="col">
                   <div className="form-check p-0">
                     <input
                       className=""
@@ -123,7 +130,7 @@ const ManageInfo = () => {
                       id="EmployeeListAllCheckbox"
                     />
                   </div>
-                </th>
+                </th> */}
                 <th scope="col">SL</th>
                 <th scope="col">image</th>
                 <th scope="col">Employee ID</th>
@@ -144,7 +151,7 @@ const ManageInfo = () => {
               {displayedData && !error
                 ? displayedData.map((item, index) => (
                     <tr key={index}>
-                      <th scope="row">
+                      {/* <th scope="row">
                         <div className="form-check p-0">
                           <input
                             className=""
@@ -153,7 +160,7 @@ const ManageInfo = () => {
                             id={item.employee_id}
                           />
                         </div>
-                      </th>
+                      </th> */}
                       <th scope="row">{startIndex + index + 1}</th>
                       <th scope="row" className="text-center">
                         <img
@@ -181,24 +188,42 @@ const ManageInfo = () => {
             </tbody>
           </table>
 
-          {isLoading && (
+          {/* {isLoading && (
             <div className="loading-overlay">
               <p>Loading...</p>
             </div>
-          )}
+          )} */}
 
           {/* {isValidating && (
             <div className="loading-overlay">
               <p>Loading...</p>
             </div>
           )} */}
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={onPageChange}
-          />
         </div>
+        <Row>
+          <Col xs lg="9">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </Col>
+          <Col xs lg="3">
+            <div className="w-100 d-flex align-items-center justify-content-end mb-3">
+              <label>Page Size</label>
+              <select
+                className="rounded-1 form_border_focus form-control w-50 ms-2"
+                value={pageSize}
+                onChange={(e) => handlePageSizeChange(e.target.value)}
+              >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+            </div>
+          </Col>
+        </Row>
       </section>
     </>
   );

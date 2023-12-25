@@ -176,14 +176,15 @@ const AddEmployee = () => {
       newErrors.image = "Image is required";
       valid = false;
     } else {
-      const allowedExtensions = ["png", "jpg", "jpeg"];
+      // const allowedExtensions = ["png", "jpg", "jpeg"];
+      const allowedExtensions = ["jpg"];
       const maxFileSize = 300 * 1024; // 300 KB
 
       const fileName = formValues.image.name.toLowerCase();
       const fileExtension = fileName.split(".").pop();
 
       if (!allowedExtensions.includes(fileExtension)) {
-        newErrors.image = "Invalid image type. Supported types: png, jpg, jpeg";
+        newErrors.image = "Invalid image type. Supported types: jpg";
         valid = false;
       }
 
@@ -240,8 +241,6 @@ const AddEmployee = () => {
 
     const { name, value } = selectedOption;
 
-    console.log(name, value);
-
     setErrors({
       ...errors,
       [name]: "",
@@ -257,7 +256,6 @@ const AddEmployee = () => {
       [name]: selectedOption,
     }));
 
-    console.log(formValues);
     return;
   };
 
@@ -303,9 +301,6 @@ const AddEmployee = () => {
     setSuccess("");
 
     const valid = validateForm();
-
-    console.log("Form Value: ", formValues);
-    console.log("Error: ", errors);
 
     if (valid) {
       setIsLoading(true);
@@ -748,6 +743,7 @@ const AddEmployee = () => {
               "rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button",
               isLoading ? "loading" : ""
             )}
+            disabled={isLoading}
           >
             + Add
             {isLoading && (

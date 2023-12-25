@@ -23,7 +23,7 @@ export const setAuthToken = (token) => {
 export const checkIsAccessible = async (page) => {
   let token = Cookies.get(authTokenKey);
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user);
+  // console.log(user);
 
   if (page === "auth" && (token === undefined || token === null)) {
     return true;

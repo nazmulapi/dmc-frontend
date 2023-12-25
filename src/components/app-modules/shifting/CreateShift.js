@@ -151,7 +151,7 @@ const CreateShift = () => {
             </div>
           </Row>
           {/* <button className="button-16 fw-semibold" role="button">
-            <span class="text">Create</span>
+            <span className="text">Create</span>
           </button> */}
 
           <Button

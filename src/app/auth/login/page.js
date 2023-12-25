@@ -122,6 +122,7 @@ const Page = () => {
                           "w-100 rounded-1 mt-2 px-0 add_btn_color theme_color border-0 d-flex justify-content-center align-items-center app-button py-3 mb-3",
                           loading ? "loading" : ""
                         )}
+                        disabled={loading}
                       >
                         Login
                         {loading && (

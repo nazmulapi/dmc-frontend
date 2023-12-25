@@ -1,16 +1,8 @@
+import classEase from "classease";
 import React from "react";
 import { Pagination as BootstrapPagination } from "react-bootstrap";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const pageItems = [];
-
-  const MAX_PAGES = 5; // Maximum number of pages to show in pagination
-
-  const renderEllipsis = (key) => (
-    <BootstrapPagination.Ellipsis key={key} disabled />
-  );
-
-  // Function to render individual page item
   const renderPageItem = (pageNumber) => (
     <BootstrapPagination.Item
       key={pageNumber}
@@ -21,7 +13,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     </BootstrapPagination.Item>
   );
 
-  // Function to render a range of pages with ellipsis in between
   const renderPageRange = (start, end) => {
     const range = [];
     for (let i = start; i <= end; i++) {
@@ -30,47 +21,64 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     return range;
   };
 
-  if (totalPages <= MAX_PAGES) {
-    // If total pages are less than or equal to the maximum pages to show
-    pageItems.push(...renderPageRange(1, totalPages));
-  } else {
-    // If total pages are more than the maximum pages to show, include ellipsis
-    const showEllipsisStart = currentPage > MAX_PAGES - 2;
-    const showEllipsisEnd = currentPage < totalPages - 2;
-
-    if (showEllipsisStart) {
-      pageItems.push(renderPageItem(1));
-      pageItems.push(renderEllipsis("start"));
-    }
-
-    if (showEllipsisEnd && !showEllipsisStart) {
-      pageItems.push(renderPageRange(1, 2));
-      pageItems.push(renderEllipsis("middle"));
-    }
-
-    const start = showEllipsisStart ? currentPage - 1 : 2;
-    const end = showEllipsisEnd ? totalPages - 1 : MAX_PAGES - 2;
-
-    pageItems.push(...renderPageRange(start, end));
-
-    if (showEllipsisEnd) {
-      pageItems.push(renderEllipsis("end"));
-      pageItems.push(renderPageItem(totalPages));
-    }
-  }
-
   return (
     <BootstrapPagination>
+      <BootstrapPagination.First
+        disabled={currentPage === 1}
+        className={classEase(currentPage === 1 && "disabled")}
+        onClick={() => onPageChange(1)}
+      />
+
       <BootstrapPagination.Prev
         disabled={currentPage === 1}
+        className={classEase(currentPage === 1 && "disabled")}
         onClick={() => onPageChange(currentPage - 1)}
       />
 
-      {pageItems}
+      {totalPages >= 5 ? (
+        <>
+          {currentPage === 1 || currentPage === 2
+            ? renderPageRange(1, 5)
+            : currentPage === totalPages - 1
+            ? renderPageRange(totalPages - 4, totalPages)
+            : currentPage === totalPages
+            ? renderPageRange(totalPages - 4, totalPages)
+            : currentPage > 2 || currentPage < totalPages - 2
+            ? renderPageRange(currentPage - 2, currentPage + 2)
+            : ""}
+        </>
+      ) : (
+        renderPageRange(1, totalPages)
+      )}
+
+      {/* {currentPage > 2 && (
+        <>
+          {renderPageItem(1)}
+          <span className="ellipsis">...</span>
+          {renderPageRange(currentPage - 1, currentPage + 1)}
+        </>
+      )} */}
+
+      {/* {currentPage > 2 && <span className="ellipsis">...</span>} */}
+
+      {/* {currentPage > 2 &&
+        currentPage < totalPages &&
+        renderPageRange(currentPage, currentPage + 1)} */}
+
+      {/* {currentPage < totalPages - 1 && <span className="ellipsis">...</span>}
+
+      {totalPages > 1 && renderPageItem(totalPages)} */}
 
       <BootstrapPagination.Next
         disabled={currentPage === totalPages}
+        className={classEase(currentPage === totalPages && "disabled")}
         onClick={() => onPageChange(currentPage + 1)}
+      />
+
+      <BootstrapPagination.Last
+        disabled={currentPage === totalPages}
+        className={classEase(currentPage === totalPages && "disabled")}
+        onClick={() => onPageChange(totalPages)}
       />
     </BootstrapPagination>
   );

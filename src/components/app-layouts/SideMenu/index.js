@@ -168,7 +168,7 @@ const Page = () => {
                         href="/raw-employee"
                         className="text-decoration-none text-white side_font"
                       >
-                        Employee Raw info
+                        Raw Data
                       </Link>
                     </li>
                     <li className="text-capitalize text-white text-decoration-none">
@@ -176,7 +176,7 @@ const Page = () => {
                         href="/attendance"
                         className="text-decoration-none text-white side_font"
                       >
-                        Manage Attendance
+                        Structured Data
                       </Link>
                     </li>
                   </ul>
@@ -189,7 +189,7 @@ const Page = () => {
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <LuNewspaper className="text-light" />
                   <span className="ms-2 text-white text-capitalize side_font">
-                     manage Device
+                    manage Device
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -262,7 +262,6 @@ const Page = () => {
                         Sync Now
                       </Link>
                     </li>
-                    
                   </ul>
                 </Accordion.Body>
               </Accordion.Item>

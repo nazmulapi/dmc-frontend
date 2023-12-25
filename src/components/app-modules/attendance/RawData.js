@@ -15,10 +15,12 @@ const ManageInfo = () => {
   return (
     <>
       <section>
-      <div>
-          <h2 className="border-bottom pb-2 mb-4 text-capitalize">employee raw information</h2>
+        <div>
+          <h2 className="border-bottom pb-2 mb-4 text-capitalize">
+            Attendance raw data
+          </h2>
         </div>
-      <div className="form_part mb-3">
+        <div className="form_part mb-3">
           <form>
             <Row>
               <Col lg={6}>
@@ -27,7 +29,7 @@ const ManageInfo = () => {
                     className="form-select rounded-1 mb-3 form_border_focus"
                     aria-label="Default select example "
                   >
-                    <option selected>Select Department</option>
+                    <option>Select Department</option>
                     <option value="1">Doctor</option>
                     <option value="2">Staff</option>
                   </select>
@@ -48,7 +50,7 @@ const ManageInfo = () => {
                     className="form-select rounded-1 mb-3 form_border_focus"
                     aria-label="Default select example "
                   >
-                    <option selected>Select Year</option>
+                    <option>Select Year</option>
                     <option value="1">2023</option>
                     <option value="2">2022</option>
                     <option value="2">2021</option>
@@ -60,7 +62,7 @@ const ManageInfo = () => {
                     className="form-select rounded-1 mb-3 form_border_focus"
                     aria-label="Default select example "
                   >
-                    <option selected>Select Month</option>
+                    <option>Select Month</option>
                     <option value="1">January</option>
                     <option value="2">February</option>
                     <option value="3">March</option>
@@ -107,7 +109,7 @@ const ManageInfo = () => {
                 <th scope="col">Employee Name</th>
                 <th scope="col">In Time</th>
                 <th scope="col">Designation</th>
-                <th scope="col">Status</th> 
+                <th scope="col">Status</th>
               </tr>
             </thead>
             <tbody>
