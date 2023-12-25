@@ -16,8 +16,8 @@ const Page = () => {
     <>
       <Row>
         {data &&
-          data.map((d) => (
-            <Col lg={3} key={d.device_id}>
+          data.map((d, index) => (
+            <Col lg={3} key={index}>
               {/* <Link href="#" className="text-decoration-none"> */}
               <div className="screen_one rounded-1 p-4 text-center mb-4">
                 <div data-aos="fade-up" data-aos-duration="700">

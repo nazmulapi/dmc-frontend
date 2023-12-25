@@ -7,10 +7,10 @@ import Spinner from "react-bootstrap/Spinner";
 import Link from "next/link";
 import useSWR from "swr";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-import { submit } from "../../../lib/submit";
-
-import { fetcher } from "../../../lib/fetcher";
 import classEase from "classease";
+import { submit } from "../../../lib/submit";
+import { fetcher } from "../../../lib/fetcher";
+import { formatDate } from "../../../lib/helper";
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -48,12 +48,10 @@ const Page = () => {
 
   const handleChange = (selected) => {
     setSelectedDevices(selected);
-    console.log("Selected devices:", selected);
   };
 
   const handleSync = async (e) => {
     const response = await submit("/log/", selectedDevices);
-    console.log(response);
   };
 
   const handleSubmit = async (e) => {
@@ -64,18 +62,35 @@ const Page = () => {
     // console.log(formData);
     // return;
     const response = await submit("/log/");
-    console.log(response);
+    // console.log(response);
     if (response?.["Sync Status"]) {
+      // After successful sync operation
+      const lastSyncDateTime = new Date().toISOString();
+      localStorage.setItem("lastSyncDateTime", lastSyncDateTime);
+      setLastSyncDateTime(lastSyncDateTime);
       setTimeout(() => {
         setSuccess("Sync successfull");
         setIsLoading(false);
       }, 1000);
+
+      setTimeout(() => {
+        setSuccess("");
+      }, 3000);
     }
   };
 
+  const [lastSyncDateTime, setLastSyncDateTime] = useState(null);
+
+  // When the component is mounted or page is loaded
+  useEffect(() => {
+    const storedLastSyncDateTime = localStorage.getItem("lastSyncDateTime");
+    // Do something with storedLastSyncDateTime, e.g., update state
+    setLastSyncDateTime(storedLastSyncDateTime);
+  }, []);
+
   return (
     <>
-      <div className="d-flex">
+      {/* <div className="d-flex">
         <Col lg={4}>
           <div className="mb-4 rounded-1 multi_select">
             <DropdownMultiselect
@@ -102,7 +117,7 @@ const Page = () => {
             Sync
           </button>
         </div>
-      </div>
+      </div> */}
 
       <div>
         <h2 className="text-capitalize text-center">Sync employee data</h2>
@@ -122,6 +137,7 @@ const Page = () => {
               isLoading ? "loading" : ""
             )}
             onClick={handleSubmit}
+            disabled={isLoading}
           >
             Sync now
             {isLoading && (
@@ -140,7 +156,9 @@ const Page = () => {
         </div>
 
         <p className="text-center font_18">
-          last data sync date: 10-10-2023 at 00:00:00 pm
+          {lastSyncDateTime && (
+            <>last data sync date: {formatDate(lastSyncDateTime)}</>
+          )}
         </p>
 
         {success && success !== "" && (

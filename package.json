@@ -15,8 +15,11 @@
     "bootstrap": "^5.3.1",
     "classease": "^1.0.1",
     "dotenv": "^16.3.1",
+    "export-to-csv": "^1.2.2",
     "formik": "^2.4.4",
     "js-cookie": "^3.0.5",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.1",
     "next": "13.4.19",
     "react": "18.2.0",
     "react-bootstrap": "^2.8.0",
@@ -28,6 +31,7 @@
     "react-router-dom": "^6.15.0",
     "react-select": "^5.8.0",
     "swr": "^2.2.4",
+    "xlsx": "^0.18.5",
     "yup": "^1.2.0"
   },
   "devDependencies": {

@@ -13,6 +13,7 @@ import Pagination from "../../utils/Pagination";
 import { fetcher } from "../../../lib/fetcher";
 import { submit } from "../../../lib/submit";
 import { formatDate, getDate, getTime } from "../../../lib/helper";
+import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
 const AttendanceManage = () => {
   const [formValues, setFormValues] = useState({
@@ -184,6 +185,18 @@ const AttendanceManage = () => {
     }
   }, [isLoading, isValidating]);
 
+  const handleExportToPDF = () => {
+    exportToPDF(employeeData);
+  };
+
+  const handleExportToCSV = () => {
+    exportToCSV();
+  };
+
+  const handleExportToExcel = () => {
+    exportToExcel();
+  };
+
   return (
     <>
       <section>
@@ -316,8 +329,9 @@ const AttendanceManage = () => {
             <div className="d-flex justify-content-between">
               <div className="me-2">
                 <Button
-                  type="submit"
+                  type="button"
                   className="rounded-1 px-4 add_btn_color border-0"
+                  onClick={() => handleExportToPDF()}
                 >
                   PDF
                 </Button>
@@ -326,6 +340,7 @@ const AttendanceManage = () => {
                 <Button
                   type="submit"
                   className="rounded-1 px-4 add_btn_color border-0"
+                  onClick={() => handleExportToCSV()}
                 >
                   CSV
                 </Button>
@@ -334,6 +349,7 @@ const AttendanceManage = () => {
                 <Button
                   type="submit"
                   className="rounded-1 px-4 add_btn_color border-0"
+                  onClick={() => handleExportToExcel()}
                 >
                   Excel
                 </Button>

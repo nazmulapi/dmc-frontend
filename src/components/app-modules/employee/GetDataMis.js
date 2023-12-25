@@ -11,13 +11,13 @@ function MyVerticallyCenteredModal(props) {
       centered
     >
       <Modal.Header closeButton>
-      <Modal.Title id="contained-modal-title-vcenter">
+        <Modal.Title id="contained-modal-title-vcenter">
           Get Data From MIS
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="mb-3">
-          <label for="" className="form-label">
+          <label htmlFor="" className="form-label">
             Enter Employee ID
           </label>
           <input

@@ -78,7 +78,8 @@ const AddDesignation = () => {
         }, 1000);
       } else {
         setTimeout(() => {
-          setSuccess("Something went wrong!");
+          // setSuccess("Something went wrong!");
+          setSuccess(response?.message || "Something went wrong!");
           setIsLoading(false);
           // setErrors({});
           setFormData({
@@ -147,6 +148,7 @@ const AddDesignation = () => {
                 "rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button",
                 isLoading ? "loading" : ""
               )}
+              disabled={isLoading}
             >
               + Add
               {isLoading && (

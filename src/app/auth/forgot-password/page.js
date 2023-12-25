@@ -246,6 +246,7 @@ const Page = () => {
                       "btn btn-primary mb-3 rounded-1 w-100 py-2 add_btn_color d-flex justify-content-center align-items-center app-button border-0 mt-2 px-4",
                       isLoading?.email ? "loading" : ""
                     )}
+                    disabled={isLoading?.email}
                   >
                     Send email
                     {isLoading?.email && (
@@ -289,7 +290,7 @@ const Page = () => {
                   </label>
                   <input
                     id="exampleFormControlInput2"
-                    type="text"
+                    type="password"
                     placeholder="New password"
                     name="password"
                     value={formValues.password}
@@ -348,6 +349,7 @@ const Page = () => {
                         "btn btn-primary mb-3 rounded-1 w-100 py-2 add_btn_color d-flex justify-content-center align-items-center app-button border-0 mt-2 px-4",
                         isLoading?.password ? "loading" : ""
                       )}
+                      disabled={isLoading?.password}
                     >
                       Reset Password
                       {isLoading?.password && (
