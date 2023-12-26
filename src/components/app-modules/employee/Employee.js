@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import useSWR from "swr";
 import Select from "react-select";
-import { Col, Row, Tab, Tabs } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";

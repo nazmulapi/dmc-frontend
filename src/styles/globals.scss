@@ -238,7 +238,7 @@ employee manage css end
 .form-control.is-invalid,
 .was-validated .form-control:invalid {
   border-color: var(--bs-form-invalid-border-color) !important;
-  padding-right: calc(1.5em + 0.75rem);
+  padding-right: 0.75rem !important;
   background-image: none !important;
 }
 .is-invalid .select__control {
