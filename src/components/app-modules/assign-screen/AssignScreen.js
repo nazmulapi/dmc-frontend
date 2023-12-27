@@ -142,7 +142,7 @@ const AssignScreen = () => {
 
       if (response?.id) {
         setTimeout(() => {
-          setSuccess("Employee created successfully");
+          setSuccess("Assigned screen successfully");
           setIsLoading(false);
           setData((prevData) => [response, ...prevData]);
           // setErrors({});

@@ -340,6 +340,42 @@ const AddEmployee = () => {
     }
   };
 
+  const [fetchedMis, setFetchedMis] = useState({});
+
+  const [isDataFetched, setIsDataFetched] = useState(false);
+
+  const handleGetDataMis = async () => {
+    try {
+      // Call the GetDataMis modal and get the employee data
+      const employeeData = await getDataMisModal();
+
+      // Update form values with the fetched data
+      setFormValues(employeeData.formValues);
+      setSelectFormValues(employeeData.selectFormValues);
+      // Update other state variables as needed
+
+      // Mark the data as fetched
+      setIsDataFetched(true);
+    } catch (error) {
+      // Handle errors
+      console.error("Error fetching or updating employee data:", error);
+    }
+  };
+
+  const getDataMisModal = () => {
+    // Implement logic to show the GetDataMis modal
+    // Return a Promise that resolves with the received employee data
+    return new Promise((resolve, reject) => {
+      // For simplicity, simulate an asynchronous API call
+      setTimeout(() => {
+        resolve({
+          formValues: {},
+          selectFormValues: {},
+        });
+      }, 1000);
+    });
+  };
+
   return (
     <div className="add_employ">
       <div className="border-bottom d-flex justify-content-between align-items-center">
@@ -347,7 +383,14 @@ const AddEmployee = () => {
           add employee
         </div>
         <div>
-          <GetDataMis />
+          <GetDataMis
+            onDataReceived={(data) => handleGetDataMis(data)}
+            data={{
+              designations: designationsData,
+              departments: departmentsData,
+              shifts: shiftsData,
+            }}
+          />
         </div>
       </div>
 
