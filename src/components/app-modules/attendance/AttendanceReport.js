@@ -11,8 +11,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
 import Pagination from "../../utils/Pagination";
 import { fetcher } from "../../../lib/fetcher";
-import { submit } from "../../../lib/submit";
-import { formatDate, getDate, getTime } from "../../../lib/helper";
+import { getDate, getTime } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
 const AttendanceManage = () => {
@@ -50,6 +49,7 @@ const AttendanceManage = () => {
     fetcher,
     {
       errorRetryCount: 2,
+      keepPreviousData: true,
     }
   );
 
@@ -63,6 +63,7 @@ const AttendanceManage = () => {
     isLoading: groupsFetchIsLoading,
   } = useSWR(`/empgrp/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const groups = groupsData?.map((item) => ({
@@ -180,6 +181,7 @@ const AttendanceManage = () => {
 
   useEffect(() => {
     if (!isLoading && !error) {
+      console.log(apiData?.results);
       setEmployeeData(apiData?.results || []);
       console.log(apiData?.results);
     }
@@ -197,7 +199,7 @@ const AttendanceManage = () => {
     ];
 
     const data = employeeData.map((item) => ({
-      ID: item.ID,
+      ID: item.employee_id,
       username: item.username,
       InTime: getTime(item.InTime),
       OutTime: getTime(item.OutTime),
@@ -208,35 +210,8 @@ const AttendanceManage = () => {
   };
 
   const handleExportToCSV = () => {
-    const columns = [
-      {
-        accessorKey: "ID",
-        header: "Employee ID",
-        size: 40,
-      },
-      {
-        accessorKey: "username",
-        header: "Employee Name",
-        size: 120,
-      },
-      {
-        accessorKey: "InTime",
-        header: "In Time",
-        size: 120,
-      },
-      {
-        accessorKey: "OutTime",
-        header: "Out Time",
-        size: 300,
-      },
-      {
-        accessorKey: "Date",
-        header: "Date",
-      },
-    ];
-
     const data = employeeData.map((item) => ({
-      "Employee ID": item.ID,
+      "Employee ID": item.employee_id,
       "Employee Name": item.username,
       "In Time": getTime(item.InTime),
       "Out Time": getTime(item.OutTime),
@@ -248,7 +223,7 @@ const AttendanceManage = () => {
 
   const handleExportToExcel = () => {
     const data = employeeData.map((item) => ({
-      "Employee ID": item.ID,
+      "Employee ID": item.employee_id,
       "Employee Name": item.username,
       "In Time": getTime(item.InTime),
       "Out Time": getTime(item.OutTime),
@@ -422,7 +397,7 @@ const AttendanceManage = () => {
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
-                <th scope="row">
+                {/* <th scope="row">
                   <div className="form-check">
                     <input
                       className="form-check-input"
@@ -431,7 +406,7 @@ const AttendanceManage = () => {
                       id=""
                     />
                   </div>
-                </th>
+                </th> */}
                 <th scope="col">SL</th>
                 <th scope="col">Employee ID</th>
                 <th scope="col">Employee Name</th>
@@ -448,7 +423,7 @@ const AttendanceManage = () => {
               <tbody>
                 {employeeData?.map((item, index) => (
                   <tr key={index}>
-                    <th scope="row">
+                    {/* <th scope="row">
                       <div className="form-check">
                         <input
                           className="form-check-input"
@@ -457,11 +432,13 @@ const AttendanceManage = () => {
                           id=""
                         />
                       </div>
-                    </th>
+                    </th> */}
                     <th scope="row">{startIndex + index + 1}</th>
                     <td>{item?.employee_id}</td>
                     <td>{item?.username}</td>
-                    <td className="text-danger">{getTime(item?.InTime)}</td>
+                    <td className={item?.delay_minutes && "text-danger"}>
+                      {getTime(item?.InTime)}
+                    </td>
                     <td>{getTime(item?.OutTime)}</td>
                     <td>{getDate(item?.InTime)}</td>
                     {/*<td>00:00:00</td>

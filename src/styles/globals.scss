@@ -72,8 +72,12 @@ button.actions-btn.btn.btn-light {
 employee manage css start
 ========================*/
 .table_user_img {
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+  overflow: hidden;
 }
 /*=====================
 employee manage css end

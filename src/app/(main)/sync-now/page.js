@@ -22,6 +22,7 @@ const Page = () => {
     isLoading: isFetchLoading,
   } = useSWR(`/devices/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const [optionsUpdated, setOptionsUpdated] = useState(false);

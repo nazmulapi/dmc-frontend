@@ -18,6 +18,7 @@ const DepartmentManager = () => {
 
   const { error, isLoading } = useSWR(`/department/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
     onSuccess: (fetchedData) => {
       // Update local state when data is successfully fetched
       setData(fetchedData);
@@ -83,7 +84,7 @@ const DepartmentManager = () => {
                 </div>
               </div>
             </div>
-            <div className="d-flex justify-content-between">
+            {/* <div className="d-flex justify-content-between">
               <div className="me-2">
                 <Button
                   type="submit"
@@ -108,7 +109,7 @@ const DepartmentManager = () => {
                   Excel
                 </Button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="employee_table table-responsive">

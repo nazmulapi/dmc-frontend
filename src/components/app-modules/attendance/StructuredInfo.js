@@ -11,20 +11,26 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
 import Pagination from "../../utils/Pagination";
 import { fetcher } from "../../../lib/fetcher";
-import { submit } from "../../../lib/submit";
-import { formatDate } from "../../../lib/helper";
+import { getDate, getTime } from "../../../lib/helper";
+import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
-const AttendanceManage = () => {
+const ManageInfo = () => {
   const [formValues, setFormValues] = useState({
-    date: "",
     group_id: "",
+    year: "",
+    month: "",
+    employee_id: "",
   });
+
   const [selectFormValues, setSelectFormValues] = useState({
     group_id: "",
+    year: "",
+    month: "",
   });
+
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
-  const [isInitialLoading, setIsLoading] = useState(false);
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -35,19 +41,21 @@ const AttendanceManage = () => {
     error,
     isValidating,
     isLoading,
+    mutate,
   } = useSWR(
     formSubmitted
-      ? `/attendance_log/?page=${currentPage}&page_size=${pageSize}`
+      ? `/structuedlog/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&page=${currentPage}&page_size=${pageSize}`
       : null,
     fetcher,
     {
       errorRetryCount: 2,
+      keepPreviousData: true,
     }
   );
 
-  const totalPages = Math.ceil(apiData?.count / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
+  const totalPages = Math.ceil(apiData?.count / Number(pageSize));
+  const startIndex = (currentPage - 1) * Number(pageSize);
+  const endIndex = startIndex + Number(pageSize);
 
   const {
     data: groupsData,
@@ -55,6 +63,7 @@ const AttendanceManage = () => {
     isLoading: groupsFetchIsLoading,
   } = useSWR(`/empgrp/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const groups = groupsData?.map((item) => ({
@@ -62,6 +71,46 @@ const AttendanceManage = () => {
     label: item.group_name,
     value: item.group_id,
   }));
+
+  // const years = [2015, 2016, 2017]?.map((item) => ({
+  //   name: "year",
+  //   label: item,
+  //   value: item,
+  // }));
+
+  const generateYears = () => {
+    const currentYear = new Date().getFullYear();
+    const startYear = 2015;
+    const years = [];
+
+    for (let year = currentYear; year >= startYear; year--) {
+      years.push({
+        name: "year",
+        label: year.toString(),
+        value: year,
+      });
+    }
+
+    return years;
+  };
+
+  const years = generateYears();
+
+  const months = [
+    { name: "month", label: "Select Month", value: null },
+    { name: "month", label: "January", value: "01" },
+    { name: "month", label: "February", value: "02" },
+    { name: "month", label: "March", value: "03" },
+    { name: "month", label: "April", value: "04" },
+    { name: "month", label: "May", value: "05" },
+    { name: "month", label: "June", value: "06" },
+    { name: "month", label: "July", value: "07" },
+    { name: "month", label: "August", value: "08" },
+    { name: "month", label: "September", value: "09" },
+    { name: "month", label: "October", value: "10" },
+    { name: "month", label: "November", value: "11" },
+    { name: "month", label: "December", value: "12" },
+  ];
 
   const handleSelectChange = async (selectedOption, key) => {
     setSuccess("");
@@ -111,7 +160,8 @@ const AttendanceManage = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setSuccess("");
-    setIsLoading(true);
+    console.log(formValues);
+    setIsSubmitLoading(true);
     setFormSubmitted(true);
   };
 
@@ -123,16 +173,59 @@ const AttendanceManage = () => {
 
   const handlePageSizeChange = (newPageSize) => {
     setPageSize(newPageSize);
+    setCurrentPage(1);
+    mutate();
   };
 
   const [employeeData, setEmployeeData] = useState([]);
 
   useEffect(() => {
     if (!isLoading && !error) {
+      console.log(apiData?.results);
       setEmployeeData(apiData?.results || []);
       console.log(apiData?.results);
     }
   }, [isLoading, isValidating]);
+
+  const handleExportToPDF = async () => {
+    // console.log(employeeData);
+    // return;
+    const headers = ["Employee ID", "Employee Name", "Device", "Date", "Time"];
+
+    const data = employeeData.map((item) => ({
+      ID: item.employee_id,
+      username: item.username,
+      Device: item.device_id,
+      Date: getDate(item.InTime),
+      Time: getTime(item.InTime),
+    }));
+
+    exportToPDF(headers, data, "attendance-structured-data");
+  };
+
+  const handleExportToCSV = () => {
+    const data = employeeData.map((item) => ({
+      "Employee ID": item.employee_id,
+      "Employee Name": item.username,
+      Device: item.device_id,
+      Date: getDate(item.InTime),
+      Time: getTime(item.InTime),
+    }));
+
+    exportToCSV(data, "attendance-structured-data");
+  };
+
+  const handleExportToExcel = () => {
+    const data = employeeData.map((item) => ({
+      "Employee ID": item.employee_id,
+      "Employee Name": item.username,
+      Device: item.device_id,
+      Date: getDate(item.InTime),
+      Time: getTime(item.InTime),
+    }));
+
+    exportToExcel(data, "attendance-structured-data");
+  };
 
   return (
     <>
@@ -163,8 +256,8 @@ const AttendanceManage = () => {
                   />
 
                   {/* <select
-
-
+                    className="form-select rounded-1 mb-3 form_border_focus"
+                    aria-label="Default select example "
                   >
                     <option>Select Department</option>
                     <option value="1">Doctor</option>
@@ -178,24 +271,81 @@ const AttendanceManage = () => {
                     id=""
                     placeholder="Employee ID"
                     className="form-control form_border_focus rounded-1"
+                    onChange={(e) =>
+                      setFormValues((prev) => ({
+                        ...prev,
+                        employee_id: e.target.value,
+                      }))
+                    }
                   />
                 </div>
               </Col>
               <Col lg={6}>
                 <div>
-                  <input
-                    type="date"
-                    className="form-control rounded-1 mb-3 form_border_focus"
+                  <Select
+                    className={classEase("rounded-1 form_border_focus mb-3")}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.year}
+                    options={years}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "year")
+                    }
+                    placeholder="Select year..."
                   />
+
+                  {/* <select
+                    className="form-select rounded-1 mb-3 form_border_focus"
+                    aria-label="Default select example "
+                  >
+                    <option>Select Year</option>
+                    <option value="1">2023</option>
+                    <option value="2">2022</option>
+                    <option value="2">2021</option>
+                    <option value="2">2020</option>
+                  </select> */}
                 </div>
-                {/* <div>
-                  <input
-                    type="date"
-                    className="form-control rounded-1 mb-3 form_border_focus"
+                <div>
+                  <Select
+                    className={classEase("rounded-1 form_border_focus mb-3")}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.month}
+                    options={months}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "month")
+                    }
+                    placeholder="Select month..."
                   />
-                </div> */}
+
+                  {/* <select
+                    className="form-select rounded-1 mb-3 form_border_focus"
+                    aria-label="Default select example "
+                  >
+                    <option>Select Month</option>
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="11">December</option>
+                  </select> */}
+                </div>
               </Col>
-              <div className="d-flex justify-content-center mt-3">
+
+              <div className="d-flex justify-content-center">
                 <button
                   className="rounded-1 theme_color text-white px-3 py-2 border-0"
                   type="submit"
@@ -206,13 +356,14 @@ const AttendanceManage = () => {
             </Row>
           </form>
         </div>
-        {/* <div className="search_part border mb-3">
+        <div className="search_part border mb-3">
           <div className="d-flex justify-content-end p-2">
             <div className="d-flex justify-content-between">
               <div className="me-2">
                 <Button
-                  type="submit"
+                  type="button"
                   className="rounded-1 px-4 add_btn_color border-0"
+                  onClick={() => handleExportToPDF()}
                 >
                   PDF
                 </Button>
@@ -221,6 +372,7 @@ const AttendanceManage = () => {
                 <Button
                   type="submit"
                   className="rounded-1 px-4 add_btn_color border-0"
+                  onClick={() => handleExportToCSV()}
                 >
                   CSV
                 </Button>
@@ -229,101 +381,68 @@ const AttendanceManage = () => {
                 <Button
                   type="submit"
                   className="rounded-1 px-4 add_btn_color border-0"
+                  onClick={() => handleExportToExcel()}
                 >
                   Excel
                 </Button>
               </div>
             </div>
           </div>
-        </div> */}
-
+        </div>
         <div className="employee_table table-responsive">
-          <table className="table table-bordered table-striped">
+          <table className="table table-bordered table-striped font_14">
             <thead>
               <tr>
-                <th scope="row">
-                  <div className="form-check">
+                {/* <th scope="col">
+                  <div className="form-check p-0">
                     <input
-                      className="form-check-input"
+                      className=""
                       type="checkbox"
                       value=""
-                      id=""
+                      id="EmployeeListAllCheckbox"
                     />
                   </div>
-                </th>
+                </th> */}
                 <th scope="col">SL</th>
+                {/* <th scope="col">image</th> */}
                 <th scope="col">Employee ID</th>
                 <th scope="col">Employee Name</th>
-                <th scope="col">In Time</th>
-                <th scope="col">Out Time</th>
+                <th scope="col">Device</th>
                 <th scope="col">Date</th>
-                {/*<th scope="col">Tardiness</th>
-                <th scope="col">Minutes</th>
-                <th scope="col">Cumulative</th>
-                <th scope="col">Action</th> */}
+                <th scope="col">Time</th>
+                {/* <th scope="col">Designation</th>
+                <th scope="col">Status</th> */}
               </tr>
             </thead>
             {formSubmitted && (
               <tbody>
-                {employeeData?.map((employee, index) => (
-                  <tr>
-                    <th scope="row">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id=""
-                        />
+                {employeeData?.map((item, index) => (
+                  <tr key={index}>
+                    {/* <th scope="row">
+                      <div className="form-check p-0">
+                        <input className="" type="checkbox" value="" id="" />
                       </div>
-                    </th>
+                    </th> */}
                     <th scope="row">{startIndex + index + 1}</th>
-                    <td>{employee.employee_id}</td>
-                    <td>{employee.username}</td>
-                    <td>{formatDate(employee.InTime)}</td>
-                    <td>{formatDate(employee.OutTime)}</td>
-                    <td>NA</td>
+                    {/* <th scope="row" className="text-center">
+                      <img
+                        src={getStoragePath(item?.image_url)}
+                        alt=""
+                        className="table_user_img"
+                      />
+                    </th> */}
+                    <td>{item?.employee_id}</td>
+                    <td>{item?.username}</td>
+                    <td>{item?.device_id}</td>
+                    <td>{getDate(item?.InTime)}</td>
+                    <td>{getTime(item?.InTime)}</td>
+                    {/* <td>N/A</td>
+                    <td>N/A</td> */}
                   </tr>
                 ))}
-
-                {/* <tr>
-                  <th scope="row">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        value=""
-                        id=""
-                      />
-                    </div>
-                  </th>
-                  <th scope="row">2</th>
-                  <td>API00000</td>
-                  <td>Md Azad </td>
-                  <td>00:00:00</td>
-                  <td>00:00:00</td>
-                  <td>00-00-0000</td>
-                  <td>00:00:00</td>
-                  <td>00:00:00</td>
-                  <td>00:00:00</td>
-                  <td>
-                    <button className="add_btn_color border-0 rounded-1 me-2">
-                      <FaRegEdit color="white" />
-                    </button>
-                    <button className="bg-danger border-0 rounded-1">
-                      <RiDeleteBin6Line color="white" />
-                    </button>
-                  </td>
-                </tr> */}
               </tbody>
             )}
           </table>
-
-          {isLoading && (
-            <div className="loading-overlay">
-              <p>Loading...</p>
-            </div>
-          )}
         </div>
         <Row>
           <Col xs lg="9">
@@ -341,10 +460,10 @@ const AttendanceManage = () => {
                 value={pageSize}
                 onChange={(e) => handlePageSizeChange(e.target.value)}
               >
-                <option value="1">1</option>
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="15">15</option>
+                <option value="20">20</option>
               </select>
             </div>
           </Col>
@@ -354,4 +473,4 @@ const AttendanceManage = () => {
   );
 };
 
-export default AttendanceManage;
+export default ManageInfo;

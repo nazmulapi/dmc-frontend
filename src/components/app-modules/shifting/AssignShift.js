@@ -29,6 +29,7 @@ const AssignShift = () => {
     isLoading: shiftsFetchIsLoading,
   } = useSWR(`/shift/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const shifts = shiftsData?.map((item) => ({

@@ -24,6 +24,7 @@ const Page = () => {
     mutate,
   } = useSWR(`/dashboard/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const dataObj = dashboardData ? dashboardData.data[0] : {};

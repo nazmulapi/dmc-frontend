@@ -18,6 +18,7 @@ const AssignScreen = () => {
 
   const { error, loading } = useSWR(`/grpdev/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
     onSuccess: (fetchedData) => {
       // Update local state when data is successfully fetched
       setData(fetchedData);
@@ -44,6 +45,7 @@ const AssignScreen = () => {
     isLoading: devicesFetchIsLoading,
   } = useSWR(`/devices/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const devices = devicesData?.map((item) => ({
@@ -58,6 +60,7 @@ const AssignScreen = () => {
     isLoading: groupsFetchIsLoading,
   } = useSWR(`/empgrp/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const groups = groupsData?.map((item) => ({
