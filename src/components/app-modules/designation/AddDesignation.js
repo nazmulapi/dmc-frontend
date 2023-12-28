@@ -101,7 +101,7 @@ const AddDesignation = () => {
           <form onSubmit={(e) => handleSubmit(e)} method="POST">
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
-                Designation
+                Designation <span className="text-danger"> *</span>
               </label>
               <input
                 type="text"
