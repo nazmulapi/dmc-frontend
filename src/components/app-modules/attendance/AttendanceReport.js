@@ -45,7 +45,7 @@ const AttendanceManage = () => {
     mutate,
   } = useSWR(
     formSubmitted
-      ? `/attendance_log/?date=${formValues.year}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&page=${currentPage}&page_size=${pageSize}`
+      ? `/attendance_log/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&page=${currentPage}&page_size=${pageSize}`
       : null,
     fetcher,
     {
@@ -97,18 +97,18 @@ const AttendanceManage = () => {
 
   const months = [
     { name: "month", label: "Select Month", value: null },
-    { name: "month", label: "January", value: 1 },
-    { name: "month", label: "February", value: 2 },
-    { name: "month", label: "March", value: 3 },
-    { name: "month", label: "April", value: 4 },
-    { name: "month", label: "May", value: 5 },
-    { name: "month", label: "June", value: 6 },
-    { name: "month", label: "July", value: 7 },
-    { name: "month", label: "August", value: 8 },
-    { name: "month", label: "September", value: 9 },
-    { name: "month", label: "October", value: 10 },
-    { name: "month", label: "November", value: 11 },
-    { name: "month", label: "December", value: 12 },
+    { name: "month", label: "January", value: "01" },
+    { name: "month", label: "February", value: "02" },
+    { name: "month", label: "March", value: "03" },
+    { name: "month", label: "April", value: "04" },
+    { name: "month", label: "May", value: "05" },
+    { name: "month", label: "June", value: "06" },
+    { name: "month", label: "July", value: "07" },
+    { name: "month", label: "August", value: "08" },
+    { name: "month", label: "September", value: "09" },
+    { name: "month", label: "October", value: "10" },
+    { name: "month", label: "November", value: "11" },
+    { name: "month", label: "December", value: "12" },
   ];
 
   const handleSelectChange = async (selectedOption, key) => {
@@ -185,16 +185,77 @@ const AttendanceManage = () => {
     }
   }, [isLoading, isValidating]);
 
-  const handleExportToPDF = () => {
-    exportToPDF(employeeData);
+  const handleExportToPDF = async () => {
+    // console.log(employeeData);
+    // return;
+    const headers = [
+      "Employee ID",
+      "Employee Name",
+      "In Time",
+      "Out Time",
+      "Date",
+    ];
+
+    const data = employeeData.map((item) => ({
+      ID: item.ID,
+      username: item.username,
+      InTime: getTime(item.InTime),
+      OutTime: getTime(item.OutTime),
+      Date: getDate(item.InTime),
+    }));
+
+    exportToPDF(headers, data, "attendance-report");
   };
 
   const handleExportToCSV = () => {
-    exportToCSV();
+    const columns = [
+      {
+        accessorKey: "ID",
+        header: "Employee ID",
+        size: 40,
+      },
+      {
+        accessorKey: "username",
+        header: "Employee Name",
+        size: 120,
+      },
+      {
+        accessorKey: "InTime",
+        header: "In Time",
+        size: 120,
+      },
+      {
+        accessorKey: "OutTime",
+        header: "Out Time",
+        size: 300,
+      },
+      {
+        accessorKey: "Date",
+        header: "Date",
+      },
+    ];
+
+    const data = employeeData.map((item) => ({
+      "Employee ID": item.ID,
+      "Employee Name": item.username,
+      "In Time": getTime(item.InTime),
+      "Out Time": getTime(item.OutTime),
+      Date: getDate(item.InTime),
+    }));
+
+    exportToCSV(data, "attendance-report");
   };
 
   const handleExportToExcel = () => {
-    exportToExcel();
+    const data = employeeData.map((item) => ({
+      "Employee ID": item.ID,
+      "Employee Name": item.username,
+      "In Time": getTime(item.InTime),
+      "Out Time": getTime(item.OutTime),
+      Date: getDate(item.InTime),
+    }));
+
+    exportToExcel(data, "attendance-report");
   };
 
   return (

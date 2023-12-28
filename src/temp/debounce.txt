@@ -1,0 +1,49 @@
+// Example using useSWR for employee data fetching
+const { data: employeeData, error: employeeFetchError, isLoading: employeeFetchIsLoading } = useSWR(
+  formValues.employee ? `/employees?search=${formValues.employee}` : null,
+  fetcher,
+  { errorRetryCount: 2 }
+);
+
+
+Debouncing is a technique used to delay the execution of a function until after a certain amount of time has passed since the last invocation of that function. This can be particularly useful when dealing with user input, such as in an input field where you want to wait for the user to finish typing before triggering an action like fetching data.
+
+Here's a simple example of how you can implement debouncing in JavaScript using a timer:
+
+
+import React, { useState } from "react";
+
+const DebouncedInput = () => {
+  const [inputValue, setInputValue] = useState("");
+
+  const debounce = (func, delay) => {
+    let timer;
+
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => func.apply(this, args), delay);
+    };
+  };
+
+  const handleInputChange = debounce((value) => {
+    // Fetch data or perform any action here
+    console.log("Fetching data for:", value);
+  }, 500); // Adjust the delay as needed (in milliseconds)
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setInputValue(value);
+    handleInputChange(value);
+  };
+
+  return (
+    <input
+      type="text"
+      value={inputValue}
+      onChange={handleChange}
+      placeholder="Type here..."
+    />
+  );
+};
+
+export default DebouncedInput;

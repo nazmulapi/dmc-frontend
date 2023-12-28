@@ -64,6 +64,10 @@ export const deleteItem = async (route) => {
     console.log(response);
 
     if (!response.ok) {
+      // return {
+      //   message: "Something went wrong!",
+      // };
+
       throw new Error("Failed to submit data");
     }
     if (response.ok) {

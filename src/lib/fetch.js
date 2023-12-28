@@ -85,4 +85,12 @@ export const fetchEmployee = async () => {
   }
 };
 
+export const fetchEmployeeDataFromMis = async (employeeId) => {
+  let token = Cookies.get(authTokenKey);
+  setAuthToken(token);
+
+  const response = await api.get(`/employee/mis/${employeeId}/`);
+  return response?.data?.message;
+};
+
 export default api;

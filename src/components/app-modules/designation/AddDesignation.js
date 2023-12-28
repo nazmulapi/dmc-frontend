@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
-import { submit } from "../../../lib/submit";
 import classEase from "classease";
+import { submit } from "../../../lib/submit";
 
 const AddDesignation = () => {
   const [formData, setFormData] = useState({
