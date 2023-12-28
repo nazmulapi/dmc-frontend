@@ -101,7 +101,7 @@ const AddDepartment = () => {
           <form onSubmit={(e) => handleSubmit(e)} method="POST">
             <div className="mb-3">
               <label htmlFor="department" className="form-label">
-                Department
+                Department <span className="text-danger"> *</span>
               </label>
               <input
                 type="text"

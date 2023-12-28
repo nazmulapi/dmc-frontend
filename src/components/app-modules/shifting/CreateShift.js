@@ -139,7 +139,7 @@ const CreateShift = () => {
 
               <div className="mb-3">
                 <label htmlFor="" className="form-label">
-                  Start Time
+                  Start Time <span className="text-danger"> *</span>
                 </label>
                 <input
                   type="time"
