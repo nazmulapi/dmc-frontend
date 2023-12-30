@@ -1,3 +1,5 @@
+import { apiBaseUrl } from "./config";
+
 export const getGreeting = () => {
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
@@ -58,4 +60,8 @@ export const getDate = (dateString) => {
 
   const date = new Date(dateString);
   return date.toLocaleString("en-US", options);
+};
+
+export const getStoragePath = (path) => {
+  return apiBaseUrl + path;
 };

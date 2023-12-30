@@ -9,7 +9,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { Row } from "react-bootstrap";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import { submit } from "../../../lib/submit";
 
 const AssignShift = () => {
@@ -29,6 +29,7 @@ const AssignShift = () => {
     isLoading: shiftsFetchIsLoading,
   } = useSWR(`/shift/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const shifts = shiftsData?.map((item) => ({

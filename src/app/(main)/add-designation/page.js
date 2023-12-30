@@ -1,12 +1,8 @@
 import React from "react";
 import AddDesignation from "../../../components/app-modules/designation/AddDesignation";
 
-const page = () => {
-  return (
-    <>
-      <AddDesignation />
-    </>
-  );
+const Page = () => {
+  return <AddDesignation />;
 };
 
-export default page;
+export default Page;

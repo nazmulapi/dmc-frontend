@@ -7,7 +7,7 @@ import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import { submit } from "../../../lib/submit";
 import GetDataMis from "./GetDataMis";
 
@@ -47,6 +47,7 @@ const AddEmployee = () => {
     isLoading: departmentsFetchIsLoading,
   } = useSWR(`/department/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const departments = departmentsData?.map((item) => ({
@@ -61,6 +62,7 @@ const AddEmployee = () => {
     isLoading: designationsFetchIsLoading,
   } = useSWR(`/designation/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const designations = designationsData?.map((item) => ({
@@ -75,6 +77,7 @@ const AddEmployee = () => {
     isLoading: shiftsFetchIsLoading,
   } = useSWR(`/shift/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const shifts = shiftsData?.map((item) => ({
@@ -89,6 +92,7 @@ const AddEmployee = () => {
     isLoading: groupsFetchIsLoading,
   } = useSWR(`/empgrp/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const groups = groupsData?.map((item) => ({
@@ -398,7 +402,9 @@ const AddEmployee = () => {
           <Row>
             <Col lg={6}>
               <div className="mb-2">
-                <div className="mb-2">Employee ID <span className="text-danger"> *</span></div>
+                <div className="mb-2">
+                  Employee ID <span className="text-danger"> *</span>
+                </div>
                 <input
                   type="text"
                   placeholder=""
@@ -416,7 +422,9 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">Employee Name <span className="text-danger"> *</span></div>
+                <div className="mb-2">
+                  Employee Name <span className="text-danger"> *</span>
+                </div>
                 <input
                   type="text"
                   placeholder=""
@@ -435,7 +443,9 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">Email address <span className="text-danger"> *</span></div>
+                <div className="mb-2">
+                  Email address <span className="text-danger"> *</span>
+                </div>
                 <input
                   type="email"
                   placeholder=""
@@ -454,7 +464,9 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">Designation <span className="text-danger"> *</span></div>
+                <div className="mb-2">
+                  Designation <span className="text-danger"> *</span>
+                </div>
                 <Select
                   className={classEase(
                     "rounded-1 form_border_focus",
@@ -495,7 +507,9 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">Department <span className="text-danger"> *</span></div>
+                <div className="mb-2">
+                  Department <span className="text-danger"> *</span>
+                </div>
                 <Select
                   className={classEase(
                     "rounded-1 form_border_focus",
@@ -536,7 +550,9 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">Phone Number <span className="text-danger"> *</span></div>
+                <div className="mb-2">
+                  Phone Number <span className="text-danger"> *</span>
+                </div>
                 <input
                   type="number"
                   placeholder=""
@@ -571,7 +587,9 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">Shift <span className="text-danger"> *</span></div>
+                <div className="mb-2">
+                  Shift <span className="text-danger"> *</span>
+                </div>
                 <Select
                   className={classEase(
                     "rounded-1 form_border_focus",
@@ -613,7 +631,9 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">Group <span className="text-danger"> *</span></div>
+                <div className="mb-2">
+                  Group <span className="text-danger"> *</span>
+                </div>
                 <Select
                   className={classEase(
                     "rounded-1 form_border_focus",
@@ -655,7 +675,9 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">Upload Photo <span className="text-danger"> *</span></div>
+                <div className="mb-2">
+                  Upload Photo <span className="text-danger"> *</span>
+                </div>
                 <input
                   type="file"
                   accept="image/*"

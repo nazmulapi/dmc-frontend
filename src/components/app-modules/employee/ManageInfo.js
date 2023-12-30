@@ -9,9 +9,14 @@ import EditEmployee from "./EditEmployee";
 // import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import classEase from "classease";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import Pagination from "../../utils/Pagination";
-import { formatDate, getDate, getTime } from "../../../lib/helper";
+import {
+  formatDate,
+  getDate,
+  getTime,
+  getStoragePath,
+} from "../../../lib/helper";
 
 const ManageInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +34,7 @@ const ManageInfo = () => {
     mutate,
   } = useSWR(`/employee/?page=${currentPage}&page_size=${pageSize}`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const totalPages = Math.ceil(apiData?.count / pageSize);
@@ -64,6 +70,7 @@ const ManageInfo = () => {
   useEffect(() => {
     if (!isLoading && !error) {
       setDisplayedData(apiData?.results || []);
+      console.log(apiData?.results);
     }
   }, [isLoading, isValidating]);
 
@@ -164,19 +171,22 @@ const ManageInfo = () => {
                       <th scope="row">{startIndex + index + 1}</th>
                       <th scope="row" className="text-center">
                         <img
-                          src="/images.png"
+                          src={getStoragePath(item?.image)}
                           alt=""
                           className="table_user_img"
                         />
                       </th>
                       <td>{item.employee_id}</td>
                       <td>{item.username}</td>
-                      <td>{item.in_time}</td>
-                      <td>N/A</td>
-                      <td>N/A</td>
+                      <td>{item?.shift_name || "N/A"}</td>
+                      <td>{item?.designation_name || "N/A"}</td>
+                      <td>{item?.is_active ? "Active" : "Inactive"}</td>
                       <td>
                         {/* {console.log(item)} */}
-                        <EditEmployee employee={item} />
+                        <EditEmployee
+                          employee={item}
+                          setData={setDisplayedData}
+                        />
 
                         {/* <button className="bg-danger border-0 rounded-1">
                         <RiDeleteBin6Line color="white" />

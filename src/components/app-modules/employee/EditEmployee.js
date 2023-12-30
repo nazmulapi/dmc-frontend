@@ -5,18 +5,24 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FaRegEdit } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
+import Select from "react-select";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
 import useSWR from "swr";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import { submit } from "../../../lib/submit";
 
-function MyVerticallyCenteredModal(props) {
-  // console.log(props.employee.is_active);
+function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
+  // console.log(employee.is_active);
+  const [empId, setEmpId] = useState(employee.employee_id);
 
   const [formValues, setFormValues] = useState({
-    shift_id: props.employee.shift_id,
-    is_active: Boolean(props.employee.is_active),
+    shift_id: employee.shift_id,
+    is_active: Boolean(employee.is_active),
+  });
+
+  const [selectFormValues, setSelectFormValues] = useState({
+    shift_id: "",
   });
 
   // useEffect(() => {
@@ -28,12 +34,19 @@ function MyVerticallyCenteredModal(props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    data: shifts,
+    data: shiftsData,
     error: shiftsFetchError,
     isLoading: shiftsFetchIsLoading,
   } = useSWR(`/shift/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
+
+  const shifts = shiftsData?.map((item) => ({
+    name: "shift_id",
+    label: item.shift_name,
+    value: item.shift_id,
+  }));
 
   const validateForm = () => {
     let valid = true;
@@ -52,6 +65,48 @@ function MyVerticallyCenteredModal(props) {
     setErrors(newErrors);
 
     return valid;
+  };
+
+  const handleSelectChange = async (selectedOption, key) => {
+    setSuccess("");
+
+    // when cleared
+    if (!selectedOption || !selectedOption.value) {
+      setErrors({
+        ...errors,
+        [key]: "",
+      });
+
+      setFormValues((prev) => ({
+        ...prev,
+        [key]: "",
+      }));
+
+      setSelectFormValues((prev) => ({
+        ...prev,
+        [key]: "",
+      }));
+      return;
+    }
+
+    const { name, value } = selectedOption;
+
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: String(value),
+    }));
+
+    setSelectFormValues((prev) => ({
+      ...prev,
+      [name]: selectedOption,
+    }));
+
+    return;
   };
 
   const handleInputChange = (e) => {
@@ -96,15 +151,27 @@ function MyVerticallyCenteredModal(props) {
     if (valid) {
       setIsLoading(true);
 
-      const response = await submit(
-        `/employee/${props.employee.employee_id}/`,
-        formValues
-      );
+      const response = await submit(`/employee/${employee.employee_id}/`, {
+        shift_id: selectFormValues.shift_id.value,
+        is_active: formValues.is_active,
+      });
 
       // console.log(response);
 
       if (response?.employee_id) {
         setTimeout(() => {
+          setData((prevData) => {
+            console.log(prevData, formValues);
+            prevData.map((i) =>
+              i.employee_id === formValues.employee_id
+                ? {
+                    ...prevData,
+                    shift_id: selectFormValues.shift_id.value,
+                    is_active: formValues.is_active,
+                  }
+                : i
+            );
+          });
           setSuccess("Employee updated successfully");
           setIsLoading(false);
           // setErrors({});
@@ -123,7 +190,8 @@ function MyVerticallyCenteredModal(props) {
 
   return (
     <Modal
-      {...props}
+      show={show}
+      onHide={onHide}
       size="md"
       aria-labelledby="contained-modal-title-vcenter"
       centered
@@ -135,27 +203,26 @@ function MyVerticallyCenteredModal(props) {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={(e) => handleSubmit(e)}>
-          <Form.Select
-            // aria-label="Default select example"
-            // className="form_border_focus mb-3"
+          <div className="mb-2">
+            Shift <span className="text-danger"> *</span>
+          </div>
+          <Select
             className={classEase(
-              "form-select form-control rounded-1 form_border_focus",
+              "rounded-1 form_border_focus",
               errors.shift_id && "is-invalid"
             )}
-            aria-label="Default select example"
-            name="shift_id"
-            value={formValues.shift_id}
-            onChange={(e) => handleInputChange(e)}
-          >
-            <option value="">Select Shift</option>
+            classNamePrefix="select"
+            isDisabled={false}
+            isLoading={false}
+            isClearable={true}
+            isSearchable={true}
+            value={selectFormValues.shift_id}
+            options={shifts}
+            onChange={(selectedOption) =>
+              handleSelectChange(selectedOption, "shift_id")
+            }
+          />
 
-            {shifts &&
-              shifts.map((s) => (
-                <option key={s.shift_id} value={s.shift_id}>
-                  {s.shift_name}
-                </option>
-              ))}
-          </Form.Select>
           {errors.shift_id && (
             <div className="invalid-feedback">{errors.shift_id}</div>
           )}
@@ -208,7 +275,7 @@ function MyVerticallyCenteredModal(props) {
   );
 }
 
-function EditEmployee({ employee }) {
+function EditEmployee({ employee, setData }) {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -226,6 +293,7 @@ function EditEmployee({ employee }) {
         show={modalShow}
         onHide={() => setModalShow(false)}
         employee={employee}
+        setData={setData}
       />
     </>
   );

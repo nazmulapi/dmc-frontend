@@ -1,12 +1,8 @@
-import React from 'react'
-import AssignScreen from '../../../components/app-modules/assign-screen/AssignScreen'
+import React from "react";
+import AssignScreen from "../../../components/app-modules/assign-screen/AssignScreen";
 
-const page = () => {
-  return (
-    <div>
-      <AssignScreen/>
-    </div>
-  )
-}
+const Page = () => {
+  return <AssignScreen />;
+};
 
-export default page
+export default Page;

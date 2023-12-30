@@ -10,13 +10,13 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
-import EditDepartment from "./EditDepartment";
+import EditDevice from "./EditDevice";
 
-const DepartmentManager = () => {
+const DeviceManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState(null);
 
-  const { error, isLoading } = useSWR(`/department/`, fetcher, {
+  const { error, isLoading } = useSWR(`/devices/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
     onSuccess: (fetchedData) => {
@@ -26,29 +26,32 @@ const DepartmentManager = () => {
   });
 
   const filteredData = data
-    ? data.filter((item) =>
-        item.department.toLowerCase().includes(searchQuery.toLowerCase())
+    ? data.filter(
+        (item) =>
+          item.device_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.device_ip.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.device_id.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
   const [show, setShow] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [selectedDevice, setSelectedDevice] = useState(null);
 
   const handleClose = () => {
     setShow(false);
   };
 
   // Function to handle delete button click
-  const handleDelete = async (department) => {
+  const handleDelete = async (device) => {
     setDeleting(true);
     try {
       // Perform delete action using API or other methods
       // For example, by making a DELETE request
-      const res = await deleteItem(`/department/${department.id}/`);
+      const res = await deleteItem(`/device/${device.device_id}/`);
       if (res) {
         setData((prevData) =>
-          prevData.filter((item) => item.id !== department.id)
+          prevData.filter((item) => item.device_id !== device.device_id)
         );
         setShow(false);
         setDeleting(false);
@@ -62,7 +65,7 @@ const DepartmentManager = () => {
     <>
       <section>
         <div>
-          <h2 className="border-bottom pb-2 mb-4">Manage Departments</h2>
+          <h2 className="border-bottom pb-2 mb-4">Manage Device</h2>
         </div>
         <div className="search_part border mb-3">
           <div className="d-flex justify-content-between p-2">
@@ -76,7 +79,7 @@ const DepartmentManager = () => {
                 <div className="col-auto">
                   <input
                     type="search"
-                    id="department_search"
+                    id="device_search"
                     className="form-control form_border_focus"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -117,20 +120,24 @@ const DepartmentManager = () => {
             <thead>
               <tr>
                 <th scope="col">SL</th>
-                <th scope="col">Department</th>
-                <th scope="col">Department Details</th>
+                <th scope="col">Device ID</th>
+                <th scope="col">Device IP</th>
+                <th scope="col">Device Name</th>
+                <th scope="col">Location</th>
+                <th scope="col">Status</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
               {error && (
                 <tr>
-                  <td colSpan={4}>Failed to load</td>
+                  <td colSpan={7}>Failed to load</td>
                 </tr>
               )}
+
               {isLoading && (
                 <tr>
-                  <td colSpan={4}>Loading...</td>
+                  <td colSpan={7}>Loading...</td>
                 </tr>
               )}
 
@@ -138,15 +145,18 @@ const DepartmentManager = () => {
                 filteredData.map((item, index) => (
                   <tr key={index}>
                     <th scope="row">{index + 1}</th>
-                    <td>{item.department}</td>
-                    <td>{item.description}</td>
+                    <td>{item.device_id}</td>
+                    <td>{item.device_ip}</td>
+                    <td>{item.device_name}</td>
+                    <td>{item.location}</td>
+                    <td>{item.active_status}</td>
                     <td>
-                      <EditDepartment item={item} setItem={setData} />
+                      <EditDevice item={item} setItem={setData} />
 
                       <button
                         className="border-0 rounded-1"
                         onClick={() => {
-                          setSelectedDepartment(item);
+                          setSelectedDevice(item);
                           setShow(true);
                         }}
                       >
@@ -156,9 +166,13 @@ const DepartmentManager = () => {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={4}>No data found!</td>
-                </tr>
+                <>
+                  {!isLoading && (
+                    <tr>
+                      <td colSpan={7}>No data found!</td>
+                    </tr>
+                  )}
+                </>
               )}
             </tbody>
           </table>
@@ -173,7 +187,7 @@ const DepartmentManager = () => {
           <Modal.Footer>
             <Button
               onClick={() => {
-                setSelectedDepartment(null);
+                setSelectedDevice(null);
                 setShow(false);
               }}
               variant="success"
@@ -185,7 +199,7 @@ const DepartmentManager = () => {
             </Button>
             <Button
               onClick={() => {
-                handleDelete(selectedDepartment);
+                handleDelete(selectedDevice);
               }}
               variant="success"
               className={classEase(
@@ -215,4 +229,4 @@ const DepartmentManager = () => {
   );
 };
 
-export default DepartmentManager;
+export default DeviceManager;

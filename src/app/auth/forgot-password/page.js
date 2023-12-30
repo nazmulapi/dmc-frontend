@@ -8,6 +8,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
+import { toast } from "react-toastify";
 import { forgotEmailSubmit, forgotPasswordSubmit } from "../../../lib/submit";
 
 const Page = () => {
@@ -29,6 +30,7 @@ const Page = () => {
   const [success, setSuccess] = useState({
     email: "",
     password: "",
+    reset: false,
   });
 
   const [isLoading, setIsLoading] = useState({
@@ -170,33 +172,31 @@ const Page = () => {
       console.log(response);
 
       if (response?.data) {
-        setTimeout(() => {
-          setSuccess((prev) => ({
-            ...prev,
-            password: "Password changed successfully",
-          }));
-          setIsLoading((prev) => ({ ...prev, password: false }));
-          // setErrors({});
-          setFormValues((prev) => ({
-            ...prev,
-            password: "",
-            confirmPassword: "",
-          }));
-        }, 1000);
+        setSuccess((prev) => ({
+          ...prev,
+          reset: true,
+        }));
+        setIsLoading((prev) => ({ ...prev, password: false }));
+        // setErrors({});
+        setFormValues((prev) => ({
+          ...prev,
+          password: "",
+          confirmPassword: "",
+        }));
+        toast.success("Password changed successfully!");
       } else {
-        setTimeout(() => {
-          setSuccess((prev) => ({
-            ...prev,
-            password: "Something went wrong!",
-          }));
-          setIsLoading((prev) => ({ ...prev, password: false }));
-          // setErrors({});
-          setFormValues((prev) => ({
-            ...prev,
-            password: "",
-            confirmPassword: "",
-          }));
-        }, 1000);
+        // setSuccess((prev) => ({
+        //   ...prev,
+        //   password: "Something went wrong!",
+        // }));
+        setIsLoading((prev) => ({ ...prev, password: false }));
+        // setErrors({});
+        setFormValues((prev) => ({
+          ...prev,
+          password: "",
+          confirmPassword: "",
+        }));
+        toast.warning("Something went wrong!");
       }
     }
   };
@@ -272,107 +272,105 @@ const Page = () => {
   }
 
   return (
-    <>
-      <section className="forgot_password">
-        <Col lg={4} className="d-flex align-items-center">
-          <div className="bg-white w-100 rounded-1 p-5">
-            <div className="text-center">
-              <h1 className="py-3 fw-bold">Password Reset</h1>
-            </div>
-            <div>
-              <Form onSubmit={(e) => handlePasswordSubmit(e)} method="POST">
-                <div className="mb-3">
-                  <label
-                    htmlFor="exampleFormControlInput2"
-                    className="form-label"
-                  >
-                    New Password <span className="text-danger">*</span>
-                  </label>
-                  <input
-                    id="exampleFormControlInput2"
-                    type="password"
-                    placeholder="New password"
-                    name="password"
-                    value={formValues.password}
-                    onChange={(e) => handlePasswordChange(e)}
-                    className={classEase(
-                      "rounded-1 form_border_focus form-control",
-                      errors.password && "is-invalid"
-                    )}
-                  />
-                  {errors.password && (
-                    <div className="invalid-feedback">{errors.password}</div>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="exampleFormControlInput3"
-                    className="form-label"
-                  >
-                    Confirm Password <span className="text-danger">*</span>
-                  </label>
-                  <input
-                    id="exampleFormControlInput3"
-                    type="password"
-                    placeholder="Confirm password"
-                    name="confirmPassword"
-                    value={formValues.confirmPassword}
-                    onChange={(e) => handlePasswordChange(e)}
-                    className={classEase(
-                      "rounded-1 form_border_focus form-control",
-                      errors.confirmPassword && "is-invalid"
-                    )}
-                  />
-                  {errors.confirmPassword && (
-                    <div className="invalid-feedback">
-                      {errors.confirmPassword}
-                    </div>
-                  )}
-                </div>
-                <div className="col-auto">
-                  {success?.password && success?.password !== "" ? (
-                    <>
-                      <div className="success-feedback mb-3">
-                        {success.password}
-                      </div>
-                      <Link
-                        href="/auth/login"
-                        className="btn btn-primary mb-3 rounded-1 w-100 py-2"
-                      >
-                        Go to login
-                      </Link>
-                    </>
-                  ) : (
-                    <Button
-                      type="submit"
-                      className={classEase(
-                        "btn btn-primary mb-3 rounded-1 w-100 py-2 add_btn_color d-flex justify-content-center align-items-center app-button border-0 mt-2 px-4",
-                        isLoading?.password ? "loading" : ""
-                      )}
-                      disabled={isLoading?.password}
-                    >
-                      Reset Password
-                      {isLoading?.password && (
-                        <div className="spinner">
-                          <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                          />
-                          <span className="visually-hidden">Loading...</span>
-                        </div>
-                      )}
-                    </Button>
-                  )}
-                </div>
-              </Form>
-            </div>
+    <section className="forgot_password">
+      <Col lg={4} className="d-flex align-items-center">
+        <div className="bg-white w-100 rounded-1 p-5">
+          <div className="text-center">
+            <h1 className="py-3 fw-bold">Password Reset</h1>
           </div>
-        </Col>
-      </section>
-    </>
+          <div>
+            <Form onSubmit={(e) => handlePasswordSubmit(e)} method="POST">
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput2"
+                  className="form-label"
+                >
+                  New Password <span className="text-danger">*</span>
+                </label>
+                <input
+                  id="exampleFormControlInput2"
+                  type="password"
+                  placeholder="New password"
+                  name="password"
+                  value={formValues.password}
+                  onChange={(e) => handlePasswordChange(e)}
+                  className={classEase(
+                    "rounded-1 form_border_focus form-control",
+                    errors.password && "is-invalid"
+                  )}
+                />
+                {errors.password && (
+                  <div className="invalid-feedback">{errors.password}</div>
+                )}
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="exampleFormControlInput3"
+                  className="form-label"
+                >
+                  Confirm Password <span className="text-danger">*</span>
+                </label>
+                <input
+                  id="exampleFormControlInput3"
+                  type="password"
+                  placeholder="Confirm password"
+                  name="confirmPassword"
+                  value={formValues.confirmPassword}
+                  onChange={(e) => handlePasswordChange(e)}
+                  className={classEase(
+                    "rounded-1 form_border_focus form-control",
+                    errors.confirmPassword && "is-invalid"
+                  )}
+                />
+                {errors.confirmPassword && (
+                  <div className="invalid-feedback">
+                    {errors.confirmPassword}
+                  </div>
+                )}
+              </div>
+              <div className="col-auto">
+                {success?.reset ? (
+                  <>
+                    {/* <div className="success-feedback mb-3">
+                      {success.password}
+                    </div> */}
+                    <Link
+                      href="/auth/login"
+                      className="btn btn-primary mb-3 rounded-1 w-100 py-2"
+                    >
+                      Go to login
+                    </Link>
+                  </>
+                ) : (
+                  <Button
+                    type="submit"
+                    className={classEase(
+                      "btn btn-primary mb-3 rounded-1 w-100 py-2 add_btn_color d-flex justify-content-center align-items-center app-button border-0 mt-2 px-4",
+                      isLoading?.password ? "loading" : ""
+                    )}
+                    disabled={isLoading?.password}
+                  >
+                    Reset Password
+                    {isLoading?.password && (
+                      <div className="spinner">
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </Form>
+          </div>
+        </div>
+      </Col>
+    </section>
   );
 };
 

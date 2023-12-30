@@ -1,13 +1,8 @@
-"use client";
 import React from "react";
 import AttendanceReport from "../../../components/app-modules/attendance/AttendanceReport";
 
-const page = () => {
-  return (
-    <>
-      <AttendanceReport />
-    </>
-  );
+const Page = () => {
+  return <AttendanceReport />;
 };
 
-export default page;
+export default Page;

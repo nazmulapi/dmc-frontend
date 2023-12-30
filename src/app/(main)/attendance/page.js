@@ -1,12 +1,8 @@
 import React from "react";
 import StructuredInfo from "../../../components/app-modules/attendance/StructuredInfo";
 
-const page = () => {
-  return (
-    <>
-      <StructuredInfo />
-    </>
-  );
+const Page = () => {
+  return <StructuredInfo />;
 };
 
-export default page;
+export default Page;

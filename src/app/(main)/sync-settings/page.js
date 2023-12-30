@@ -1,12 +1,8 @@
 import React from "react";
 import SyncSetting from "../../../components/app-modules/sync-settings/sync-data";
 
-const page = () => {
-  return (
-    <>
-      <SyncSetting />
-    </>
-  );
+const Page = () => {
+  return <SyncSetting />;
 };
 
-export default page;
+export default Page;

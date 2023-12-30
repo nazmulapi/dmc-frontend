@@ -10,14 +10,16 @@ import Spinner from "react-bootstrap/Spinner";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import { deleteItem, submit } from "../../../lib/submit";
+import EditAssign from "./EditAssign";
 
 const AssignScreen = () => {
   const [data, setData] = useState(null);
 
   const { error, loading } = useSWR(`/grpdev/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
     onSuccess: (fetchedData) => {
       // Update local state when data is successfully fetched
       setData(fetchedData);
@@ -44,6 +46,7 @@ const AssignScreen = () => {
     isLoading: devicesFetchIsLoading,
   } = useSWR(`/devices/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const devices = devicesData?.map((item) => ({
@@ -58,6 +61,7 @@ const AssignScreen = () => {
     isLoading: groupsFetchIsLoading,
   } = useSWR(`/empgrp/`, fetcher, {
     errorRetryCount: 2,
+    keepPreviousData: true,
   });
 
   const groups = groupsData?.map((item) => ({
@@ -335,7 +339,7 @@ const AssignScreen = () => {
                       {/* <button className="border-0 rounded-1 bg-danger">
                         <RiDeleteBin6Line color="#fff" />
                       </button> */}
-
+                      {/* <EditAssign item={item} setItem={setData} /> */}
                       <button
                         className="border-0 rounded-1"
                         onClick={() => {

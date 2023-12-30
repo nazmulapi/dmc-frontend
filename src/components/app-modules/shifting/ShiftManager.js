@@ -10,13 +10,13 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
-import EditDepartment from "./EditDepartment";
+import EditShift from "./EditShift";
 
-const DepartmentManager = () => {
+const ShiftManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState(null);
 
-  const { error, isLoading } = useSWR(`/department/`, fetcher, {
+  const { error, isLoading } = useSWR(`/shift/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
     onSuccess: (fetchedData) => {
@@ -27,28 +27,28 @@ const DepartmentManager = () => {
 
   const filteredData = data
     ? data.filter((item) =>
-        item.department.toLowerCase().includes(searchQuery.toLowerCase())
+        item.shift_name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
   const [show, setShow] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [selectedShift, setSelectedShift] = useState(null);
 
   const handleClose = () => {
     setShow(false);
   };
 
   // Function to handle delete button click
-  const handleDelete = async (department) => {
+  const handleDelete = async (shift) => {
     setDeleting(true);
     try {
       // Perform delete action using API or other methods
       // For example, by making a DELETE request
-      const res = await deleteItem(`/department/${department.id}/`);
+      const res = await deleteItem(`/shift/${shift.shift_id}/`);
       if (res) {
         setData((prevData) =>
-          prevData.filter((item) => item.id !== department.id)
+          prevData.filter((item) => item.shift_id !== shift.shift_id)
         );
         setShow(false);
         setDeleting(false);
@@ -62,7 +62,7 @@ const DepartmentManager = () => {
     <>
       <section>
         <div>
-          <h2 className="border-bottom pb-2 mb-4">Manage Departments</h2>
+          <h2 className="border-bottom pb-2 mb-4">Manage Shifts</h2>
         </div>
         <div className="search_part border mb-3">
           <div className="d-flex justify-content-between p-2">
@@ -76,7 +76,7 @@ const DepartmentManager = () => {
                 <div className="col-auto">
                   <input
                     type="search"
-                    id="department_search"
+                    id="shift_search"
                     className="form-control form_border_focus"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -117,20 +117,22 @@ const DepartmentManager = () => {
             <thead>
               <tr>
                 <th scope="col">SL</th>
-                <th scope="col">Department</th>
-                <th scope="col">Department Details</th>
+                <th scope="col">Shift Name</th>
+                <th scope="col">Shift Beginning</th>
+                <th scope="col">Shift End</th>
+                <th scope="col">Total Time</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
               {error && (
                 <tr>
-                  <td colSpan={4}>Failed to load</td>
+                  <td colSpan={6}>Failed to load</td>
                 </tr>
               )}
               {isLoading && (
                 <tr>
-                  <td colSpan={4}>Loading...</td>
+                  <td colSpan={6}>Loading...</td>
                 </tr>
               )}
 
@@ -138,15 +140,17 @@ const DepartmentManager = () => {
                 filteredData.map((item, index) => (
                   <tr key={index}>
                     <th scope="row">{index + 1}</th>
-                    <td>{item.department}</td>
-                    <td>{item.description}</td>
+                    <td>{item.shift_name}</td>
+                    <td>{item.shift_beginning}</td>
+                    <td>{item.shift_end}</td>
+                    <td>{item.total_time}</td>
                     <td>
-                      <EditDepartment item={item} setItem={setData} />
+                      <EditShift item={item} setItem={setData} />
 
                       <button
                         className="border-0 rounded-1"
                         onClick={() => {
-                          setSelectedDepartment(item);
+                          setSelectedShift(item);
                           setShow(true);
                         }}
                       >
@@ -156,9 +160,13 @@ const DepartmentManager = () => {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={4}>No data found!</td>
-                </tr>
+                <>
+                  {!isLoading && (
+                    <tr>
+                      <td colSpan={6}>No data found!</td>
+                    </tr>
+                  )}
+                </>
               )}
             </tbody>
           </table>
@@ -173,7 +181,7 @@ const DepartmentManager = () => {
           <Modal.Footer>
             <Button
               onClick={() => {
-                setSelectedDepartment(null);
+                setSelectedShift(null);
                 setShow(false);
               }}
               variant="success"
@@ -185,7 +193,7 @@ const DepartmentManager = () => {
             </Button>
             <Button
               onClick={() => {
-                handleDelete(selectedDepartment);
+                handleDelete(selectedShift);
               }}
               variant="success"
               className={classEase(
@@ -215,4 +223,4 @@ const DepartmentManager = () => {
   );
 };
 
-export default DepartmentManager;
+export default ShiftManager;

@@ -7,10 +7,10 @@ import classEase from "classease";
 import { toast } from "react-toastify";
 import { submit } from "../../../lib/submit";
 
-const AddDesignation = () => {
+const AddGroup = () => {
   const [formData, setFormData] = useState({
-    designation: "",
-    description: "",
+    group_name: "",
+    // description: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -21,15 +21,15 @@ const AddDesignation = () => {
     let valid = true;
     const newErrors = {};
 
-    if (!formData?.designation?.trim()) {
-      newErrors.designation = "Designation is required";
+    if (!formData?.group_name?.trim()) {
+      newErrors.group_name = "Group name is required";
       valid = false;
     }
 
-    if (!formData?.description?.trim()) {
-      newErrors.description = "Description is required";
-      valid = false;
-    }
+    // if (!formData?.description?.trim()) {
+    //   newErrors.description = "Description is required";
+    //   valid = false;
+    // }
 
     setErrors(newErrors);
 
@@ -61,20 +61,20 @@ const AddDesignation = () => {
     if (valid) {
       setIsLoading(true);
 
-      const response = await submit("/designation/", formData);
+      const response = await submit("/empgrp/", formData);
 
       console.log(response);
 
       // return;
 
-      if (response?.id) {
-        toast.success("Designation created successfully"); // success, info, warning, error
-        setSuccess("Designation created successfully");
+      if (response?.group_id) {
+        toast.success("Group created successfully"); // success, info, warning, error
+        setSuccess("Group created successfully");
         setIsLoading(false);
         // setErrors({});
         setFormData({
-          designation: "",
-          description: "",
+          group_name: "",
+          // description: "",
         });
       } else {
         // setSuccess("Something went wrong!");
@@ -83,8 +83,8 @@ const AddDesignation = () => {
         setIsLoading(false);
         // setErrors({});
         // setFormData({
-        //   designation: "",
-        //   description: "",
+        //   group_name: "",
+        //   // description: "",
         // });
       }
     }
@@ -94,32 +94,32 @@ const AddDesignation = () => {
     <>
       <section>
         <div>
-          <h2 className="border-bottom pb-2">Create Designation</h2>
+          <h2 className="border-bottom pb-2">Create Group</h2>
         </div>
         <div className="col-lg-6">
           <form onSubmit={(e) => handleSubmit(e)} method="POST">
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
-                Designation <span className="text-danger"> *</span>
+                Group name<span className="text-danger"> *</span>
               </label>
               <input
                 type="text"
-                placeholder="Enter designation"
-                name="designation"
-                value={formData.designation}
+                placeholder="Enter group name"
+                name="group_name"
+                value={formData.group_name}
                 onChange={(e) => handleChange(e)}
                 className={classEase(
                   "rounded-1 form_border_focus form-control",
-                  errors.designation && "is-invalid"
+                  errors.group_name && "is-invalid"
                 )}
               />
-              {errors.designation && (
-                <div className="invalid-feedback">{errors.designation}</div>
+              {errors.group_name && (
+                <div className="invalid-feedback">{errors.group_name}</div>
               )}
             </div>
             <div className="mb-3">
               <label htmlFor="" className="form-label">
-                Designation Details
+                Group Details
               </label>
               <textarea
                 name="description"
@@ -170,4 +170,4 @@ const AddDesignation = () => {
   );
 };
 
-export default AddDesignation;
+export default AddGroup;

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import axios from "axios";
-import { authTokenKey, apiBaseUrl } from "../config";
+import { authTokenKey, apiBaseUrl } from "./config";
 
 const MAX_RETRIES = 3;
 const TIMEOUT = 5000; // Timeout in milliseconds
