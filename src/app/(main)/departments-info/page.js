@@ -1,12 +1,8 @@
 import React from "react";
 import DepartmentsManage from "../../../components/app-modules/departments/DepartmentsManager";
 
-const page = () => {
-  return (
-    <>
-      <DepartmentsManage />
-    </>
-  );
+const Page = () => {
+  return <DepartmentsManage />;
 };
 
-export default page;
+export default Page;

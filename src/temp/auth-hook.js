@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 // import { useRouter } from 'next/router';
 import Cookies from "js-cookie";
 import axios from "axios";
-import { authTokenKey, apiBaseUrl } from "../config";
+import { authTokenKey, apiBaseUrl } from "../lib/config";
 
 const MAX_RETRIES = 3;
 const TIMEOUT = 100; // Timeout in milliseconds

@@ -10,8 +10,9 @@ import Spinner from "react-bootstrap/Spinner";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import { deleteItem, submit } from "../../../lib/submit";
+import EditAssign from "./EditAssign";
 
 const AssignScreen = () => {
   const [data, setData] = useState(null);
@@ -338,7 +339,7 @@ const AssignScreen = () => {
                       {/* <button className="border-0 rounded-1 bg-danger">
                         <RiDeleteBin6Line color="#fff" />
                       </button> */}
-
+                      {/* <EditAssign item={item} setItem={setData} /> */}
                       <button
                         className="border-0 rounded-1"
                         onClick={() => {

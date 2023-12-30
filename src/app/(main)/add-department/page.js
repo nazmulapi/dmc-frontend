@@ -1,12 +1,8 @@
 import React from "react";
 import AddDepartment from "../../../components/app-modules/departments/AddDepartment";
 
-const page = () => {
-  return (
-    <>
-      <AddDepartment />
-    </>
-  );
+const Page = () => {
+  return <AddDepartment />;
 };
 
-export default page;
+export default Page;

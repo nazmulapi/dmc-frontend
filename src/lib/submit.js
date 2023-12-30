@@ -31,21 +31,28 @@ export const submit = async (route, data, hasFile = false) => {
     // console.log(response);
 
     if (!response.ok) {
-      throw new Error("Failed to submit data");
-    }
-    if (response.ok) {
-      console.log("Successful");
-      // console.log(response.json());
-    } else {
       console.error("Error");
+      // throw new Error("Failed to submit data");
+
+      return {
+        error: true,
+        message: "Failed to submit data",
+      };
     }
+
+    // console.log("Successful");
+    // console.log(response.json());
 
     const responseData = await response.json();
 
     return responseData;
   } catch (error) {
     console.error("Failed: ", error);
-    throw error;
+    // throw error;
+    return {
+      error: true,
+      message: "An error occurred. Please try again later.",
+    };
   }
 };
 
@@ -61,27 +68,26 @@ export const deleteItem = async (route) => {
       },
     });
 
-    console.log(response);
+    // console.log(response);
 
     if (!response.ok) {
-      // return {
-      //   message: "Something went wrong!",
-      // };
+      return {
+        error: true,
+        message: "Failed to delete",
+      };
+    }
 
-      throw new Error("Failed to submit data");
-    }
-    if (response.ok) {
-      console.log("Successful");
-    } else {
-      console.error("Error");
-    }
+    // console.log("Successful");
 
     const responseData = await response.json();
 
     return responseData;
   } catch (error) {
     console.error("Failed: ", error);
-    throw error;
+    return {
+      error: true,
+      message: error.response?.data || error?.message || "Something went wrong",
+    };
   }
 };
 
@@ -95,23 +101,27 @@ export const forgotEmailSubmit = async (route, data) => {
       body: JSON.stringify(data),
     });
 
-    console.log(response);
+    // console.log(response);
 
     if (!response.ok) {
-      throw new Error("Failed to submit data");
+      // console.error("Error");
+      return {
+        error: true,
+        message: "Failed to send mail",
+      };
     }
-    if (response.ok) {
-      console.log("Successful");
-    } else {
-      console.error("Error");
-    }
+
+    // console.log("Successful");
 
     const responseData = await response.json();
 
     return responseData;
   } catch (error) {
     console.error("Failed: ", error);
-    throw error;
+    return {
+      error: true,
+      message: error?.message || "Something went wrong",
+    };
   }
 };
 
@@ -126,23 +136,27 @@ export const forgotPasswordSubmit = async (route, data, token) => {
       body: JSON.stringify(data),
     });
 
-    console.log(response);
+    // console.log(response);
 
     if (!response.ok) {
-      throw new Error("Failed to submit data");
-    }
-    if (response.ok) {
-      console.log("Successful");
-    } else {
       console.error("Error");
+      return {
+        error: true,
+        message: "Failed to submit data",
+      };
     }
+
+    // console.log("Successful");
 
     const responseData = await response.json();
 
     return responseData;
   } catch (error) {
     console.error("Failed: ", error);
-    throw error;
+    return {
+      error: true,
+      message: error?.message || "Something went wrong",
+    };
   }
 };
 
@@ -164,20 +178,22 @@ export const syncManual = async (route) => {
     // console.log(response);
 
     if (!response.ok) {
-      throw new Error("Failed to submit data");
-    }
-    if (response.ok) {
-      console.log("Successful");
-      // console.log(response.json());
-    } else {
       console.error("Error");
+      return {
+        error: true,
+        message: "Failed to sync",
+      };
     }
+    console.log("Successful");
 
     const responseData = await response.json();
 
     return responseData;
   } catch (error) {
     console.error("Failed: ", error);
-    throw error;
+    return {
+      error: true,
+      message: error?.message || "Failed to sync",
+    };
   }
 };

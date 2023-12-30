@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import axios from "axios";
-import { authTokenKey, apiBaseUrl } from "../config";
+import { authTokenKey, apiBaseUrl } from "./config";
 
 // const MAX_RETRIES = 3;
 // const TIMEOUT = 100; // Timeout in milliseconds

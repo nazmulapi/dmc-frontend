@@ -9,7 +9,7 @@ import Select from "react-select";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
 import useSWR from "swr";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import { submit } from "../../../lib/submit";
 
 function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {

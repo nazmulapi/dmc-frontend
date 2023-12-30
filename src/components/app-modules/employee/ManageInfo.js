@@ -9,7 +9,7 @@ import EditEmployee from "./EditEmployee";
 // import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import classEase from "classease";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import Pagination from "../../utils/Pagination";
 import {
   formatDate,

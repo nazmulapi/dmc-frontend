@@ -7,7 +7,7 @@ import classEase from "classease";
 import { toast } from "react-toastify";
 import { submit } from "../../../lib/submit";
 
-const AddDesignation = () => {
+const AddDevice = () => {
   const [formData, setFormData] = useState({
     designation: "",
     description: "",
@@ -94,13 +94,13 @@ const AddDesignation = () => {
     <>
       <section>
         <div>
-          <h2 className="border-bottom pb-2">Create Designation</h2>
+          <h2 className="border-bottom pb-2">Add Device</h2>
         </div>
         <div className="col-lg-6">
           <form onSubmit={(e) => handleSubmit(e)} method="POST">
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
-                Designation <span className="text-danger"> *</span>
+                Device name <span className="text-danger"> *</span>
               </label>
               <input
                 type="text"
@@ -119,7 +119,7 @@ const AddDesignation = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="" className="form-label">
-                Designation Details
+                Device Details
               </label>
               <textarea
                 name="description"
@@ -170,4 +170,4 @@ const AddDesignation = () => {
   );
 };
 
-export default AddDesignation;
+export default AddDevice;

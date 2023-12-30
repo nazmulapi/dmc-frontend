@@ -10,13 +10,13 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
-import EditDepartment from "./EditDepartment";
+import EditGroup from "./EditGroup";
 
-const DepartmentManager = () => {
+const GroupManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState(null);
 
-  const { error, isLoading } = useSWR(`/department/`, fetcher, {
+  const { error, isLoading } = useSWR(`/empgrp/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
     onSuccess: (fetchedData) => {
@@ -27,28 +27,28 @@ const DepartmentManager = () => {
 
   const filteredData = data
     ? data.filter((item) =>
-        item.department.toLowerCase().includes(searchQuery.toLowerCase())
+        item.group_name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
   const [show, setShow] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
   const handleClose = () => {
     setShow(false);
   };
 
   // Function to handle delete button click
-  const handleDelete = async (department) => {
+  const handleDelete = async (group) => {
     setDeleting(true);
     try {
       // Perform delete action using API or other methods
       // For example, by making a DELETE request
-      const res = await deleteItem(`/department/${department.id}/`);
+      const res = await deleteItem(`/empgrp/${group.group_id}/`);
       if (res) {
         setData((prevData) =>
-          prevData.filter((item) => item.id !== department.id)
+          prevData.filter((item) => item.group_id !== group.group_id)
         );
         setShow(false);
         setDeleting(false);
@@ -62,7 +62,7 @@ const DepartmentManager = () => {
     <>
       <section>
         <div>
-          <h2 className="border-bottom pb-2 mb-4">Manage Departments</h2>
+          <h2 className="border-bottom pb-2 mb-4">Manage Groups</h2>
         </div>
         <div className="search_part border mb-3">
           <div className="d-flex justify-content-between p-2">
@@ -76,7 +76,7 @@ const DepartmentManager = () => {
                 <div className="col-auto">
                   <input
                     type="search"
-                    id="department_search"
+                    id="group_search"
                     className="form-control form_border_focus"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -117,8 +117,8 @@ const DepartmentManager = () => {
             <thead>
               <tr>
                 <th scope="col">SL</th>
-                <th scope="col">Department</th>
-                <th scope="col">Department Details</th>
+                <th scope="col">Group name</th>
+                <th scope="col">Remaks</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -138,15 +138,15 @@ const DepartmentManager = () => {
                 filteredData.map((item, index) => (
                   <tr key={index}>
                     <th scope="row">{index + 1}</th>
-                    <td>{item.department}</td>
-                    <td>{item.description}</td>
+                    <td>{item.group_name}</td>
+                    <td>{item.Remaks}</td>
                     <td>
-                      <EditDepartment item={item} setItem={setData} />
+                      <EditGroup item={item} setItem={setData} />
 
                       <button
                         className="border-0 rounded-1"
                         onClick={() => {
-                          setSelectedDepartment(item);
+                          setSelectedGroup(item);
                           setShow(true);
                         }}
                       >
@@ -173,7 +173,7 @@ const DepartmentManager = () => {
           <Modal.Footer>
             <Button
               onClick={() => {
-                setSelectedDepartment(null);
+                setSelectedGroup(null);
                 setShow(false);
               }}
               variant="success"
@@ -185,7 +185,7 @@ const DepartmentManager = () => {
             </Button>
             <Button
               onClick={() => {
-                handleDelete(selectedDepartment);
+                handleDelete(selectedGroup);
               }}
               variant="success"
               className={classEase(
@@ -215,4 +215,4 @@ const DepartmentManager = () => {
   );
 };
 
-export default DepartmentManager;
+export default GroupManager;

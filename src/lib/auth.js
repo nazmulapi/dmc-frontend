@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiBaseUrl } from "../config";
+import { apiBaseUrl } from "./config";
 
 const api = axios.create({
   baseURL: apiBaseUrl,
@@ -9,9 +9,16 @@ const api = axios.create({
 export const login = async (credentials) => {
   try {
     const response = await api.post("/login/", credentials);
+    // console.log(response);
     return response.data;
   } catch (error) {
-    throw error.response?.data || error.message || "Something went wrong";
+    // console.log("error", error);
+    return {
+      error: true,
+      message:
+        error.response?.data || error?.message || "Something went wrong!",
+    };
+    // throw error.response?.data || error.message || "Something went wrong";
   }
 };
 

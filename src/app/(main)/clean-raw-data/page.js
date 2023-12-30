@@ -9,7 +9,7 @@ import useSWR from "swr";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import classEase from "classease";
 import { deleteItem } from "../../../lib/submit";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import { formatDate } from "../../../lib/helper";
 
 const Page = () => {

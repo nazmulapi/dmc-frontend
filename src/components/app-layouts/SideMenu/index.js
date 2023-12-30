@@ -116,6 +116,36 @@ const Page = () => {
                   </ul>
                 </Accordion.Body>
               </Accordion.Item>
+
+              <Accordion.Item eventKey="8" className="pt-2">
+                <Accordion.Header className="p-0 m-0 text-capitalize">
+                  <BiTargetLock className="text-light" />
+                  <span className="ms-2 text-white text-capitalize side_font">
+                    Group
+                  </span>
+                </Accordion.Header>
+                <Accordion.Body>
+                  <ul className="text-decoration-none mb-0">
+                    <li className="text-capitalize text-white">
+                      <Link
+                        href="/add-group"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        add Group
+                      </Link>
+                    </li>
+                    <li className="text-capitalize text-white text-decoration-none">
+                      <Link
+                        href="/group-info"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        Manage Group
+                      </Link>
+                    </li>
+                  </ul>
+                </Accordion.Body>
+              </Accordion.Item>
+
               <Accordion.Item eventKey="3" className="pt-2">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <MdDeviceHub className="text-light" />
@@ -131,6 +161,14 @@ const Page = () => {
                         className="text-decoration-none text-white side_font"
                       >
                         Create Shift
+                      </Link>
+                    </li>
+                    <li className="text-capitalize text-white text-decoration-none">
+                      <Link
+                        href="/shift-info"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        Manage Shift
                       </Link>
                     </li>
                     <li className="text-capitalize text-white text-decoration-none">
@@ -194,6 +232,22 @@ const Page = () => {
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0">
+                    <li className="text-capitalize text-white">
+                      <Link
+                        href="/add-device"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        add Device
+                      </Link>
+                    </li>
+                    <li className="text-capitalize text-white text-decoration-none">
+                      <Link
+                        href="/device-info"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        Manage Device
+                      </Link>
+                    </li>
                     <li className="text-capitalize text-white text-decoration-none">
                       <Link
                         href="/assign-screen"

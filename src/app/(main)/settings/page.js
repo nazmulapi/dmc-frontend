@@ -1,12 +1,8 @@
 import React from "react";
 import Settings from "../../../components/app-modules/settings/Manage";
 
-const page = () => {
-  return (
-    <div>
-      <Settings />
-    </div>
-  );
+const Page = () => {
+  return <Settings />;
 };
 
-export default page;
+export default Page;

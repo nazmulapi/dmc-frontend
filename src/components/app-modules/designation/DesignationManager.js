@@ -8,7 +8,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
-import { fetcher } from "../../../lib/fetcher";
+import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
 import EditDesignation from "./EditDesignation";
 
