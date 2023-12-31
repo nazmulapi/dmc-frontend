@@ -145,7 +145,7 @@ const ShiftManager = () => {
                     <td>{item.shift_end}</td>
                     <td>{item.total_time}</td>
                     <td>
-                      <EditShift item={item} setItem={setData} />
+                      {/* <EditShift item={item} setItem={setData} /> */}
 
                       <button
                         className="border-0 rounded-1"

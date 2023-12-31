@@ -149,7 +149,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
 
     const valid = validateForm();
 
-    // console.log("Form Value: ", formValues);
+    // console.log("Form Value: ", formValues, selectFormValues);
     // console.log("Error: ", errors);
     // return;
 
@@ -157,26 +157,30 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
       setIsLoading(true);
 
       const response = await submit(`/employee/${employee.employee_id}/`, {
-        // employee_id: employee.employee_id,
-        shift_id: selectFormValues.shift_id,
+        employee_id: employee.employee_id,
+        shift_id: formValues.shift_id,
         is_active: formValues.is_active,
       });
 
       console.log(response);
+      // setIsLoading(false);
+
+      // return;
 
       if (response?.employee_id) {
         setTimeout(() => {
           setData((prevData) => {
-            console.log(prevData, formValues);
-            prevData.map((i) =>
-              i.employee_id === formValues.employee_id
+            const d = prevData.map((i) =>
+              i.employee_id === response.employee_id
                 ? {
-                    ...prevData,
-                    shift_id: selectFormValues.shift_id,
-                    is_active: formValues.is_active,
+                    ...i,
+                    shift_id: response.shift_id,
+                    shift_name: selectFormValues.shift_id.label,
+                    is_active: response.is_active,
                   }
                 : i
             );
+            return d;
           });
           setSuccess("Employee updated successfully");
           setIsLoading(false);

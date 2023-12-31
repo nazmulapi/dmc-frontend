@@ -156,9 +156,13 @@ const DesignationManager = () => {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={4}>No data found!</td>
-                </tr>
+                <>
+                  {!isLoading && (
+                    <tr>
+                      <td colSpan={4}>No data found!</td>
+                    </tr>
+                  )}
+                </>
               )}
             </tbody>
           </table>

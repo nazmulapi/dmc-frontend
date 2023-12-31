@@ -10,7 +10,7 @@ import { submit } from "../../../lib/submit";
 const AddGroup = () => {
   const [formData, setFormData] = useState({
     group_name: "",
-    // description: "",
+    Remaks: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -26,8 +26,8 @@ const AddGroup = () => {
       valid = false;
     }
 
-    // if (!formData?.description?.trim()) {
-    //   newErrors.description = "Description is required";
+    // if (!formData?.Remaks?.trim()) {
+    //   newErrors.Remaks = "Remarks is required";
     //   valid = false;
     // }
 
@@ -74,7 +74,7 @@ const AddGroup = () => {
         // setErrors({});
         setFormData({
           group_name: "",
-          // description: "",
+          Remaks: "",
         });
       } else {
         // setSuccess("Something went wrong!");
@@ -84,7 +84,7 @@ const AddGroup = () => {
         // setErrors({});
         // setFormData({
         //   group_name: "",
-        //   // description: "",
+        //   // Remaks: "",
         // });
       }
     }
@@ -122,17 +122,17 @@ const AddGroup = () => {
                 Group Details
               </label>
               <textarea
-                name="description"
-                value={formData.description}
+                name="Remaks"
+                value={formData.Remaks}
                 className={classEase(
                   "rounded-1 form_border_focus form-control",
-                  errors.description && "is-invalid"
+                  errors.Remaks && "is-invalid"
                 )}
                 onChange={(e) => handleChange(e)}
                 rows="3"
               ></textarea>
-              {errors.description && (
-                <div className="invalid-feedback">{errors.description}</div>
+              {errors.Remaks && (
+                <div className="invalid-feedback">{errors.Remaks}</div>
               )}
             </div>
 

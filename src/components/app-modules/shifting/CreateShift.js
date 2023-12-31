@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
 import { submit } from "../../../lib/submit";
+import { toast } from "react-toastify";
 
 const CreateShift = () => {
   const [formData, setFormData] = useState({
@@ -72,27 +73,24 @@ const CreateShift = () => {
       console.log(response);
 
       if (response?.shift_id) {
-        setTimeout(() => {
-          setSuccess("Shift created successfully");
-          setIsLoading(false);
-          setFormData({
-            shift_name: "",
-            shift_beginning: "",
-            shift_end: "",
-          });
-        }, 1000);
+        toast.success("Shift created successfully");
+        // setSuccess("Shift created successfully");
+        setIsLoading(false);
+        setFormData({
+          shift_name: "",
+          shift_beginning: "",
+          shift_end: "",
+        });
       } else {
-        setTimeout(() => {
-          // setSuccess("Something went wrong!");
-          setSuccess(response?.message || "Something went wrong!");
-          setIsLoading(false);
-          // setErrors({});
-          setFormData({
-            shift_name: "",
-            shift_beginning: "",
-            shift_end: "",
-          });
-        }, 1000);
+        toast.success(response?.message || "Something went wrong!");
+        // setSuccess(response?.message || "Something went wrong!");
+        setIsLoading(false);
+        // setErrors({});
+        setFormData({
+          shift_name: "",
+          shift_beginning: "",
+          shift_end: "",
+        });
       }
     }
   };
