@@ -48,7 +48,7 @@ const DeviceManager = () => {
     try {
       // Perform delete action using API or other methods
       // For example, by making a DELETE request
-      const res = await deleteItem(`/device/${device.device_id}/`);
+      const res = await deleteItem(`/devices/${device.device_id}/`);
       if (res) {
         setData((prevData) =>
           prevData.filter((item) => item.device_id !== device.device_id)
@@ -151,7 +151,7 @@ const DeviceManager = () => {
                     <td>{item.location}</td>
                     <td>{item.active_status}</td>
                     <td>
-                      <EditDevice item={item} setItem={setData} />
+                      {/* <EditDevice item={item} setItem={setData} /> */}
 
                       <button
                         className="border-0 rounded-1"

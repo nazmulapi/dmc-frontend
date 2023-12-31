@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FaRegEdit } from "react-icons/fa";
@@ -13,7 +13,7 @@ import { fetcher } from "../../../lib/fetch";
 import { submit } from "../../../lib/submit";
 
 function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
-  // console.log(employee.is_active);
+  // console.log(employee);
   const [empId, setEmpId] = useState(employee.employee_id);
 
   const [formValues, setFormValues] = useState({
@@ -25,9 +25,13 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
     shift_id: "",
   });
 
-  // useEffect(() => {
-  //   setFormValues();
-  // }, []);
+  useEffect(() => {
+    setFormValues((prev) => ({
+      ...prev,
+      shift_id: employee.shift_id,
+      is_active: Boolean(employee.is_active),
+    }));
+  }, [employee]);
 
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
@@ -145,32 +149,38 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
 
     const valid = validateForm();
 
-    // console.log("Form Value: ", formValues);
+    // console.log("Form Value: ", formValues, selectFormValues);
     // console.log("Error: ", errors);
+    // return;
 
     if (valid) {
       setIsLoading(true);
 
       const response = await submit(`/employee/${employee.employee_id}/`, {
-        shift_id: selectFormValues.shift_id.value,
+        employee_id: employee.employee_id,
+        shift_id: formValues.shift_id,
         is_active: formValues.is_active,
       });
 
-      // console.log(response);
+      console.log(response);
+      // setIsLoading(false);
+
+      // return;
 
       if (response?.employee_id) {
         setTimeout(() => {
           setData((prevData) => {
-            console.log(prevData, formValues);
-            prevData.map((i) =>
-              i.employee_id === formValues.employee_id
+            const d = prevData.map((i) =>
+              i.employee_id === response.employee_id
                 ? {
-                    ...prevData,
-                    shift_id: selectFormValues.shift_id.value,
-                    is_active: formValues.is_active,
+                    ...i,
+                    shift_id: response.shift_id,
+                    shift_name: selectFormValues.shift_id.label,
+                    is_active: response.is_active,
                   }
                 : i
             );
+            return d;
           });
           setSuccess("Employee updated successfully");
           setIsLoading(false);
@@ -231,7 +241,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
             Active
           </label>
 
-          {console.log(formValues.is_active)}
+          {/* {console.log(formValues.is_active)} */}
           <input
             id="activeStatus"
             type="checkbox"

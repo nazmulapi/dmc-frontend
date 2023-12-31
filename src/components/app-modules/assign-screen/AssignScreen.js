@@ -14,7 +14,7 @@ import { fetcher } from "../../../lib/fetch";
 import { deleteItem, submit } from "../../../lib/submit";
 import EditAssign from "./EditAssign";
 
-const AssignScreen = () => {
+const AssignDevice = () => {
   const [data, setData] = useState(null);
 
   const { error, loading } = useSWR(`/grpdev/`, fetcher, {
@@ -146,7 +146,7 @@ const AssignScreen = () => {
 
       if (response?.id) {
         setTimeout(() => {
-          setSuccess("Assigned screen successfully");
+          setSuccess("Assigned Device successfully");
           setIsLoading(false);
           setData((prevData) => [response, ...prevData]);
           // setErrors({});
@@ -207,7 +207,7 @@ const AssignScreen = () => {
       <div>
         <div>
           <h2 className="border-bottom pb-2 mb-4 text-capitalize">
-            Assign screen
+            Assign Device
           </h2>
         </div>
         <form onSubmit={(e) => handleSubmit(e)}>
@@ -215,7 +215,7 @@ const AssignScreen = () => {
             <Col lg={4} className="px-2">
               <div className="mb-3">
                 <label htmlFor="deviceSelect" className="form-label">
-                  Select screen<span className="text-danger"> *</span>
+                  Select Device<span className="text-danger"> *</span>
                 </label>
 
                 <Select
@@ -241,7 +241,7 @@ const AssignScreen = () => {
                   className="form-select rounded-1 py-2 form_border_focus"
                   aria-label="Default select example"
                 >
-                  <option>select screen</option>
+                  <option>Select Device</option>
                   <option value="1">One</option>
                   <option value="2">Two</option>
                   <option value="3">Three</option>
@@ -412,4 +412,4 @@ const AssignScreen = () => {
   );
 };
 
-export default AssignScreen;
+export default AssignDevice;

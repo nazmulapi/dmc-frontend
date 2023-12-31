@@ -9,8 +9,9 @@ import { submit } from "../../../lib/submit";
 
 const AddDevice = () => {
   const [formData, setFormData] = useState({
-    designation: "",
-    description: "",
+    device_id: "",
+    device_ip: "",
+    device_name: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -21,13 +22,18 @@ const AddDevice = () => {
     let valid = true;
     const newErrors = {};
 
-    if (!formData?.designation?.trim()) {
-      newErrors.designation = "Designation is required";
+    if (!formData?.device_id?.trim()) {
+      newErrors.device_id = "Device name is required";
       valid = false;
     }
 
-    if (!formData?.description?.trim()) {
-      newErrors.description = "Description is required";
+    if (!formData?.device_ip?.trim()) {
+      newErrors.device_ip = "Device IP is required";
+      valid = false;
+    }
+
+    if (!formData?.device_name?.trim()) {
+      newErrors.device_name = "Device name is required";
       valid = false;
     }
 
@@ -61,20 +67,21 @@ const AddDevice = () => {
     if (valid) {
       setIsLoading(true);
 
-      const response = await submit("/designation/", formData);
+      const response = await submit("/devices/", formData);
 
       console.log(response);
 
       // return;
 
-      if (response?.id) {
-        toast.success("Designation created successfully"); // success, info, warning, error
-        setSuccess("Designation created successfully");
+      if (response?.device_id) {
+        toast.success("Device created successfully"); // success, info, warning, error
+        setSuccess("Device created successfully");
         setIsLoading(false);
         // setErrors({});
         setFormData({
-          designation: "",
-          description: "",
+          device_id: "",
+          device_ip: "",
+          device_name: "",
         });
       } else {
         // setSuccess("Something went wrong!");
@@ -83,8 +90,9 @@ const AddDevice = () => {
         setIsLoading(false);
         // setErrors({});
         // setFormData({
-        //   designation: "",
-        //   description: "",
+        //   device_id: "",
+        //   device_ip: "",
+        //   device_name: "",
         // });
       }
     }
@@ -100,41 +108,81 @@ const AddDevice = () => {
           <form onSubmit={(e) => handleSubmit(e)} method="POST">
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
+                Device ID <span className="text-danger"> *</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter device name"
+                name="device_id"
+                value={formData.device_id}
+                onChange={(e) => handleChange(e)}
+                className={classEase(
+                  "rounded-1 form_border_focus form-control",
+                  errors.device_id && "is-invalid"
+                )}
+              />
+              {errors.device_id && (
+                <div className="invalid-feedback">{errors.device_id}</div>
+              )}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
                 Device name <span className="text-danger"> *</span>
               </label>
               <input
                 type="text"
-                placeholder="Enter designation"
-                name="designation"
-                value={formData.designation}
+                placeholder="Enter device name"
+                name="device_name"
+                value={formData.device_name}
                 onChange={(e) => handleChange(e)}
                 className={classEase(
                   "rounded-1 form_border_focus form-control",
-                  errors.designation && "is-invalid"
+                  errors.device_name && "is-invalid"
                 )}
               />
-              {errors.designation && (
-                <div className="invalid-feedback">{errors.designation}</div>
+              {errors.device_name && (
+                <div className="invalid-feedback">{errors.device_name}</div>
               )}
             </div>
+
             <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
+                Device IP <span className="text-danger"> *</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter device IP"
+                name="device_ip"
+                value={formData.device_ip}
+                onChange={(e) => handleChange(e)}
+                className={classEase(
+                  "rounded-1 form_border_focus form-control",
+                  errors.device_ip && "is-invalid"
+                )}
+              />
+              {errors.device_ip && (
+                <div className="invalid-feedback">{errors.device_ip}</div>
+              )}
+            </div>
+
+            {/* <div className="mb-3">
               <label htmlFor="" className="form-label">
                 Device Details
               </label>
               <textarea
-                name="description"
-                value={formData.description}
+                name="device_ip"
+                value={formData.device_ip}
                 className={classEase(
                   "rounded-1 form_border_focus form-control",
-                  errors.description && "is-invalid"
+                  errors.device_ip && "is-invalid"
                 )}
                 onChange={(e) => handleChange(e)}
                 rows="3"
               ></textarea>
-              {errors.description && (
-                <div className="invalid-feedback">{errors.description}</div>
+              {errors.device_ip && (
+                <div className="invalid-feedback">{errors.device_ip}</div>
               )}
-            </div>
+            </div> */}
 
             {/* {success && success !== "" && (
               <div className="success-feedback mb-3">{success}</div>

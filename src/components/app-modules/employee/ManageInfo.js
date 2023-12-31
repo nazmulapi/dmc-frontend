@@ -7,8 +7,11 @@ import Button from "react-bootstrap/Button";
 // import { RiDeleteBin6Line } from "react-icons/ri";
 import EditEmployee from "./EditEmployee";
 // import Form from "react-bootstrap/Form";
+import Spinner from "react-bootstrap/Spinner";
 import { Row, Col } from "react-bootstrap";
 import classEase from "classease";
+import { toast } from "react-toastify";
+import { submit } from "../../../lib/submit";
 import { fetcher } from "../../../lib/fetch";
 import Pagination from "../../utils/Pagination";
 import {
@@ -17,6 +20,7 @@ import {
   getTime,
   getStoragePath,
 } from "../../../lib/helper";
+import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
 const ManageInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -74,33 +78,209 @@ const ManageInfo = () => {
     }
   }, [isLoading, isValidating]);
 
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadingSuccess, setUploadingSuccess] = useState("");
+  const [validationError, setValidationError] = useState(null);
+
+  const handleFileChange = (event) => {
+    setValidationError(null);
+    const files = event.target.files;
+    // Convert files to an array
+    const filesArray = Array.from(files);
+    setUploadedFiles(filesArray);
+  };
+
+  const validateFiles = () => {
+    let valid = true;
+    const newErrors = {};
+
+    // Basic validation: Check if exactly two files are selected
+    if (uploadedFiles.length !== 2) {
+      setValidationError(
+        "Please select exactly two files: 'zip_file.zip' and 'csv_file.csv'."
+      );
+      valid = false;
+      return valid;
+    }
+
+    // Validate file names
+    const fileNames = uploadedFiles.map((file) => file.name);
+    const requiredFileNames = ["zip_file.zip", "csv_file.csv"];
+
+    for (const requiredFileName of requiredFileNames) {
+      if (!fileNames.includes(requiredFileName)) {
+        setValidationError(`Missing required file: ${requiredFileName}`);
+        valid = false;
+        break;
+
+        // return valid;
+      }
+    }
+
+    return valid;
+  };
+
+  const handleFileSubmit = async (e) => {
+    e.preventDefault();
+    setUploadingSuccess("");
+
+    const valid = validateFiles();
+
+    if (!valid) {
+      toast.error(validationError);
+      return;
+    }
+
+    if (valid) {
+      setIsUploading(true);
+
+      const formData = new FormData();
+
+      // // Append each file to the formData
+      // for (const file of uploadedFiles) {
+      //   formData.append("files", file);
+      // }
+
+      // // Append each file with its corresponding key
+      // for (let i = 0; i < uploadedFiles.length; i++) {
+      //   formData.append(`file${i + 1}`, uploadedFiles[i]);
+      // }
+
+      uploadedFiles.forEach((file) => {
+        const key = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
+        formData.append(key, file);
+      });
+
+      // console.log("Form data", formData);
+
+      // return;
+
+      const response = await submit("/employee_csv/", formData, true);
+
+      console.log(response);
+      setIsUploading(false);
+      // return;
+
+      if (response?.uploaded) {
+        toast.success("CSV and ZIP uploaded successfully");
+        // setSuccess("Employee created successfully");
+        // setIsLoading(false);
+        // setErrors({});
+        // setFormValues(initialValues);
+      } else {
+        toast.error(response?.message || "Something went wrong!");
+        // setSuccess("Something went wrong!");
+        // setIsLoading(false);
+        // setErrors({});
+        // setFormValues(initialValues);
+      }
+    }
+  };
+
+  // file download
+  const handleExportToPDF = async () => {
+    // console.log(displayedData);
+    // return;
+    const headers = [
+      "Employee ID",
+      "Employee Name",
+      "Shift",
+      "Designation",
+      "Status",
+    ];
+
+    const data = displayedData.map((item) => ({
+      ID: item.employee_id,
+      username: item.username,
+      Shift: item?.shift_name || "N/A",
+      Designation: item?.designation_name || "N/A",
+      Status: item?.is_active ? "Active" : "Inactive",
+    }));
+
+    exportToPDF(headers, data, "employee");
+  };
+
+  const handleExportToCSV = () => {
+    const data = displayedData.map((item) => ({
+      "Employee ID": item.employee_id,
+      "Employee Name": item.username,
+      Shift: item?.shift_name || "N/A",
+      Designation: item?.designation_name || "N/A",
+      Status: item?.is_active ? "Active" : "Inactive",
+    }));
+
+    exportToCSV(data, "employee");
+  };
+
+  const handleExportToExcel = () => {
+    const data = displayedData.map((item) => ({
+      "Employee ID": item.employee_id,
+      "Employee Name": item.username,
+      Shift: item?.shift_name || "N/A",
+      Designation: item?.designation_name || "N/A",
+      Status: item?.is_active ? "Active" : "Inactive",
+    }));
+
+    exportToExcel(data, "employee");
+  };
+
   return (
     <>
       <section>
         <div className="search_part border mb-3">
           <div className="d-flex justify-content-between p-2">
-            <div className="">
+            <form className="" onSubmit={handleFileSubmit}>
               <div className=" d-flex">
                 <div>
                   <input
                     type="file"
                     className="form-control rounded-1 form_border_focus"
+                    multiple
+                    onChange={handleFileChange}
                   />
                 </div>
                 <div>
-                  <input
+                  <Button
+                    type="submit"
+                    // className="rounded-1 mt-2 px-4 add_btn_color border-0"
+                    className={classEase(
+                      "d-flex justify-content-center align-items-center form-control form_border_focus rounded-1 theme_color fw-semibold text-white ms-3",
+                      isUploading ? "loading" : ""
+                    )}
+                    disabled={isUploading}
+                  >
+                    import
+                    {isUploading && (
+                      <div className="spinner">
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    )}
+                  </Button>
+
+                  {/* <input
                     type="submit"
                     className="form-control form_border_focus rounded-1 theme_color fw-semibold text-white ms-3"
                     value="import"
-                  />
+                    disabled={isUploading}
+                  /> */}
                 </div>
               </div>
-            </div>
+            </form>
+
             <div className="d-flex justify-content-between">
               <div className="me-2">
                 <Button
                   type="submit"
                   className="rounded-1 px-4 btn btn-success border-0"
+                  onClick={() => handleExportToPDF()}
                 >
                   PDF
                 </Button>
@@ -109,6 +289,7 @@ const ManageInfo = () => {
                 <Button
                   type="submit"
                   className="rounded-1 px-4 btn btn-success border-0"
+                  onClick={() => handleExportToCSV()}
                 >
                   CSV
                 </Button>
@@ -117,6 +298,7 @@ const ManageInfo = () => {
                 <Button
                   type="submit"
                   className="rounded-1 px-4 btn btn-success border-0"
+                  onClick={() => handleExportToExcel()}
                 >
                   Excel
                 </Button>

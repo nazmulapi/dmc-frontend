@@ -9,6 +9,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { Row } from "react-bootstrap";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
+import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { submit } from "../../../lib/submit";
 
@@ -42,12 +43,12 @@ const AssignShift = () => {
     let valid = true;
     const newErrors = {};
 
-    if (!formValues.employee_id.trim()) {
+    if (!formValues?.employee_id?.trim()) {
       newErrors.employee_id = "Employee ID is required";
       valid = false;
     }
 
-    if (!formValues.shift_id.trim()) {
+    if (!formValues?.shift_id?.trim()) {
       newErrors.shift_id = "Shift ID is required";
       valid = false;
     }
@@ -128,25 +129,23 @@ const AssignShift = () => {
       console.log(formValues);
       // return;
 
-      const response = await submit("/employee/DMC309/", formValues);
+      const response = await submit("/shift_assign/", formValues);
 
       console.log(response);
 
-      // if (response?.employee_id) {
-      //   setTimeout(() => {
-      //     setSuccess("Employee created successfully");
-      //     setIsLoading(false);
-      //     // setErrors({});
-      //     setFormValues(initialValues);
-      //   }, 1000);
-      // } else {
-      //   setTimeout(() => {
-      //     setSuccess("Something went wrong!");
-      //     setIsLoading(false);
-      //     // setErrors({});
-      //     // setFormValues(initialValues);
-      //   }, 1000);
-      // }
+      if (response?.employee_id) {
+        toast.success("Shift assigned successfully");
+        // setSuccess("Employee created successfully");
+        setIsLoading(false);
+        // setErrors({});
+        // setFormValues(initialValues);
+      } else {
+        toast.error(response?.message || "Something went wrong!");
+        // setSuccess("");
+        setIsLoading(false);
+        // setErrors({});
+        // setFormValues(initialValues);
+      }
     }
   };
 
