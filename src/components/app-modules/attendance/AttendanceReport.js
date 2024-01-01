@@ -17,6 +17,8 @@ import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 const AttendanceManage = () => {
   const [formValues, setFormValues] = useState({
     group_id: "",
+    department_id: "",
+    designation_id: "",
     year: "",
     month: "",
     employee_id: "",
@@ -24,6 +26,8 @@ const AttendanceManage = () => {
 
   const [selectFormValues, setSelectFormValues] = useState({
     group_id: "",
+    department_id: "",
+    designation_id: "",
     year: "",
     month: "",
   });
@@ -44,7 +48,7 @@ const AttendanceManage = () => {
     mutate,
   } = useSWR(
     formSubmitted
-      ? `/attendance_log/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&page=${currentPage}&page_size=${pageSize}`
+      ? `/attendance_log/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&department_id=${formValues.department_id}&designation_id=${formValues.designation_id}&page=${currentPage}&page_size=${pageSize}`
       : null,
     fetcher,
     {
@@ -70,6 +74,36 @@ const AttendanceManage = () => {
     name: "group_id",
     label: item.group_name,
     value: item.group_id,
+  }));
+
+  const {
+    data: departmentData,
+    error: departmentFetchError,
+    isLoading: departmentFetchIsLoading,
+  } = useSWR(`/department/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const departments = departmentData?.map((item) => ({
+    name: "department_id",
+    label: item.department,
+    value: item.id,
+  }));
+
+  const {
+    data: designationsData,
+    error: designationsFetchError,
+    isLoading: designationsFetchIsLoading,
+  } = useSWR(`/designation/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const designations = designationsData?.map((item) => ({
+    name: "designation_id",
+    label: item.designation,
+    value: item.id,
   }));
 
   // const years = [2015, 2016, 2017]?.map((item) => ({
@@ -242,7 +276,7 @@ const AttendanceManage = () => {
         <div className="form_part mb-3">
           <form onSubmit={handleFormSubmit}>
             <Row>
-              <Col lg={6}>
+              <Col lg={4}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -258,33 +292,45 @@ const AttendanceManage = () => {
                     }
                     placeholder="Select group..."
                   />
-
-                  {/* <select
-                    className="form-select rounded-1 mb-3 form_border_focus"
-                    aria-label="Default select example "
-                  >
-                    <option>Select Department</option>
-                    <option value="1">Doctor</option>
-                    <option value="2">Staff</option>
-                  </select> */}
                 </div>
-
-                <div className="col-auto">
-                  <input
-                    type="search"
-                    id=""
-                    placeholder="Employee ID"
-                    className="form-control form_border_focus rounded-1"
-                    onChange={(e) =>
-                      setFormValues((prev) => ({
-                        ...prev,
-                        employee_id: e.target.value,
-                      }))
+              </Col>
+              <Col lg={4}>
+                <div>
+                  <Select
+                    className={classEase("rounded-1 form_border_focus mb-3")}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.department_id}
+                    options={departments}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "department_id")
                     }
+                    placeholder="Select department..."
                   />
                 </div>
               </Col>
-              <Col lg={6}>
+              <Col lg={4}>
+                <div>
+                  <Select
+                    className={classEase("rounded-1 form_border_focus mb-3")}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.designation_id}
+                    options={designations}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "designation_id")
+                    }
+                    placeholder="Select designation..."
+                  />
+                </div>
+              </Col>
+              <Col lg={4}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -300,18 +346,9 @@ const AttendanceManage = () => {
                     }
                     placeholder="Select year..."
                   />
-
-                  {/* <select
-                    className="form-select rounded-1 mb-3 form_border_focus"
-                    aria-label="Default select example "
-                  >
-                    <option>Select Year</option>
-                    <option value="1">2023</option>
-                    <option value="2">2022</option>
-                    <option value="2">2021</option>
-                    <option value="2">2020</option>
-                  </select> */}
                 </div>
+              </Col>
+              <Col lg={4}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -327,37 +364,33 @@ const AttendanceManage = () => {
                     }
                     placeholder="Select month..."
                   />
-
-                  {/* <select
-                    className="form-select rounded-1 mb-3 form_border_focus"
-                    aria-label="Default select example "
-                  >
-                    <option>Select Month</option>
-                    <option value="1">January</option>
-                    <option value="2">February</option>
-                    <option value="3">March</option>
-                    <option value="4">April</option>
-                    <option value="5">May</option>
-                    <option value="6">June</option>
-                    <option value="7">July</option>
-                    <option value="8">August</option>
-                    <option value="9">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="11">December</option>
-                  </select> */}
                 </div>
               </Col>
-
-              <div className="d-flex justify-content-center">
-                <button
-                  className="rounded-1 theme_color text-white px-3 py-2 border-0"
-                  type="submit"
-                >
-                  Submit
-                </button>
-              </div>
+              <Col lg={4}>
+                <div className="col-auto">
+                  <input
+                    type="search"
+                    id=""
+                    placeholder="Employee ID"
+                    className="form-control form_border_focus rounded-1"
+                    onChange={(e) =>
+                      setFormValues((prev) => ({
+                        ...prev,
+                        employee_id: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              </Col>
             </Row>
+            <div className="d-flex justify-content-center">
+              <button
+                className="rounded-1 theme_color text-white px-3 py-2 border-0"
+                type="submit"
+              >
+                Submit
+              </button>
+            </div>
           </form>
         </div>
         <div className="search_part border mb-3">

@@ -29,13 +29,14 @@ const Page = () => {
   const dataObj = dashboardData ? dashboardData.data[0] : {};
   const data = dataObj
     ? {
-        "Total Employee": dataObj.total_employee,
-        "Total Departments": dataObj.total_departments,
-        "Total Device": dataObj.total_device,
-        "Total Active Devices": dataObj.total_active_devices,
-        "Total Chekable Devices": dataObj.total_chekable_devices,
-        "Total Group": dataObj.total_group,
-        "Total Shift": dataObj.total_shift,
+        Employees: dataObj.total_employee,
+        Departments: dataObj.total_departments,
+        Devices: dataObj.total_device,
+        "Active Devices": dataObj.total_active_devices,
+        "Inactive Devices": dataObj.total_device - dataObj.total_active_devices,
+        // "Checkable Devices": dataObj.total_chekable_devices,
+        Groups: dataObj.total_group,
+        // Shifts: dataObj.total_shift,
       }
     : {};
 
