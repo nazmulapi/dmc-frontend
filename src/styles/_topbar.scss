@@ -12,6 +12,8 @@
   width: 40px;
   line-height: 70px;
   border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
 }
 .topbar .btn-primary {
   --bs-btn-bg: none !important;

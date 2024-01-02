@@ -697,7 +697,7 @@ const AddEmployee = () => {
                 <div className="mb-2">Employee Role</div>
                 <div>
                   <div className="d-flex">
-                    <div className="form-check me-2">
+                    {/* <div className="form-check me-2">
                       <input
                         id="employee_role_admin"
                         type="checkbox"
@@ -721,7 +721,7 @@ const AddEmployee = () => {
                       >
                         Is Admin
                       </label>
-                    </div>
+                    </div> */}
                     <div>
                       <div className="form-check">
                         <input
@@ -742,7 +742,7 @@ const AddEmployee = () => {
                     </div>
                   </div>
 
-                  {formValues?.is_superuser && (
+                  {/* {formValues?.is_superuser && (
                     <div className="">
                       <div className="mb-2">
                         <label className="mb-2">
@@ -790,7 +790,7 @@ const AddEmployee = () => {
                         )}
                       </div>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </Col>
