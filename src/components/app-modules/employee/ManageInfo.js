@@ -231,7 +231,7 @@ const ManageInfo = () => {
         <div className="search_part border mb-3">
           <div className="d-flex justify-content-between p-2">
             <form className="" onSubmit={handleFileSubmit}>
-              <div className=" d-flex">
+              <div className="d-flex align-items-center">
                 <div>
                   <input
                     type="file"
@@ -240,12 +240,12 @@ const ManageInfo = () => {
                     onChange={handleFileChange}
                   />
                 </div>
-                <div>
+                <div className="ms-3">
                   <Button
                     type="submit"
                     // className="rounded-1 mt-2 px-4 add_btn_color border-0"
                     className={classEase(
-                      "d-flex justify-content-center align-items-center form-control form_border_focus rounded-1 theme_color fw-semibold text-white ms-3",
+                      "d-flex justify-content-center align-items-center form-control form_border_focus rounded-1 theme_color fw-semibold text-white",
                       isUploading ? "loading" : ""
                     )}
                     disabled={isUploading}
@@ -271,6 +271,18 @@ const ManageInfo = () => {
                     value="import"
                     disabled={isUploading}
                   /> */}
+                </div>
+                <div className="ms-2 d-flex align-items-center">
+                  <a
+                    className="me-2"
+                    href="/csv_file.csv"
+                    download="csv_file.csv"
+                  >
+                    Sample CSV
+                  </a>
+                  <a href="/zip_file.zip" download="zip_file.zip">
+                    Sample ZIP
+                  </a>
                 </div>
               </div>
             </form>

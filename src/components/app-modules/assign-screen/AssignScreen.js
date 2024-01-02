@@ -22,6 +22,7 @@ const AssignDevice = () => {
     keepPreviousData: true,
     onSuccess: (fetchedData) => {
       // Update local state when data is successfully fetched
+      // console.log(fetchedData);
       setData(fetchedData);
     },
   });
@@ -323,7 +324,7 @@ const AssignDevice = () => {
             <thead>
               <tr>
                 <th scope="col">SL</th>
-                <th scope="col">Device ID</th>
+                <th scope="col">Device</th>
                 <th scope="col">Group</th>
                 <th scope="col">Action</th>
               </tr>
@@ -332,9 +333,9 @@ const AssignDevice = () => {
               {data?.length ? (
                 data.map((item, index) => (
                   <tr key={index}>
-                    <th scope="row">{item.id}</th>
-                    <td>{item.device_id}</td>
-                    <td>{item.group_id}</td>
+                    <th scope="row">{index + 1}</th>
+                    <td>{item.device_name}</td>
+                    <td>{item.group_name}</td>
                     <td>
                       {/* <button className="border-0 rounded-1 bg-danger">
                         <RiDeleteBin6Line color="#fff" />

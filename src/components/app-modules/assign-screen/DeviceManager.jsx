@@ -124,20 +124,20 @@ const DeviceManager = () => {
                 <th scope="col">Device IP</th>
                 <th scope="col">Device Name</th>
                 <th scope="col">Location</th>
-                <th scope="col">Status</th>
+                {/* <th scope="col">Status</th> */}
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
               {error && (
                 <tr>
-                  <td colSpan={7}>Failed to load</td>
+                  <td colSpan={6}>Failed to load</td>
                 </tr>
               )}
 
               {isLoading && (
                 <tr>
-                  <td colSpan={7}>Loading...</td>
+                  <td colSpan={6}>Loading...</td>
                 </tr>
               )}
 
@@ -149,7 +149,7 @@ const DeviceManager = () => {
                     <td>{item.device_ip}</td>
                     <td>{item.device_name}</td>
                     <td>{item.location}</td>
-                    <td>{item.active_status}</td>
+                    {/* <td>{item.active_status}</td> */}
                     <td>
                       {/* <EditDevice item={item} setItem={setData} /> */}
 
@@ -169,7 +169,7 @@ const DeviceManager = () => {
                 <>
                   {!isLoading && (
                     <tr>
-                      <td colSpan={7}>No data found!</td>
+                      <td colSpan={6}>No data found!</td>
                     </tr>
                   )}
                 </>
