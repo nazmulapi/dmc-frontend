@@ -443,9 +443,7 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">
-                  Email address <span className="text-danger"> *</span>
-                </div>
+                <div className="mb-2">Email address</div>
                 <input
                   type="email"
                   placeholder=""
@@ -550,9 +548,7 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">
-                  Phone Number <span className="text-danger"> *</span>
-                </div>
+                <div className="mb-2">Phone Number</div>
                 <input
                   type="number"
                   placeholder=""

@@ -120,7 +120,7 @@ const AddDepartment = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="description" className="form-label">
-                Department Details
+                Department Details <span className="text-danger"> *</span>
               </label>
               <textarea
                 className={`form-control form_border_focus rounded-1 ${
