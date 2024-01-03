@@ -16,7 +16,7 @@ const Page = () => {
         <div className="">
           <h3 className="text-white text-center mb-4 border-bottom pb-3">
             <Link
-              href="/"
+              href="/dashboard"
               className="text-decoration-none fw-bold text-white text-center "
             >
               DMC
