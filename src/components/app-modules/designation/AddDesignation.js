@@ -119,7 +119,7 @@ const AddDesignation = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="" className="form-label">
-                Designation Details
+                Designation Details <span className="text-danger"> *</span>
               </label>
               <textarea
                 name="description"

@@ -8,17 +8,18 @@ import Link from "next/link";
 import useSWR from "swr";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import classEase from "classease";
+import { toast } from "react-toastify";
 import { deleteItem } from "../../../lib/submit";
 import { fetcher } from "../../../lib/fetch";
 import { formatDate } from "../../../lib/helper";
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [success, setSuccess] = useState("");
+  // const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess("");
+    // setSuccess("");
 
     setIsLoading(true);
     // console.log(formData);
@@ -26,19 +27,17 @@ const Page = () => {
     const response = await deleteItem("/archive_log/");
     // console.log(response);
     // return;
-    if (response?.archive_time) {
+    if (!response?.error) {
       // After successful sync operation
-      const lastSyncDateTime = new Date().toISOString();
+      // const lastSyncDateTime = new Date().toISOString();
       // localStorage.setItem("lastSyncDateTime", lastSyncDateTime);
       // setLastSyncDateTime(lastSyncDateTime);
-      setTimeout(() => {
-        setSuccess(response?.message || "Log data successfully archived");
-        setIsLoading(false);
-      }, 1000);
-
-      setTimeout(() => {
-        setSuccess("");
-      }, 3000);
+      // setSuccess(response?.message || "Log data successfully archived");
+      setIsLoading(false);
+      toast.success(response?.message || "Log data successfully archived");
+    } else {
+      setIsLoading(false);
+      toast.error(response?.message || "Something went wrong!");
     }
   };
 
@@ -75,9 +74,9 @@ const Page = () => {
           last clean data date: 10-10-2023 at 00:00:00 pm
         </p> */}
 
-        {success && success !== "" && (
+        {/* {success && success !== "" && (
           <div className="success-feedback mb-3 text-center">{success}</div>
-        )}
+        )} */}
       </div>
     </>
   );

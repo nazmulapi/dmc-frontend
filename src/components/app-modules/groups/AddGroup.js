@@ -26,10 +26,10 @@ const AddGroup = () => {
       valid = false;
     }
 
-    // if (!formData?.Remaks?.trim()) {
-    //   newErrors.Remaks = "Remarks is required";
-    //   valid = false;
-    // }
+    if (!formData?.Remaks?.trim()) {
+      newErrors.Remaks = "Remarks is required";
+      valid = false;
+    }
 
     setErrors(newErrors);
 
@@ -119,7 +119,7 @@ const AddGroup = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="" className="form-label">
-                Group Details
+                Remarks <span className="text-danger"> *</span>
               </label>
               <textarea
                 name="Remaks"

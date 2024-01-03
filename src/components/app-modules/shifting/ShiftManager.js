@@ -8,6 +8,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
+import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
 import EditShift from "./EditShift";
@@ -46,15 +47,23 @@ const ShiftManager = () => {
       // Perform delete action using API or other methods
       // For example, by making a DELETE request
       const res = await deleteItem(`/shift/${shift.shift_id}/`);
-      if (res) {
+      if (!res?.error) {
         setData((prevData) =>
           prevData.filter((item) => item.shift_id !== shift.shift_id)
         );
         setShow(false);
         setDeleting(false);
+        toast.success(res?.message || "Shift deleted successfully");
+      } else {
+        setShow(false);
+        setDeleting(false);
+        toast.error(res?.message || "Something went wrong!");
       }
     } catch (error) {
       console.error("Delete failed", error);
+      setShow(false);
+      setDeleting(false);
+      toast.error("Something went wrong!");
     }
   };
 
