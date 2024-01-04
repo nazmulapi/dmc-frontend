@@ -14,7 +14,7 @@ const AddDesignation = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState("");
+  // const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
@@ -37,7 +37,7 @@ const AddDesignation = () => {
   };
 
   const handleChange = (e) => {
-    setSuccess("");
+    // setSuccess("");
 
     const { name, value } = e.target;
 
@@ -54,7 +54,7 @@ const AddDesignation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess("");
+    // setSuccess("");
 
     const valid = validateForm();
 
@@ -68,24 +68,24 @@ const AddDesignation = () => {
       // return;
 
       if (response?.id) {
-        toast.success("Designation created successfully"); // success, info, warning, error
-        setSuccess("Designation created successfully");
+        // setSuccess("Designation created successfully");
         setIsLoading(false);
         // setErrors({});
         setFormData({
           designation: "",
           description: "",
         });
+        toast.success("Designation created successfully"); // success, info, warning, error
       } else {
         // setSuccess("Something went wrong!");
-        toast.error(response?.message || "Something went wrong!");
-        setSuccess(response?.message || "Something went wrong!");
+        // setSuccess(response?.message || "Something went wrong!");
         setIsLoading(false);
         // setErrors({});
         // setFormData({
         //   designation: "",
         //   description: "",
         // });
+        toast.error(response?.message || "Something went wrong!");
       }
     }
   };

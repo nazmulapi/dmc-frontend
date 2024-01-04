@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
-import { submit } from "../../../lib/submit";
 import classEase from "classease";
+import { toast } from "react-toastify";
+import { submit } from "../../../lib/submit";
 
 const AddDepartment = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +14,7 @@ const AddDepartment = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState("");
+  // const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
@@ -36,7 +37,7 @@ const AddDepartment = () => {
   };
 
   const handleChange = (e) => {
-    setSuccess("");
+    // setSuccess("");
 
     const { name, value } = e.target;
 
@@ -53,7 +54,7 @@ const AddDepartment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess("");
+    // setSuccess("");
 
     const valid = validateForm();
 
@@ -62,31 +63,29 @@ const AddDepartment = () => {
 
       const response = await submit("/department/", formData);
 
-      console.log(response);
+      // console.log(response);
 
       // return;
 
       if (response?.id) {
-        setTimeout(() => {
-          setSuccess("Department created successfully");
-          setIsLoading(false);
-          // setErrors({});
-          setFormData({
-            department: "",
-            description: "",
-          });
-        }, 1000);
+        // setSuccess("Department created successfully");
+        setIsLoading(false);
+        // setErrors({});
+        setFormData({
+          department: "",
+          description: "",
+        });
+        toast.success(response?.message || "Department created successfully");
       } else {
-        setTimeout(() => {
-          // setSuccess("Something went wrong!");
-          setSuccess(response?.message || "Something went wrong!");
-          setIsLoading(false);
-          // setErrors({});
-          setFormData({
-            department: "",
-            description: "",
-          });
-        }, 1000);
+        setIsLoading(false);
+        // setSuccess("Something went wrong!");
+        //  setSuccess(response?.message || "Something went wrong!");
+        // setErrors({});
+        // setFormData({
+        //   department: "",
+        //   description: "",
+        // });
+        toast.error(response?.message || "Something went wrong!");
       }
     }
   };
@@ -137,9 +136,9 @@ const AddDepartment = () => {
               )}
             </div>
 
-            {success && success !== "" && (
+            {/* {success && success !== "" && (
               <div className="success-feedback mb-3">{success}</div>
-            )}
+            )} */}
 
             <Button
               type="submit"
