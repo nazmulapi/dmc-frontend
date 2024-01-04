@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
+import { toast } from "react-toastify";
 import { syncManual } from "../../../lib/submit";
 import { formatDate } from "../../../lib/helper";
 
@@ -70,20 +71,26 @@ const Manage = () => {
         log: lastSyncDateTime,
       }));
 
-      setTimeout(() => {
-        setLogState((prev) => ({
-          ...prev,
-          success: "Sync successfull",
-          isLoading: false,
-        }));
-      }, 1000);
+      setLogState((prev) => ({
+        ...prev,
+        // success: "Sync successfull",
+        isLoading: false,
+      }));
 
-      setTimeout(() => {
-        setLogState((prev) => ({
-          ...prev,
-          success: "",
-        }));
-      }, 3000);
+      toast.success("Sync successfull");
+
+      // setLogState((prev) => ({
+      //   ...prev,
+      //   success: "",
+      // }));
+    } else {
+      setLogState((prev) => ({
+        ...prev,
+        // success: "Sync successfull",
+        isLoading: false,
+      }));
+
+      toast.error("Sync failed");
     }
   };
 
@@ -112,20 +119,26 @@ const Manage = () => {
         mis: lastSyncDateTime,
       }));
 
-      setTimeout(() => {
-        setMisState((prev) => ({
-          ...prev,
-          success: "Sync successfull",
-          isLoading: false,
-        }));
-      }, 1000);
+      setMisState((prev) => ({
+        ...prev,
+        // success: "Sync successfull",
+        isLoading: false,
+      }));
 
-      setTimeout(() => {
-        setMisState((prev) => ({
-          ...prev,
-          success: "",
-        }));
-      }, 3000);
+      toast.success("Sync successfull");
+
+      // setMisState((prev) => ({
+      //   ...prev,
+      //   success: "",
+      // }));
+    } else {
+      setMisState((prev) => ({
+        ...prev,
+        // success: "Sync successfull",
+        isLoading: false,
+      }));
+
+      toast.error("Sync failed");
     }
   };
 
@@ -218,11 +231,11 @@ const Manage = () => {
             </h4>
           )}
 
-          {logState?.success && logState?.success !== "" && (
+          {/* {logState?.success && logState?.success !== "" && (
             <div className="success-feedback mb-3 text-center">
               {logState?.success}
             </div>
-          )}
+          )} */}
         </Row>
       </form>
 

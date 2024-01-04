@@ -12,6 +12,7 @@ const AddDevice = () => {
     device_id: "",
     device_ip: "",
     device_name: "",
+    active_status: "inactive",
   });
 
   const [errors, setErrors] = useState({});
@@ -45,17 +46,24 @@ const AddDevice = () => {
   const handleChange = (e) => {
     setSuccess("");
 
-    const { name, value } = e.target;
+    const { name, type, value } = e.target;
 
     setErrors({
       ...errors,
       [name]: "",
     });
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (type === "checkbox") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: e.target.checked ? "active" : "inactive",
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -163,6 +171,21 @@ const AddDevice = () => {
               {errors.device_ip && (
                 <div className="invalid-feedback">{errors.device_ip}</div>
               )}
+            </div>
+
+            <div className="mb-2">
+              <input
+                id="deviceStatus"
+                type="checkbox"
+                name="active_status"
+                checked={formData.active_status === "active"}
+                // value={formValues.is_active}
+                onChange={(e) => handleChange(e)}
+                className="form-check-input"
+              />
+              <label className="mb-2 ms-2" htmlFor="employeeStatus">
+                Active
+              </label>
             </div>
 
             {/* <div className="mb-3">

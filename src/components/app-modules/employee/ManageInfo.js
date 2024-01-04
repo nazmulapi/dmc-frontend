@@ -336,8 +336,10 @@ const ManageInfo = () => {
                 <th scope="col">image</th>
                 <th scope="col">Employee ID</th>
                 <th scope="col">Employee Name</th>
-                <th scope="col">Shift</th>
                 <th scope="col">Designation</th>
+                <th scope="col">Group</th>
+                <th scope="col">Department</th>
+                <th scope="col">Shift</th>
                 <th scope="col">Status</th>
                 <th scope="col">Action</th>
               </tr>
@@ -345,7 +347,7 @@ const ManageInfo = () => {
             <tbody>
               {error && (
                 <tr>
-                  <td colSpan={9}>Failed to load</td>
+                  <td colSpan={10}>Failed to load</td>
                 </tr>
               )}
 
@@ -372,8 +374,10 @@ const ManageInfo = () => {
                       </th>
                       <td>{item.employee_id}</td>
                       <td>{item.username}</td>
-                      <td>{item?.shift_name || "N/A"}</td>
                       <td>{item?.designation_name || "N/A"}</td>
+                      <td>{item?.gruop_name || "N/A"}</td>
+                      <td>{item?.department_name || "N/A"}</td>
+                      <td>{item?.shift_name || "N/A"}</td>
                       <td>{item?.is_active ? "Active" : "Inactive"}</td>
                       <td>
                         {/* {console.log(item)} */}

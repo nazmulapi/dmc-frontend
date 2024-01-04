@@ -7,6 +7,7 @@ import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
+import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { submit } from "../../../lib/submit";
 import GetDataMis from "./GetDataMis";
@@ -327,19 +328,18 @@ const AddEmployee = () => {
       console.log(response);
 
       if (response?.employee_id) {
-        setTimeout(() => {
-          setSuccess("Employee created successfully");
-          setIsLoading(false);
-          // setErrors({});
-          setFormValues(initialValues);
-        }, 1000);
+        // setSuccess("Employee created successfully");
+        setIsLoading(false);
+        // setErrors({});
+        setFormValues(initialValues);
+
+        toast.success("Employee created successfully");
       } else {
-        setTimeout(() => {
-          setSuccess("Something went wrong!");
-          setIsLoading(false);
-          // setErrors({});
-          // setFormValues(initialValues);
-        }, 1000);
+        setSuccess("Something went wrong!");
+        setIsLoading(false);
+        // setErrors({});
+        // setFormValues(initialValues);
+        toast.error(response?.message || "Something went wrong!");
       }
     }
   };

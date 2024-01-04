@@ -10,6 +10,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
+import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem, submit } from "../../../lib/submit";
 import EditAssign from "./EditAssign";
@@ -38,7 +39,7 @@ const AssignDevice = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState("");
+  // const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -91,7 +92,7 @@ const AssignDevice = () => {
   };
 
   const handleSelectChange = async (selectedOption, key) => {
-    setSuccess("");
+    // setSuccess("");
 
     // when cleared
     if (!selectedOption || !selectedOption.value) {
@@ -134,7 +135,7 @@ const AssignDevice = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess("");
+    // setSuccess("");
 
     const valid = validateForm();
 
@@ -146,27 +147,25 @@ const AssignDevice = () => {
       console.log(response);
 
       if (response?.id) {
-        setTimeout(() => {
-          setSuccess("Assigned Device successfully");
-          setIsLoading(false);
-          setData((prevData) => [response, ...prevData]);
-          // setErrors({});
-          setFormValues({
-            device_id: "",
-            group_id: "",
-          });
-          setSelectFormValues({
-            device_id: "",
-            group_id: "",
-          });
-        }, 1000);
+        // setSuccess("Assigned Device successfully");
+        setIsLoading(false);
+        setData((prevData) => [response, ...prevData]);
+        // setErrors({});
+        setFormValues({
+          device_id: "",
+          group_id: "",
+        });
+        setSelectFormValues({
+          device_id: "",
+          group_id: "",
+        });
+        toast.success(response?.message || "Assigned device successfully");
       } else {
-        setTimeout(() => {
-          setSuccess(response?.message || "Something went wrong!");
-          setIsLoading(false);
-          // setErrors({});
-          // setFormValues(initialValues);
-        }, 1000);
+        // setSuccess(response?.message || "Something went wrong!");
+        setIsLoading(false);
+        // setErrors({});
+        // setFormValues(initialValues);
+        toast.error(response?.message || "Something went wrong!");
       }
     }
   };
@@ -193,13 +192,18 @@ const AssignDevice = () => {
         );
         setShow(false);
         setDeleting(false);
+        toast.success(res?.message || "Deletion successful!!");
       } else if (res) {
-        setSuccess(res?.message || "Something went wrong!");
+        // setSuccess(res?.message || "Something went wrong!");
         setDeleting(false);
         setShow(false);
+        toast.error(res?.message || "Something went wrong!");
       }
     } catch (error) {
       console.error("Delete failed", error);
+      setDeleting(false);
+      setShow(false);
+      toast.error(res?.message || "Something went wrong!");
     }
   };
 
@@ -291,14 +295,18 @@ const AssignDevice = () => {
               </div>
             </Col>
 
-            {success && success !== "" && (
+            {/* {success && success !== "" && (
               <div className="success-feedback mb-3">{success}</div>
-            )}
+            )} */}
 
             <div className="button-section">
               <button
-                className="dynami_button submit ms-2 rounded-1"
+                // className="dynami_button submit ms-2 rounded-1 d-flex"
                 type="submit"
+                className={classEase(
+                  "dynami_button submit rounded-1 mt-2 px-0 d-flex justify-content-center align-items-center app-button",
+                  isLoading ? "loading" : ""
+                )}
                 disabled={isLoading}
               >
                 Submit
@@ -330,6 +338,17 @@ const AssignDevice = () => {
               </tr>
             </thead>
             <tbody>
+              {error && (
+                <tr>
+                  <td colSpan={4}>Failed to load</td>
+                </tr>
+              )}
+              {loading && (
+                <tr>
+                  <td colSpan={4}>Loading...</td>
+                </tr>
+              )}
+
               {data?.length ? (
                 data.map((item, index) => (
                   <tr key={index}>
@@ -354,9 +373,13 @@ const AssignDevice = () => {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={4}>No data found!</td>
-                </tr>
+                <>
+                  {!loading && (
+                    <tr>
+                      <td colSpan={4}>No data found!</td>
+                    </tr>
+                  )}
+                </>
               )}
             </tbody>
           </table>

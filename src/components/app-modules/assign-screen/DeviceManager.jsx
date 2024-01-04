@@ -133,7 +133,7 @@ const DeviceManager = () => {
                 <th scope="col">Device IP</th>
                 <th scope="col">Device Name</th>
                 <th scope="col">Location</th>
-                {/* <th scope="col">Status</th> */}
+                <th scope="col">Status</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -158,7 +158,9 @@ const DeviceManager = () => {
                     <td>{item.device_ip}</td>
                     <td>{item.device_name}</td>
                     <td>{item.location}</td>
-                    {/* <td>{item.active_status}</td> */}
+                    <td>
+                      {item?.active_status === "active" ? "Active" : "Inactive"}
+                    </td>
                     <td>
                       {/* <EditDevice item={item} setItem={setData} /> */}
 
