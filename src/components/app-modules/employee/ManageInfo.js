@@ -185,16 +185,20 @@ const ManageInfo = () => {
     const headers = [
       "Employee ID",
       "Employee Name",
-      "Shift",
       "Designation",
+      "Group",
+      "Department",
+      "Shift",
       "Status",
     ];
 
     const data = displayedData.map((item) => ({
       ID: item.employee_id,
       username: item.username,
-      Shift: item?.shift_name || "N/A",
       Designation: item?.designation_name || "N/A",
+      Group: item?.group_name || "N/A",
+      Department: item?.department_name || "N/A",
+      Shift: item?.shift_name || "N/A",
       Status: item?.is_active ? "Active" : "Inactive",
     }));
 
@@ -205,8 +209,10 @@ const ManageInfo = () => {
     const data = displayedData.map((item) => ({
       "Employee ID": item.employee_id,
       "Employee Name": item.username,
-      Shift: item?.shift_name || "N/A",
       Designation: item?.designation_name || "N/A",
+      Group: item?.group_name || "N/A",
+      Department: item?.department_name || "N/A",
+      Shift: item?.shift_name || "N/A",
       Status: item?.is_active ? "Active" : "Inactive",
     }));
 
@@ -217,8 +223,10 @@ const ManageInfo = () => {
     const data = displayedData.map((item) => ({
       "Employee ID": item.employee_id,
       "Employee Name": item.username,
-      Shift: item?.shift_name || "N/A",
       Designation: item?.designation_name || "N/A",
+      Group: item?.group_name || "N/A",
+      Department: item?.department_name || "N/A",
+      Shift: item?.shift_name || "N/A",
       Status: item?.is_active ? "Active" : "Inactive",
     }));
 
