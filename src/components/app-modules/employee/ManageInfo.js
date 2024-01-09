@@ -375,7 +375,7 @@ const ManageInfo = () => {
                       <td>{item.employee_id}</td>
                       <td>{item.username}</td>
                       <td>{item?.designation_name || "N/A"}</td>
-                      <td>{item?.gruop_name || "N/A"}</td>
+                      <td>{item?.group_name || "N/A"}</td>
                       <td>{item?.department_name || "N/A"}</td>
                       <td>{item?.shift_name || "N/A"}</td>
                       <td>{item?.is_active ? "Active" : "Inactive"}</td>
