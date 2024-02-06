@@ -12,6 +12,8 @@ const AddDevice = () => {
     device_id: "",
     device_ip: "",
     device_name: "",
+    username: "",
+    password: "",
     active_status: "inactive",
   });
 
@@ -35,6 +37,16 @@ const AddDevice = () => {
 
     if (!formData?.device_name?.trim()) {
       newErrors.device_name = "Device name is required";
+      valid = false;
+    }
+
+    if (!formData?.username?.trim()) {
+      newErrors.username = "Device username is required";
+      valid = false;
+    }
+
+    if (!formData?.password?.trim()) {
+      newErrors.password = "Device password is required";
       valid = false;
     }
 
@@ -90,6 +102,8 @@ const AddDevice = () => {
           device_id: "",
           device_ip: "",
           device_name: "",
+          username: "",
+          password: "",
         });
       } else {
         // setSuccess("Something went wrong!");
@@ -170,6 +184,46 @@ const AddDevice = () => {
               />
               {errors.device_ip && (
                 <div className="invalid-feedback">{errors.device_ip}</div>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
+                Username <span className="text-danger"> *</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter device username"
+                name="username"
+                value={formData.username}
+                onChange={(e) => handleChange(e)}
+                className={classEase(
+                  "rounded-1 form_border_focus form-control",
+                  errors.username && "is-invalid"
+                )}
+              />
+              {errors.username && (
+                <div className="invalid-feedback">{errors.username}</div>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
+                Password <span className="text-danger"> *</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter device password"
+                name="password"
+                value={formData.password}
+                onChange={(e) => handleChange(e)}
+                className={classEase(
+                  "rounded-1 form_border_focus form-control",
+                  errors.password && "is-invalid"
+                )}
+              />
+              {errors.password && (
+                <div className="invalid-feedback">{errors.password}</div>
               )}
             </div>
 

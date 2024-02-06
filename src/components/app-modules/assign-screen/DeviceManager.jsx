@@ -31,7 +31,8 @@ const DeviceManager = () => {
         (item) =>
           item.device_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           item.device_ip.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.device_id.toLowerCase().includes(searchQuery.toLowerCase())
+          item.device_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.username.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
@@ -132,6 +133,8 @@ const DeviceManager = () => {
                 <th scope="col">Device ID</th>
                 <th scope="col">Device IP</th>
                 <th scope="col">Device Name</th>
+                <th scope="col">Device Username</th>
+                <th scope="col">Device Password</th>
                 <th scope="col">Location</th>
                 <th scope="col">Status</th>
                 <th scope="col">Action</th>
@@ -140,13 +143,13 @@ const DeviceManager = () => {
             <tbody>
               {error && (
                 <tr>
-                  <td colSpan={6}>Failed to load</td>
+                  <td colSpan={9}>Failed to load</td>
                 </tr>
               )}
 
               {isLoading && (
                 <tr>
-                  <td colSpan={6}>Loading...</td>
+                  <td colSpan={9}>Loading...</td>
                 </tr>
               )}
 
@@ -157,6 +160,8 @@ const DeviceManager = () => {
                     <td>{item.device_id}</td>
                     <td>{item.device_ip}</td>
                     <td>{item.device_name}</td>
+                    <td>{item.username}</td>
+                    <td>{item.password}</td>
                     <td>{item.location}</td>
                     <td>
                       {item?.active_status === "active" ? "Active" : "Inactive"}
@@ -180,7 +185,7 @@ const DeviceManager = () => {
                 <>
                   {!isLoading && (
                     <tr>
-                      <td colSpan={6}>No data found!</td>
+                      <td colSpan={9}>No data found!</td>
                     </tr>
                   )}
                 </>
