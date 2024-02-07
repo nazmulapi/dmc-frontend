@@ -1,0 +1,118 @@
+:root,
+::after,
+::before {
+  --dmc-white: #ffffff;
+  --dmc-black: #000000;
+  --dmc-success: #28a745;
+  --dmc-danger: #dc3545;
+  --dmc-warning: #ffc107;
+
+  // theme color
+  --dmc-theme-color: #ef4060;
+
+  // text color
+  --dmc-text-color-primary: #555555;
+  --dmc-text-color-secondary: #111111;
+  --dmc-text-color-tertiary: #9baab3;
+  --dmc-text-color-designation: #7b7b7b;
+  --dmc-text-color-menu: #666666;
+
+  // background color
+  --dmc-background-color-primary: #ffffff;
+  --dmc-background-color-secondary: #f7f8f9;
+  --dmc-avatar-background: #fea6b4;
+
+  // gradient background
+  --dmc-gradient-from: #dd2476;
+  --dmc-gradient-to: #fa5252;
+  --dmc-background-gradient-from: rgba(220, 236, 236, 0.2);
+  --dmc-background-gradient-to: rgba(220, 236, 236, 0.5);
+
+  // backdrop
+  --dmc-backdrop-background: rgba(0, 0, 0, 0.3);
+
+  // border color
+  --dmc-border-primary: rgba(238, 238, 238, 1);
+  --dmc-border-secondary: rgba(119, 119, 119, 1);
+
+  // border radius
+  --dmc-border-radius-alpha: 15px / 30px;
+  --dmc-border-radius-alpha: 191px 90px 60px 59px/60px 60px 123px 163px;
+  --dmc-border-radius-alpha: 20px 20px 32px 32px;
+  --dmc-border-radius-primary: 20px;
+
+  // shadow
+  --dmc-box-shadow-primary: 0 2.5rem 3.125rem rgb(103 118 128 / 10%);
+  --dmc-drop-shadow: drop-shadow(0 20px 13px rgba(0, 0, 0, 0.03))
+    drop-shadow(0 8px 5px rgba(0, 0, 0, 0.08));
+
+  // scrollbar
+  --dmc-scrollbar-thumb: #c1c1c1;
+
+  // icon color
+  --dmc-brand-facebook: #1877f2;
+  --dmc-brand-stackoverflow: #f48024;
+  --dmc-brand-github: #6cc644;
+  --dmc-brand-linkedin: #0077b5;
+  --dmc-brand-whatsapp: #075e54;
+  --dmc-brand-messenger: #0084ff;
+  --dmc-brand-skype: #00aff0;
+
+  --dmc-icon-mobile: #e93b81;
+  --dmc-icon-email: #6ab5b9;
+  --dmc-icon-location: #0077b3;
+  --dmc-icon-flag: #00684d;
+
+  // transition
+  --dmc-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --dmc-transition-duration: 300ms;
+
+  // transform
+  --dmc-transform-primary: skew(10deg, -10deg);
+
+  /*
+    scheme 2
+  */
+  // --dmc-theme-color: #ee6057;
+  // --dmc-gradient-from: #ee6057;
+  // --dmc-gradient-to: #ee607f;
+  // --dmc-background-gradient-from: rgba(239, 211, 238, 0.4);
+  // --dmc-background-gradient-to: rgba(219, 238, 239, 0.4);
+}
+
+.dark,
+.dark ::after,
+.dark ::before {
+  // text color
+  --dmc-text-color-primary: #aaaaaa;
+  --dmc-text-color-secondary: #eeeeee;
+  --dmc-text-color-tertiary: #64554c;
+  --dmc-text-color-designation: #848484;
+  --dmc-text-color-menu: #999999;
+
+  // background color
+  --dmc-background-color-primary: #111111;
+  --dmc-background-color-secondary: #1d1d1d;
+
+  // gradient background
+  --dmc-background-gradient-from: rgba(51, 28, 46, 0.9);
+  --dmc-background-gradient-to: rgba(38, 19, 48, 0.8);
+
+  // backdrop
+  --dmc-backdrop-background: rgba(255, 255, 255, 0.3);
+
+  // border color
+  --dmc-border-primary: rgba(58, 58, 58, 1);
+  --dmc-border-secondary: rgba(136, 136, 136, 1);
+
+  // shadow
+  --dmc-box-shadow-primary: 0 2.5rem 3.125rem rgb(103 118 128 / 10%);
+  --dmc-drop-shadow: drop-shadow(0 20px 13px rgba(0, 0, 0, 0.03))
+    drop-shadow(0 8px 5px rgba(0, 0, 0, 0.08));
+
+  // scrollbar
+  --dmc-scrollbar-thumb: #2e2e2e;
+}
+
+@media (prefers-color-scheme: dark) {
+}
