@@ -45,7 +45,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="topbar shadow d-flex justify-content-end align-items-center">
+    <div className="topbar d-flex justify-content-end align-items-center">
       <Dropdown>
         <Dropdown.Toggle className="border-0 pro_img_bg">
           {userImagePath && userImagePath !== "" && (

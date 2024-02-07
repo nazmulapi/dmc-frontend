@@ -1,9 +1,8 @@
 html,
 body {
   overflow-x: hidden;
-  background: url("/bg.jpg") no-repeat center;
-  background-size: cover;
   font-family: "Open Sans", sans-serif !important;
+  background-color: #edf1f5 !important;
 }
 P {
   font-size: 14px !important;
@@ -178,10 +177,13 @@ employee manage css end
 }
 .form-select:focus,
 .form-control:focus {
-  border-color: #2684ff !important;
+  border-color: var(--dmc-theme-color-secondary) !important;
 }
 .select__control {
   box-shadow: none !important;
+}
+.select__control--is-focused {
+  border-color: var(--dmc-theme-color-secondary) !important;
 }
 
 // dynamic form

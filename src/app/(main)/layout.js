@@ -1,5 +1,7 @@
 // import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import "ag-grid-community/styles/ag-grid.css"; // Core CSS
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 // import { authTokenKey } from "../../lib/config";
 // import Accessible from "../../components/utils/CheckAccessibleForMainPages";
 import SideMenu from "../../components/app-layouts/SideMenu";
@@ -36,7 +38,7 @@ export default async function RootLayout({ children }) {
           <div>
             <Navbar />
           </div>
-          <div className="m-3 p-3 bg-white rounded">{children}</div>
+          <div className="m-3 p-3">{children}</div>
         </div>
       </div>
     </>

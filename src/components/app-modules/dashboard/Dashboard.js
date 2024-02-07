@@ -51,8 +51,8 @@ const Page = () => {
               <div data-aos="fade-up" data-aos-duration="700">
                 <MdGroups size={"60px"} color="#fff" />
                 {/* <img src="/face.png" alt="" className="screen_img" /> */}
-                <p className="m-0 text-capitalize text-white font_20">{key}</p>
-                <div className="mt-1 m-0 fw-bold text-white">
+                <p className="m-0 text-capitalize font_20">{key}</p>
+                <div className="mt-1 m-0 fw-bold">
                   {isLoading ? (
                     <div className="spinner">
                       <Spinner

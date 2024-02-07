@@ -1,10 +1,16 @@
-body {
-  /* font-family: 'Oswald', sans-serif; */
+.main_logo {
+  margin-bottom: 10px;
 }
-
+.main_logo .logo_text {
+  font-size: 14px;
+  text-align: left;
+  line-height: 1.5;
+  font-weight: normal;
+  color: #fff;
+}
 .side_nav_bg {
-  background-color: #683091;
-  /* position: fixed ; */
+  background-color: var(--dmc-theme-color-primary);
+  /* position: fixed; */
   height: 100vh !important;
 }
 .side_nav {
@@ -15,13 +21,13 @@ body {
   --bs-accordion-border-color: none;
 }
 #navigation_part .accordion-body {
-  padding-top: 5px;
-  padding-bottom: 0px;
+  padding: 0;
 }
 #navigation_part .accordion-button {
   padding: 0px !important;
   background-color: transparent !important;
   border: none !important;
+  line-height: 47px;
 }
 #navigation_part .accordion-button:focus {
   box-shadow: none !important;
@@ -29,22 +35,57 @@ body {
 #navigation_part .accordion-item {
   background: transparent;
   border: none !important;
-  width: 230px;
+  width: 100%;
+}
+#navigation_part .accordion-item .sidenav-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
 }
 .accordion-button::after {
   transform: rotate(-90deg);
   filter: brightness(0) invert(1);
-  width: 20px !important;
-  height: 25px !important;
+  // width: 20px !important;
+  // height: 25px !important;
+  width: 12px;
+  height: 12px;
+  background-size: 12px;
 }
 .accordion-button.collapsed {
   padding-bottom: 10px !important;
 }
-
+.accordion-item .sidenav_submenu {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.accordion-item .sidenav_sub_item {
+  line-height: 37px;
+  list-style: none;
+  position: relative;
+}
+.accordion-item .sidenav_sub_item::before {
+  content: "";
+  width: 6px;
+  height: 2px;
+  background-color: #fff;
+  position: absolute;
+  left: -18px;
+  top: 18px;
+  transition: all 0.4s ease-in-out;
+  opacity: 0.5;
+}
+.accordion-item .sidenav_sub_item a {
+  font-size: 13px !important;
+  opacity: 0.6;
+}
 /* topbar start*/
 
 .add_btn_color {
-  background-color: #585858 !important;
+  background-color: var(--dmc-theme-color-secondary);
+}
+.add_btn_color:hover {
+  background-color: var(--dmc-theme-color-secondary);
+  opacity: 0.8;
 }
 .form_border_focus {
   box-shadow: none !important;

@@ -1,26 +1,30 @@
 :root,
 ::after,
 ::before {
-  --dmc-white: #ffffff;
-  --dmc-black: #000000;
-  --dmc-success: #28a745;
-  --dmc-danger: #dc3545;
-  --dmc-warning: #ffc107;
+  --dmc-white: #ffffff; // updated
+  --dmc-black: #000000; // updated
+  --dmc-success: #28a745; // updated
+  --dmc-danger: #dc3545; // updated
+  --dmc-warning: #ffc107; // updated
 
   // theme color
-  --dmc-theme-color: #ef4060;
+  --dmc-theme-color-primary: #2a3e4c; // updated
+  --dmc-theme-color-secondary: #10bc83; // updated
 
   // text color
-  --dmc-text-color-primary: #555555;
+  --dmc-text-color-primary: #333333; // updated
   --dmc-text-color-secondary: #111111;
   --dmc-text-color-tertiary: #9baab3;
   --dmc-text-color-designation: #7b7b7b;
   --dmc-text-color-menu: #666666;
 
   // background color
-  --dmc-background-color-primary: #ffffff;
-  --dmc-background-color-secondary: #f7f8f9;
+  --dmc-background-color-primary: #ffffff; // updated
+  --dmc-background-color-secondary: #f3f3f9; // updated
   --dmc-avatar-background: #fea6b4;
+
+  // button color
+  --dmc-button-color-primary: #10bc83;
 
   // gradient background
   --dmc-gradient-from: #dd2476;
