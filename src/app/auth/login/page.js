@@ -62,8 +62,8 @@ const Page = () => {
           expires: 30,
         });
       }
-      router.push("/dashboard");
       toast.success("Login successful"); // success, info, warning, error
+      router.push("/dashboard");
     } catch (error) {
       // console.log(error);
       setLoading(false);
