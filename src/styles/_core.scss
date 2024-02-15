@@ -249,3 +249,25 @@ employee manage css end
 .is-invalid .select__control {
   border-color: var(--bs-form-invalid-border-color) !important;
 }
+
+.app_box {
+  padding: 30px 30px;
+  background-color: #fff;
+  border-radius: 0;
+}
+
+.form-check-input:checked {
+  background-color: var(--dmc-theme-color-secondary) !important;
+  border-color: var(--dmc-theme-color-secondary) !important;
+}
+
+.pagination {
+  --bs-pagination-color: var(--dmc-theme-color-secondary) !important;
+  --bs-pagination-hover-color: var(--dmc-theme-color-secondary) !important;
+  --bs-pagination-focus-color: var(--bs-link-hover-color);
+  --bs-pagination-focus-bg: var(--bs-secondary-bg);
+  --bs-pagination-active-bg: var(--dmc-theme-color-secondary) !important;
+  --bs-pagination-active-border-color: var(
+    --dmc-theme-color-secondary
+  ) !important;
+}

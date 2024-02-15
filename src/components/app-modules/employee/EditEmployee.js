@@ -214,6 +214,58 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
       <Modal.Body>
         <Form onSubmit={(e) => handleSubmit(e)}>
           <div className="mb-2">
+            <div className="mb-2">
+              Designation <span className="text-danger"> *</span>
+            </div>
+            <Select
+              className={classEase(
+                "rounded-1 form_border_focus"
+                // errors.designation && "is-invalid"
+              )}
+              classNamePrefix="select"
+              isDisabled={false}
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              // value={selectFormValues.designation}
+              // options={designations}
+              onChange={(selectedOption) =>
+                handleSelectChange(selectedOption, "designation")
+              }
+            />
+
+            {/* {errors.designation && (
+              <div className="invalid-feedback">{errors.designation}</div>
+            )} */}
+          </div>
+
+          <div className="mb-2">
+            <div className="mb-2">
+              Department <span className="text-danger"> *</span>
+            </div>
+            <Select
+              className={classEase(
+                "rounded-1 form_border_focus"
+                // errors.department && "is-invalid"
+              )}
+              classNamePrefix="select"
+              isDisabled={false}
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              // value={selectFormValues.department}
+              // options={departments}
+              onChange={(selectedOption) =>
+                handleSelectChange(selectedOption, "department")
+              }
+            />
+
+            {/* {errors.department && (
+                  <div className="invalid-feedback">{errors.department}</div>
+                )} */}
+          </div>
+
+          <div className="mb-2">
             Shift <span className="text-danger"> *</span>
           </div>
           <Select
@@ -236,6 +288,51 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
           {errors.shift_id && (
             <div className="invalid-feedback">{errors.shift_id}</div>
           )}
+
+          <div className="mb-2">
+            <div className="mb-2">
+              Group <span className="text-danger"> *</span>
+            </div>
+            <Select
+              className={classEase(
+                "rounded-1 form_border_focus"
+                // errors.group_id && "is-invalid"
+              )}
+              classNamePrefix="select"
+              isDisabled={false}
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              // value={selectFormValues.group_id}
+              // options={groups}
+              onChange={(selectedOption) =>
+                handleSelectChange(selectedOption, "group_id")
+              }
+            />
+
+            {/* {errors.group_id && (
+                  <div className="invalid-feedback">{errors.group_id}</div>
+                )} */}
+          </div>
+
+          <div className="mb-2">
+            <div className="mb-2">
+              Change Photo <span className="text-danger"> *</span>
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              name="image"
+              onChange={(e) => handleInputChange(e)}
+              className={classEase(
+                "rounded-1 form_border_focus form-control"
+                // errors.image && "is-invalid"
+              )}
+            />
+            {/* {errors.image && (
+                  <div className="invalid-feedback">{errors.image}</div>
+                )} */}
+          </div>
 
           <label className="mt-2 mb-2 me-1" htmlFor="activeStatus">
             Active

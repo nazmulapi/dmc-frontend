@@ -23,7 +23,7 @@ const initialValues = {
   password: "",
   confirm_password: "",
   phone_number: "",
-  shift_id: "",
+  // shift_id: "",
   image: "",
   group_id: "",
   department: "",
@@ -35,7 +35,7 @@ const AddEmployee = () => {
   const [selectFormValues, setSelectFormValues] = useState({
     department: "",
     designation: "",
-    shift_id: "",
+    // shift_id: "",
     group_id: "",
   });
   const [errors, setErrors] = useState({});
@@ -152,10 +152,10 @@ const AddEmployee = () => {
     //   valid = false;
     // }
 
-    if (!formValues.shift_id.trim()) {
-      newErrors.shift_id = "Shift ID is required";
-      valid = false;
-    }
+    // if (!formValues.shift_id.trim()) {
+    //   newErrors.shift_id = "Shift ID is required";
+    //   valid = false;
+    // }
 
     // Image validation (assuming it's a file upload)
     // if (!formValues.image) {
@@ -379,7 +379,7 @@ const AddEmployee = () => {
   // };
 
   return (
-    <div className="add_employ">
+    <div className="app_box add_employ">
       <div className="border-bottom d-flex justify-content-between align-items-center">
         <div className=" text-capitalize font_20 fw-bold pb-2">
           add employee
@@ -567,22 +567,7 @@ const AddEmployee = () => {
             </Col>
 
             <Col lg={6}>
-              <div className="mb-2">
-                <input
-                  id="employeeStatus"
-                  type="checkbox"
-                  name="is_active"
-                  checked={formValues.is_active}
-                  // value={formValues.is_active}
-                  onChange={(e) => handleInputChange(e)}
-                  className="form-check-input"
-                />
-                <label className="mb-2 ms-2" htmlFor="employeeStatus">
-                  Active
-                </label>
-              </div>
-
-              <div className="mb-2">
+              {/* <div className="mb-2">
                 <div className="mb-2">
                   Shift <span className="text-danger"> *</span>
                 </div>
@@ -602,38 +587,19 @@ const AddEmployee = () => {
                     handleSelectChange(selectedOption, "shift_id")
                   }
                 />
-                {/* <select
-                  className={classEase(
-                    "form-select form-control rounded-1 form_border_focus",
-                    errors.shift_id && "is-invalid"
-                  )}
-                  aria-label="Default select example"
-                  name="shift_id"
-                  value={formValues.shift_id}
-                  onChange={(e) => handleInputChange(e)}
-                >
-                  <option value="">Select Shift</option>
-
-                  {shifts &&
-                    shifts.map((s) => (
-                      <option key={s.shift_id} value={s.shift_id}>
-                        {s.shift_beginning} - {s.shift_end}
-                      </option>
-                    ))}
-                </select> */}
                 {errors.shift_id && (
                   <div className="invalid-feedback">{errors.shift_id}</div>
                 )}
-              </div>
+              </div> */}
 
-              <div className="mb-2">
+              {/* <div className="mb-2">
                 <div className="mb-2">
                   Group <span className="text-danger"> *</span>
                 </div>
                 <Select
                   className={classEase(
                     "rounded-1 form_border_focus",
-                    errors.shift_id && "is-invalid"
+                    errors.group_id && "is-invalid"
                   )}
                   classNamePrefix="select"
                   isDisabled={false}
@@ -646,29 +612,10 @@ const AddEmployee = () => {
                     handleSelectChange(selectedOption, "group_id")
                   }
                 />
-                {/* <select
-                  className={classEase(
-                    "form-select form-control rounded-1 form_border_focus",
-                    errors.group_id && "is-invalid"
-                  )}
-                  name="group_id"
-                  aria-label="Default select example"
-                  value={formValues.group_id}
-                  onChange={(e) => handleInputChange(e)}
-                >
-                  <option value="">Select Group</option>
-
-                  {groups &&
-                    groups.map((g) => (
-                      <option key={g.group_id} value={g.group_id}>
-                        {g.group_name}
-                      </option>
-                    ))}
-                </select> */}
                 {errors.group_id && (
                   <div className="invalid-feedback">{errors.group_id}</div>
                 )}
-              </div>
+              </div> */}
 
               <div className="mb-2">
                 <div className="mb-2">
@@ -690,7 +637,22 @@ const AddEmployee = () => {
               </div>
 
               <div className="mb-2">
-                <div className="mb-2">Employee Role</div>
+                <input
+                  id="employeeStatus"
+                  type="checkbox"
+                  name="is_active"
+                  checked={formValues.is_active}
+                  // value={formValues.is_active}
+                  onChange={(e) => handleInputChange(e)}
+                  className="form-check-input"
+                />
+                <label className="mb-2 ms-2" htmlFor="employeeStatus">
+                  Active
+                </label>
+              </div>
+
+              <div className="mb-2">
+                {/* <div className="mb-2">Employee Role</div> */}
                 <div>
                   <div className="d-flex">
                     {/* <div className="form-check me-2">
@@ -718,7 +680,7 @@ const AddEmployee = () => {
                         Is Admin
                       </label>
                     </div> */}
-                    <div>
+                    {/* <div>
                       <div className="form-check">
                         <input
                           id="employee_role_staff"
@@ -735,7 +697,7 @@ const AddEmployee = () => {
                           Is staff
                         </label>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* {formValues?.is_superuser && (

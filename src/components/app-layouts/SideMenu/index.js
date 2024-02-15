@@ -21,7 +21,7 @@ const Page = () => {
               href="/dashboard"
               className="main_logo text-decoration-none d-flex justify-content-start align-items-center"
             >
-              <Image src={Logo} className="me-2" />
+              <Image src={Logo} className="me-2" alt="logo" />
               <span className="logo_text">Dhaka Medical College Hospital</span>
             </Link>
           </h3>

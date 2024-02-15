@@ -40,7 +40,7 @@ const Page = () => {
         password,
       });
 
-      // console.log(user);
+      console.log(user);
       // return;
 
       if (!access) {

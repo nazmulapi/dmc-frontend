@@ -235,7 +235,7 @@ const ManageInfo = () => {
 
   return (
     <>
-      <section>
+      <section className="app_box">
         <div className="search_part border mb-3">
           <div className="d-flex justify-content-between p-2">
             <form className="" onSubmit={handleFileSubmit}>
