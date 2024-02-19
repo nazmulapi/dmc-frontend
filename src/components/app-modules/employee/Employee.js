@@ -23,7 +23,7 @@ const initialValues = {
   password: "",
   confirm_password: "",
   phone_number: "",
-  // shift_id: "",
+  shift_id: "",
   image: "",
   group_id: "",
   department: "",
@@ -35,7 +35,7 @@ const AddEmployee = () => {
   const [selectFormValues, setSelectFormValues] = useState({
     department: "",
     designation: "",
-    // shift_id: "",
+    shift_id: "",
     group_id: "",
   });
   const [errors, setErrors] = useState({});
@@ -567,7 +567,22 @@ const AddEmployee = () => {
             </Col>
 
             <Col lg={6}>
-              {/* <div className="mb-2">
+              <div className="mb-2">
+                <input
+                  id="employeeStatus"
+                  type="checkbox"
+                  name="is_active"
+                  checked={formValues.is_active}
+                  // value={formValues.is_active}
+                  onChange={(e) => handleInputChange(e)}
+                  className="form-check-input"
+                />
+                <label className="mb-2 ms-2" htmlFor="employeeStatus">
+                  Active
+                </label>
+              </div>
+
+              <div className="mb-2">
                 <div className="mb-2">
                   Shift <span className="text-danger"> *</span>
                 </div>
@@ -590,9 +605,9 @@ const AddEmployee = () => {
                 {errors.shift_id && (
                   <div className="invalid-feedback">{errors.shift_id}</div>
                 )}
-              </div> */}
+              </div>
 
-              {/* <div className="mb-2">
+              <div className="mb-2">
                 <div className="mb-2">
                   Group <span className="text-danger"> *</span>
                 </div>
@@ -615,7 +630,7 @@ const AddEmployee = () => {
                 {errors.group_id && (
                   <div className="invalid-feedback">{errors.group_id}</div>
                 )}
-              </div> */}
+              </div>
 
               <div className="mb-2">
                 <div className="mb-2">
@@ -634,21 +649,6 @@ const AddEmployee = () => {
                 {errors.image && (
                   <div className="invalid-feedback">{errors.image}</div>
                 )}
-              </div>
-
-              <div className="mb-2">
-                <input
-                  id="employeeStatus"
-                  type="checkbox"
-                  name="is_active"
-                  checked={formValues.is_active}
-                  // value={formValues.is_active}
-                  onChange={(e) => handleInputChange(e)}
-                  className="form-check-input"
-                />
-                <label className="mb-2 ms-2" htmlFor="employeeStatus">
-                  Active
-                </label>
               </div>
 
               <div className="mb-2">
@@ -680,7 +680,7 @@ const AddEmployee = () => {
                         Is Admin
                       </label>
                     </div> */}
-                    {/* <div>
+                    <div className="mt-2">
                       <div className="form-check">
                         <input
                           id="employee_role_staff"
@@ -697,7 +697,7 @@ const AddEmployee = () => {
                           Is staff
                         </label>
                       </div>
-                    </div> */}
+                    </div>
                   </div>
 
                   {/* {formValues?.is_superuser && (

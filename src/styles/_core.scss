@@ -1,8 +1,10 @@
 html,
 body {
   overflow-x: hidden;
-  font-family: "Open Sans", sans-serif !important;
+  // font-family: "Open Sans", sans-serif !important;
+  font-family: "Jakarta", sans-serif !important;
   background-color: #edf1f5 !important;
+  background-color: #f7f7f7 !important;
 }
 P {
   font-size: 14px !important;
@@ -29,12 +31,18 @@ P {
   /* position: fixed; */
 }
 .wrapper {
-  display: flex;
-  background-size: cover;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
 }
-.content {
-  height: 100vh;
-  width: calc(100% - 275px);
+.page-wrapper {
+  left: 0;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  margin: 0 0 0 230px;
+  padding: 60px 0 0;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -184,6 +192,7 @@ employee manage css end
 }
 .select__control--is-focused {
   border-color: var(--dmc-theme-color-secondary) !important;
+  z-index: 3 !important;
 }
 
 // dynamic form
@@ -270,4 +279,13 @@ employee manage css end
   --bs-pagination-active-border-color: var(
     --dmc-theme-color-secondary
   ) !important;
+}
+.datatable-wrapper {
+}
+.datatable .mantine-datatable {
+  z-index: 0;
+  min-height: 500px !important;
+}
+.datatable .mantine-datatable-header {
+  z-index: 0;
 }

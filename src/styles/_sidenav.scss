@@ -1,5 +1,25 @@
+.sidebar {
+  background-color: #34444c;
+  border-right: 1px solid transparent;
+  margin-top: 0;
+  position: fixed;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  -webkit-transition: all 0.2s ease;
+  -ms-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  width: 230px;
+  z-index: 1001;
+}
+
 .main_logo {
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
+}
+.main_logo img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
 }
 .main_logo .logo_text {
   font-size: 14px;
@@ -9,9 +29,9 @@
   color: #fff;
 }
 .side_nav_bg {
-  background-color: var(--dmc-theme-color-primary);
+  // background-color: var(--dmc-theme-color-primary);
   /* position: fixed; */
-  height: 100vh !important;
+  // height: 100vh !important;
 }
 .side_nav {
   height: 100vh !important;

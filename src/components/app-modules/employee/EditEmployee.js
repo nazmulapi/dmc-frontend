@@ -18,17 +18,28 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
 
   const [formValues, setFormValues] = useState({
     shift_id: employee.shift_id,
+    image: employee.image,
+    group_id: employee.group_id,
+    department: employee.department,
+    designation: employee.designation,
     is_active: Boolean(employee.is_active),
   });
 
   const [selectFormValues, setSelectFormValues] = useState({
+    department: "",
+    designation: "",
     shift_id: "",
+    group_id: "",
   });
 
   useEffect(() => {
     setFormValues((prev) => ({
       ...prev,
       shift_id: employee.shift_id,
+      image: employee.image,
+      group_id: employee.group_id,
+      department: employee.department,
+      designation: employee.designation,
       is_active: Boolean(employee.is_active),
     }));
   }, [employee]);
@@ -36,6 +47,36 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    data: departmentsData,
+    error: departmentsFetchError,
+    isLoading: departmentsFetchIsLoading,
+  } = useSWR(`/department/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const departments = departmentsData?.map((item) => ({
+    name: "department",
+    label: item.department,
+    value: item.id,
+  }));
+
+  const {
+    data: designationsData,
+    error: designationsFetchError,
+    isLoading: designationsFetchIsLoading,
+  } = useSWR(`/designation/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const designations = designationsData?.map((item) => ({
+    name: "designation",
+    label: item.designation,
+    value: item.id,
+  }));
 
   const {
     data: shiftsData,
@@ -50,6 +91,21 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
     name: "shift_id",
     label: item.shift_name,
     value: item.shift_id,
+  }));
+
+  const {
+    data: groupsData,
+    error: groupsFetchError,
+    isLoading: groupsFetchIsLoading,
+  } = useSWR(`/empgrp/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const groups = groupsData?.map((item) => ({
+    name: "group_id",
+    label: item.group_name,
+    value: item.group_id,
   }));
 
   const validateForm = () => {
@@ -156,11 +212,24 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
     if (valid) {
       setIsLoading(true);
 
-      const response = await submit(`/employee/${employee.employee_id}/`, {
-        employee_id: employee.employee_id,
-        shift_id: formValues.shift_id,
-        is_active: formValues.is_active,
+      const formData = new FormData();
+
+      // Append form data
+      Object.entries(formValues).forEach(([key, value]) => {
+        if (key !== "image") {
+          formData.append(key, value);
+        }
       });
+
+      // Append image file
+      formData.append("image", formValues.image);
+      console.log("Form data", formData);
+
+      const response = await submit(
+        `/employee/${employee.employee_id}/`,
+        formData,
+        true
+      );
 
       console.log(response);
       // setIsLoading(false);
@@ -227,8 +296,8 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
               isLoading={false}
               isClearable={true}
               isSearchable={true}
-              // value={selectFormValues.designation}
-              // options={designations}
+              value={selectFormValues.designation}
+              options={designations}
               onChange={(selectedOption) =>
                 handleSelectChange(selectedOption, "designation")
               }
@@ -253,8 +322,8 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
               isLoading={false}
               isClearable={true}
               isSearchable={true}
-              // value={selectFormValues.department}
-              // options={departments}
+              value={selectFormValues.department}
+              options={departments}
               onChange={(selectedOption) =>
                 handleSelectChange(selectedOption, "department")
               }
@@ -303,8 +372,8 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
               isLoading={false}
               isClearable={true}
               isSearchable={true}
-              // value={selectFormValues.group_id}
-              // options={groups}
+              value={selectFormValues.group_id}
+              options={groups}
               onChange={(selectedOption) =>
                 handleSelectChange(selectedOption, "group_id")
               }

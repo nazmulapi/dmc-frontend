@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Dropdown from "react-bootstrap/Dropdown";
+import Image from "next/image";
+import Logo from "../../../../public/logo.png";
 import { logout } from "../../../lib/auth";
 import { getLoggedInUser } from "../../../lib/getter";
 import { getStoragePath } from "../../../lib/helper";
@@ -45,7 +48,16 @@ const Navbar = () => {
   };
 
   return (
-    <div className="topbar d-flex justify-content-end align-items-center">
+    <div className="topbar d-flex justify-content-between align-items-center">
+      <div className="header-left d-flex justify-content-center align-items-center">
+        <Link
+          href="/dashboard"
+          className="main_logo text-decoration-none d-flex justify-content-start align-items-center"
+        >
+          <Image src={Logo} className="" alt="logo" />
+          <span className="logo_text">Dhaka Medical College Hospital</span>
+        </Link>
+      </div>
       <Dropdown>
         <Dropdown.Toggle className="border-0 pro_img_bg">
           {userImagePath && userImagePath !== "" && (

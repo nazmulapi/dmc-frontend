@@ -31,14 +31,14 @@ export default async function RootLayout({ children }) {
     <>
       {/* <Accessible /> */}
       <div className="wrapper">
-        <div className="side_nav">
+        <div className="sidebar">
           <SideMenu />
         </div>
-        <div className="content shadow float-end">
-          <div>
-            <Navbar />
-          </div>
-          <div className="m-3 p-3">{children}</div>
+        <div className="header">
+          <Navbar />
+        </div>
+        <div className="page-wrapper">
+          <div className="content">{children}</div>
         </div>
       </div>
     </>

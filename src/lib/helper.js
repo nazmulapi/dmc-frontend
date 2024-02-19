@@ -65,3 +65,16 @@ export const getDate = (dateString) => {
 export const getStoragePath = (path) => {
   return apiBaseUrl + path;
 };
+
+export const sortBy = (array, key) => {
+  return array.slice().sort((a, b) => {
+    const valueA = a[key];
+    const valueB = b[key];
+
+    if (typeof valueA === "string") {
+      return valueA.localeCompare(valueB);
+    } else {
+      return valueA - valueB;
+    }
+  });
+};

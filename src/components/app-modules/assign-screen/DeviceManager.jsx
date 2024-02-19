@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
+import { DataTable } from "mantine-datatable";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
@@ -11,20 +12,32 @@ import classEase from "classease";
 import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
+import { sortBy } from "../../../lib/helper";
 import EditDevice from "./EditDevice";
 
 const DeviceManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [data, setData] = useState(null);
+
+  const [sortStatus, setSortStatus] = useState({
+    columnAccessor: "device_name",
+    direction: "asc",
+  });
+
+  const [data, setData] = useState([]);
 
   const { error, isLoading } = useSWR(`/devices/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
     onSuccess: (fetchedData) => {
       // Update local state when data is successfully fetched
-      setData(fetchedData);
+      setData(sortBy(fetchedData, "device_name"));
     },
   });
+
+  useEffect(() => {
+    const sorted = sortBy(data, sortStatus.columnAccessor);
+    setData(sortStatus.direction === "desc" ? sorted.reverse() : sorted);
+  }, [sortStatus]);
 
   const filteredData = data
     ? data.filter(
@@ -125,7 +138,90 @@ const DeviceManager = () => {
             </div> */}
           </div>
         </div>
-        <div className="employee_table table-responsive">
+
+        {console.log(data)}
+
+        <div className="datatable-wrapper">
+          <DataTable
+            className="datatable"
+            withTableBorder
+            withColumnBorders
+            striped
+            highlightOnHover
+            horizontalSpacing="sm"
+            verticalSpacing="sm"
+            fz="sm"
+            verticalAlign="center"
+            columns={[
+              {
+                accessor: "",
+                title: "SL",
+                render: (_, index) => index + 1,
+              },
+              {
+                accessor: "device_id",
+                title: "Device ID",
+                sortable: true,
+                // width: 150
+              },
+              {
+                accessor: "device_ip",
+                title: "Device IP",
+                sortable: true,
+                // width: 150
+              },
+              {
+                accessor: "device_name",
+                title: "Device Name",
+                sortable: true,
+                // width: 150
+              },
+              {
+                accessor: "username",
+                title: "Device Username",
+                sortable: true,
+                // width: 150
+              },
+              {
+                accessor: "password",
+                title: "Device Password",
+              },
+              {
+                accessor: "location",
+                title: "Location",
+              },
+              {
+                accessor: "active_status",
+                title: "Status",
+                render: (item) => {
+                  item?.active_status === "active" ? "Active" : "Inactive";
+                },
+              },
+              {
+                accessor: "actions",
+                title: "Actions",
+                // width: "0%",
+                render: (item) => (
+                  <button
+                    className="border-0 rounded-1"
+                    onClick={() => {
+                      setSelectedDevice(item);
+                      setShow(true);
+                    }}
+                  >
+                    <RiDeleteBin6Line color="#DB3545" />
+                  </button>
+                ),
+              },
+            ]}
+            fetching={isLoading}
+            records={filteredData}
+            sortStatus={sortStatus}
+            onSortStatusChange={setSortStatus}
+          />
+        </div>
+
+        {/* <div className="employee_table table-responsive">
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
@@ -167,8 +263,6 @@ const DeviceManager = () => {
                       {item?.active_status === "active" ? "Active" : "Inactive"}
                     </td>
                     <td>
-                      {/* <EditDevice item={item} setItem={setData} /> */}
-
                       <button
                         className="border-0 rounded-1"
                         onClick={() => {
@@ -192,7 +286,7 @@ const DeviceManager = () => {
               )}
             </tbody>
           </table>
-        </div>
+        </div> */}
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>

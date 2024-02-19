@@ -15,7 +15,7 @@ const Page = () => {
   return (
     <div id="navigation_part" className="h-100 side_nav_bg ">
       <div className="p-3">
-        <div className="">
+        {/* <div className="">
           <h3 className="text-white">
             <Link
               href="/dashboard"
@@ -25,7 +25,7 @@ const Page = () => {
               <span className="logo_text">Dhaka Medical College Hospital</span>
             </Link>
           </h3>
-        </div>
+        </div> */}
         <div className="accordion_part">
           <div className="pb-2">
             <Accordion>

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
+import { DataTable } from "mantine-datatable";
 import Select from "react-select";
 import { Col, Row } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
@@ -13,10 +14,16 @@ import classEase from "classease";
 import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem, submit } from "../../../lib/submit";
+import { sortBy } from "../../../lib/helper";
 import EditAssign from "./EditAssign";
 
 const AssignDevice = () => {
-  const [data, setData] = useState(null);
+  const [sortStatus, setSortStatus] = useState({
+    columnAccessor: "device_name",
+    direction: "asc",
+  });
+
+  const [data, setData] = useState([]);
 
   const { error, loading } = useSWR(`/grpdev/`, fetcher, {
     errorRetryCount: 2,
@@ -24,9 +31,14 @@ const AssignDevice = () => {
     onSuccess: (fetchedData) => {
       // Update local state when data is successfully fetched
       // console.log(fetchedData);
-      setData(fetchedData);
+      setData(sortBy(fetchedData, "device_name"));
     },
   });
+
+  useEffect(() => {
+    const sorted = sortBy(data, sortStatus.columnAccessor);
+    setData(sortStatus.direction === "desc" ? sorted.reverse() : sorted);
+  }, [sortStatus]);
 
   const [selectFormValues, setSelectFormValues] = useState({
     device_id: "",
@@ -299,35 +311,90 @@ const AssignDevice = () => {
               <div className="success-feedback mb-3">{success}</div>
             )} */}
 
-            <div className="button-section">
-              <button
-                // className="dynami_button submit ms-2 rounded-1 d-flex"
-                type="submit"
-                className={classEase(
-                  "dynami_button submit rounded-1 mt-2 px-0 d-flex justify-content-center align-items-center app-button",
-                  isLoading ? "loading" : ""
-                )}
-                disabled={isLoading}
-              >
-                Submit
-                {isLoading && (
-                  <div className="spinner">
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                    />
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                )}
-              </button>
-            </div>
+            <Col lg={4} className="px-2">
+              <div className="button-section d-flex align-items-end pt-4">
+                <button
+                  // className="dynami_button submit ms-2 rounded-1 d-flex"
+                  type="submit"
+                  className={classEase(
+                    "dynami_button submit rounded-1 mt-2 px-0 d-flex justify-content-center align-items-center app-button",
+                    isLoading ? "loading" : ""
+                  )}
+                  disabled={isLoading}
+                >
+                  Submit
+                  {isLoading && (
+                    <div className="spinner">
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  )}
+                </button>
+              </div>
+            </Col>
           </Row>
         </form>
 
-        <div className="employee_table table-responsive mt-5">
+        <div className="datatable-wrapper">
+          <DataTable
+            className="datatable"
+            withTableBorder
+            withColumnBorders
+            striped
+            highlightOnHover
+            horizontalSpacing="sm"
+            verticalSpacing="sm"
+            fz="sm"
+            verticalAlign="center"
+            columns={[
+              {
+                accessor: "",
+                title: "SL",
+                render: (_, index) => index + 1,
+              },
+              {
+                accessor: "device_name",
+                title: "Device",
+                sortable: true,
+                // width: 150
+              },
+              {
+                accessor: "group_name",
+                title: "Group",
+                sortable: true,
+                // width: 150,
+              },
+              {
+                accessor: "actions",
+                title: "Actions",
+                // width: "0%",
+                render: (item) => (
+                  <button
+                    className="border-0 rounded-1"
+                    onClick={() => {
+                      setSelected(item);
+                      setShow(true);
+                    }}
+                  >
+                    <RiDeleteBin6Line color="#DB3545" />
+                  </button>
+                ),
+              },
+            ]}
+            fetching={devicesFetchIsLoading}
+            records={data}
+            sortStatus={sortStatus}
+            onSortStatusChange={setSortStatus}
+          />
+        </div>
+
+        {/* <div className="employee_table table-responsive mt-5">
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
@@ -356,10 +423,6 @@ const AssignDevice = () => {
                     <td>{item.device_name}</td>
                     <td>{item.group_name}</td>
                     <td>
-                      {/* <button className="border-0 rounded-1 bg-danger">
-                        <RiDeleteBin6Line color="#fff" />
-                      </button> */}
-                      {/* <EditAssign item={item} setItem={setData} /> */}
                       <button
                         className="border-0 rounded-1"
                         onClick={() => {
@@ -383,7 +446,7 @@ const AssignDevice = () => {
               )}
             </tbody>
           </table>
-        </div>
+        </div> */}
       </div>
 
       <Modal show={show} onHide={handleClose}>
