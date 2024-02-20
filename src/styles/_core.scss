@@ -43,6 +43,7 @@ P {
   transition: all 0.2s ease-in-out;
   margin: 0 0 0 230px;
   padding: 60px 0 0;
+  min-height: 100vh;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

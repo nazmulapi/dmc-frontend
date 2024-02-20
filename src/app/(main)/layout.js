@@ -1,7 +1,7 @@
 // import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import "ag-grid-community/styles/ag-grid.css"; // Core CSS
-import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
+// import "ag-grid-community/styles/ag-grid.css"; // Core CSS
+// import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 // import { authTokenKey } from "../../lib/config";
 // import Accessible from "../../components/utils/CheckAccessibleForMainPages";
 import SideMenu from "../../components/app-layouts/SideMenu";

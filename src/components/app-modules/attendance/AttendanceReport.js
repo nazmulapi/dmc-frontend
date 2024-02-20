@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import useSWR from "swr";
 import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -9,17 +9,27 @@ import Select from "react-select";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
-import Pagination from "../../utils/Pagination";
+import { DataTable } from "mantine-datatable";
+// import Pagination from "../../utils/Pagination";
 import { fetcher } from "../../../lib/fetch";
 import { getDate, getTime } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
+const PAGE_SIZES = [10, 20, 30, 40];
+
 const AttendanceManage = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
+  const [sortStatus, setSortStatus] = useState({
+    columnAccessor: "InTime",
+    direction: "desc", // desc
+  });
+
   const [formValues, setFormValues] = useState({
     group_id: "",
     department_id: "",
     designation_id: "",
-    year: "",
+    year: "2024",
     month: "",
     employee_id: "",
   });
@@ -36,8 +46,8 @@ const AttendanceManage = () => {
   const [success, setSuccess] = useState("");
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const {
@@ -47,9 +57,7 @@ const AttendanceManage = () => {
     isLoading,
     mutate,
   } = useSWR(
-    formSubmitted
-      ? `/attendance_log/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&department_id=${formValues.department_id}&designation_id=${formValues.designation_id}&page=${currentPage}&page_size=${pageSize}`
-      : null,
+    `/attendance_log/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&department_id=${formValues.department_id}&designation_id=${formValues.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
     fetcher,
     {
       errorRetryCount: 2,
@@ -57,9 +65,17 @@ const AttendanceManage = () => {
     }
   );
 
-  const totalPages = Math.ceil(apiData?.count / Number(pageSize));
-  const startIndex = (currentPage - 1) * Number(pageSize);
-  const endIndex = startIndex + Number(pageSize);
+  console.log(apiData);
+
+  // const totalPages = Math.ceil(apiData?.count / Number(pageSize));
+  // const startIndex = (currentPage - 1) * Number(pageSize);
+  // const endIndex = startIndex + Number(pageSize);
+
+  const handleSortStatusChange = (status) => {
+    console.log(status);
+    setCurrentPage(1);
+    setSortStatus(status);
+  };
 
   const {
     data: groupsData,
@@ -199,27 +215,27 @@ const AttendanceManage = () => {
     setFormSubmitted(true);
   };
 
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1) {
-      setCurrentPage(newPage);
-    }
-  };
+  // const handlePageChange = (newPage) => {
+  //   if (newPage >= 1) {
+  //     setCurrentPage(newPage);
+  //   }
+  // };
 
-  const handlePageSizeChange = (newPageSize) => {
-    setPageSize(newPageSize);
-    setCurrentPage(1);
-    mutate();
-  };
+  // const handlePageSizeChange = (newPageSize) => {
+  //   setPageSize(newPageSize);
+  //   setCurrentPage(1);
+  //   mutate();
+  // };
 
   const [employeeData, setEmployeeData] = useState([]);
 
-  useEffect(() => {
-    if (!isLoading && !error) {
-      console.log(apiData?.results);
-      setEmployeeData(apiData?.results || []);
-      console.log(apiData?.results);
-    }
-  }, [isLoading, isValidating]);
+  // useEffect(() => {
+  //   if (!isLoading && !error) {
+  //     console.log(apiData?.results);
+  //     setEmployeeData(apiData?.results || []);
+  //     console.log(apiData?.results);
+  //   }
+  // }, [isLoading, isValidating]);
 
   const handleExportToPDF = async () => {
     // console.log(employeeData);
@@ -426,46 +442,96 @@ const AttendanceManage = () => {
             </div>
           </div>
         </div>
-        <div className="employee_table table-responsive">
+
+        <div className="datatable-wrapper">
+          <DataTable
+            style={{
+              height: apiData?.results?.length === 0 ? "300px" : "auto",
+            }}
+            className="datatable"
+            withTableBorder
+            withColumnBorders
+            striped
+            highlightOnHover
+            horizontalSpacing="sm"
+            verticalSpacing="sm"
+            fz="sm"
+            verticalAlign="center"
+            columns={[
+              {
+                title: "SL",
+                accessor: "na",
+                noWrap: true,
+                sortable: false,
+                render: (_, index) => (currentPage - 1) * pageSize + index + 1,
+              },
+              {
+                accessor: "employee_id",
+                title: "Employee ID",
+                sortable: true,
+              },
+              {
+                accessor: "username",
+                title: "Employee Name",
+                noWrap: true,
+                sortable: true,
+                // visibleMediaQuery: aboveXs,
+                // render: ({ username }) => username,
+              },
+              {
+                accessor: "InTime",
+                title: "In Time",
+                noWrap: true,
+                // visibleMediaQuery: aboveXs,
+                render: ({ InTime }) => getTime(InTime),
+              },
+              {
+                accessor: "InTime",
+                title: "Out Time",
+                // visibleMediaQuery: aboveXs,
+                render: ({ OutTime }) => getTime(OutTime),
+              },
+              {
+                accessor: "Type",
+                title: "Date",
+                // visibleMediaQuery: aboveXs,
+                render: ({ Type }) => Type,
+              },
+            ]}
+            fetching={isLoading}
+            records={apiData?.results || []}
+            page={currentPage}
+            onPageChange={setCurrentPage}
+            totalRecords={apiData?.count}
+            recordsPerPage={pageSize}
+            sortStatus={sortStatus}
+            onSortStatusChange={handleSortStatusChange}
+            // selectedRecords={selectedRecords}
+            // onSelectedRecordsChange={setSelectedRecords}
+            recordsPerPageOptions={PAGE_SIZES}
+            onRecordsPerPageChange={setPageSize}
+            // rowExpansion={rowExpansion}
+            // onRowContextMenu={handleContextMenu}
+            // onScroll={hideContextMenu}
+          />
+        </div>
+
+        {/* <div className="employee_table table-responsive">
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
-                {/* <th scope="row">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id=""
-                    />
-                  </div>
-                </th> */}
                 <th scope="col">SL</th>
                 <th scope="col">Employee ID</th>
                 <th scope="col">Employee Name</th>
                 <th scope="col">In Time</th>
                 <th scope="col">Out Time</th>
                 <th scope="col">Date</th>
-                {/*<th scope="col">Tardiness</th>
-                <th scope="col">Minutes</th>
-                <th scope="col">Cumulative</th>
-                <th scope="col">Action</th> */}
               </tr>
             </thead>
             {formSubmitted && (
               <tbody>
                 {employeeData?.map((item, index) => (
                   <tr key={index}>
-                    {/* <th scope="row">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id=""
-                        />
-                      </div>
-                    </th> */}
                     <th scope="row">{startIndex + index + 1}</th>
                     <td>{item?.employee_id}</td>
                     <td>{item?.username}</td>
@@ -474,29 +540,13 @@ const AttendanceManage = () => {
                     </td>
                     <td>{getTime(item?.OutTime)}</td>
                     <td>{getDate(item?.InTime)}</td>
-                    {/*<td>00:00:00</td>
-                 <td>00:00:00</td>
-                <td>00:00:00</td>
-                <td>
-                  <button className="add_btn_color border-0 rounded-1 me-2">
-                    <FaRegEdit color="white" />
-                  </button>
-                  <button className="bg-danger border-0 rounded-1">
-                    <RiDeleteBin6Line color="white" />
-                  </button>
-                </td> */}
                   </tr>
                 ))}
               </tbody>
             )}
           </table>
-          {/* {isLoading && (
-            <div className="loading-overlay">
-              <p>Loading...</p>
-            </div>
-          )} */}
-        </div>
-        <Row>
+        </div> */}
+        {/* <Row>
           <Col xs lg="9">
             <Pagination
               currentPage={currentPage}
@@ -519,7 +569,7 @@ const AttendanceManage = () => {
               </select>
             </div>
           </Col>
-        </Row>
+        </Row> */}
       </section>
     </>
   );

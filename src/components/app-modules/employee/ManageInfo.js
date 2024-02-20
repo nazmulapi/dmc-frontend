@@ -11,9 +11,10 @@ import Spinner from "react-bootstrap/Spinner";
 import { Row, Col } from "react-bootstrap";
 import classEase from "classease";
 import { toast } from "react-toastify";
+import { DataTable } from "mantine-datatable";
 import { submit } from "../../../lib/submit";
 import { fetcher } from "../../../lib/fetch";
-import Pagination from "../../utils/Pagination";
+// import Pagination from "../../utils/Pagination";
 import {
   formatDate,
   getDate,
@@ -22,9 +23,15 @@ import {
 } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
+const PAGE_SIZES = [10, 20, 30, 40];
+
 const ManageInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
+  const [sortStatus, setSortStatus] = useState({
+    columnAccessor: "username",
+    direction: "asc", // desc
+  });
 
   // const { data, error, isLoading } = useSWR(
   //   `/employee/?page=${currentPage}&page_size=${itemsPerPage}`,
@@ -36,12 +43,25 @@ const ManageInfo = () => {
     isValidating,
     isLoading,
     mutate,
-  } = useSWR(`/employee/?page=${currentPage}&page_size=${pageSize}`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-  });
+  } = useSWR(
+    `/employee/?page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
+    fetcher,
+    {
+      errorRetryCount: 2,
+      keepPreviousData: true,
+    }
+  );
 
-  const totalPages = Math.ceil(apiData?.count / pageSize);
+  const [selectedRecords, setSelectedRecords] = useState([]);
+
+  const handleSortStatusChange = (status) => {
+    console.log(status);
+    setCurrentPage(1);
+    setSortStatus(status);
+    console.log(sortStatus);
+  };
+
+  // const totalPages = Math.ceil(apiData?.count / pageSize);
   // const displayedData = apiData && apiData?.results;
 
   // const isLoading = isValidating && displayedData.length === 0;
@@ -50,8 +70,8 @@ const ManageInfo = () => {
 
   // const { data, error, isLoading } = useSWR(`/employee/`, fetcher);
 
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
+  // const startIndex = (currentPage - 1) * pageSize;
+  // const endIndex = startIndex + pageSize;
 
   // const displayedData = data?.slice(startIndex, endIndex);
 
@@ -326,20 +346,117 @@ const ManageInfo = () => {
             </div>
           </div>
         </div>
-        <div className="employee_table table-responsive">
+
+        <div className="datatable-wrapper">
+          <DataTable
+            style={{
+              height: apiData?.results?.length === 0 ? "300px" : "auto",
+            }}
+            className="datatable"
+            withTableBorder
+            withColumnBorders
+            striped
+            highlightOnHover
+            horizontalSpacing="sm"
+            verticalSpacing="sm"
+            fz="sm"
+            verticalAlign="center"
+            columns={[
+              {
+                title: "SL",
+                accessor: "na",
+                noWrap: true,
+                sortable: false,
+                render: (_, index) => (currentPage - 1) * pageSize + index + 1,
+              },
+              {
+                accessor: "image",
+                title: "Image",
+                sortable: false,
+                render: ({ image }) => (
+                  <div className="text-center">
+                    <img
+                      src={getStoragePath(image)}
+                      alt=""
+                      className="table_user_img"
+                    />
+                  </div>
+                ),
+              },
+              {
+                accessor: "employee_id",
+                title: "Employee ID",
+                noWrap: true,
+                sortable: true,
+              },
+              {
+                accessor: "username",
+                title: "Employee Name",
+                sortable: true,
+                // visibleMediaQuery: aboveXs,
+              },
+              {
+                accessor: "designation_name",
+                title: "Designation",
+                noWrap: true,
+                // visibleMediaQuery: aboveXs,
+                render: ({ designation_name }) => designation_name || "N/A",
+              },
+              {
+                accessor: "group_name",
+                title: "Group",
+                // visibleMediaQuery: aboveXs,
+                render: ({ group_name }) => group_name || "N/A",
+              },
+              {
+                accessor: "department_name",
+                title: "Department",
+                // visibleMediaQuery: aboveXs,
+                render: ({ department_name }) => department_name || "N/A",
+              },
+              {
+                accessor: "shift_name",
+                title: "Shift",
+                // visibleMediaQuery: aboveXs,
+                render: ({ shift_name }) => shift_name || "N/A",
+              },
+              {
+                accessor: "is_active",
+                title: "Status",
+                // visibleMediaQuery: aboveXs,
+                render: ({ is_active }) => (is_active ? "Active" : "Inactive"),
+              },
+              {
+                accessor: "actions",
+                title: "Actions",
+                // width: "0%",
+                render: (item) => (
+                  <EditEmployee employee={item} setData={setDisplayedData} />
+                ),
+              },
+            ]}
+            fetching={isLoading}
+            records={apiData?.results || []}
+            page={currentPage}
+            onPageChange={setCurrentPage}
+            totalRecords={apiData?.count}
+            recordsPerPage={pageSize}
+            sortStatus={sortStatus}
+            onSortStatusChange={handleSortStatusChange}
+            selectedRecords={selectedRecords}
+            onSelectedRecordsChange={setSelectedRecords}
+            recordsPerPageOptions={PAGE_SIZES}
+            onRecordsPerPageChange={setPageSize}
+            // rowExpansion={rowExpansion}
+            // onRowContextMenu={handleContextMenu}
+            // onScroll={hideContextMenu}
+          />
+        </div>
+
+        {/* <div className="employee_table table-responsive">
           <table className="table table-bordered table-striped font_14">
             <thead>
               <tr>
-                {/* <th scope="col">
-                  <div className="form-check p-0">
-                    <input
-                      className=""
-                      type="checkbox"
-                      value=""
-                      id="EmployeeListAllCheckbox"
-                    />
-                  </div>
-                </th> */}
                 <th scope="col">SL</th>
                 <th scope="col">image</th>
                 <th scope="col">Employee ID</th>
@@ -362,16 +479,6 @@ const ManageInfo = () => {
               {displayedData && !error
                 ? displayedData.map((item, index) => (
                     <tr key={index}>
-                      {/* <th scope="row">
-                        <div className="form-check p-0">
-                          <input
-                            className=""
-                            type="checkbox"
-                            value=""
-                            id={item.employee_id}
-                          />
-                        </div>
-                      </th> */}
                       <th scope="row">{startIndex + index + 1}</th>
                       <th scope="row" className="text-center">
                         <img
@@ -388,15 +495,10 @@ const ManageInfo = () => {
                       <td>{item?.shift_name || "N/A"}</td>
                       <td>{item?.is_active ? "Active" : "Inactive"}</td>
                       <td>
-                        {/* {console.log(item)} */}
                         <EditEmployee
                           employee={item}
                           setData={setDisplayedData}
                         />
-
-                        {/* <button className="bg-danger border-0 rounded-1">
-                        <RiDeleteBin6Line color="white" />
-                      </button> */}
                       </td>
                     </tr>
                   ))
@@ -404,19 +506,19 @@ const ManageInfo = () => {
             </tbody>
           </table>
 
-          {/* {isLoading && (
+          {isLoading && (
             <div className="loading-overlay">
               <p>Loading...</p>
             </div>
-          )} */}
+          )}
 
-          {/* {isValidating && (
+          {isValidating && (
             <div className="loading-overlay">
               <p>Loading...</p>
             </div>
-          )} */}
-        </div>
-        <Row>
+          )}
+        </div> */}
+        {/* <Row>
           <Col xs lg="9">
             <Pagination
               currentPage={currentPage}
@@ -439,7 +541,7 @@ const ManageInfo = () => {
               </select>
             </div>
           </Col>
-        </Row>
+        </Row> */}
       </section>
     </>
   );

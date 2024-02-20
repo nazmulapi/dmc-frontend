@@ -343,6 +343,7 @@ const AssignDevice = () => {
 
         <div className="datatable-wrapper">
           <DataTable
+            style={{ height: data.length === 0 ? "300px" : "auto" }}
             className="datatable"
             withTableBorder
             withColumnBorders

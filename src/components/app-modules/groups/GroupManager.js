@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -8,23 +8,35 @@ import Spinner from "react-bootstrap/Spinner";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
+import { DataTable } from "mantine-datatable";
 import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
+import { sortBy } from "../../../lib/helper";
 import EditGroup from "./EditGroup";
 
 const GroupManager = () => {
+  const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [data, setData] = useState(null);
+
+  const [sortStatus, setSortStatus] = useState({
+    columnAccessor: "shift_name",
+    direction: "asc",
+  });
 
   const { error, isLoading } = useSWR(`/empgrp/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
     onSuccess: (fetchedData) => {
       // Update local state when data is successfully fetched
-      setData(fetchedData);
+      setData(sortBy(fetchedData, "group_name"));
     },
   });
+
+  useEffect(() => {
+    const sorted = sortBy(data, sortStatus.columnAccessor);
+    setData(sortStatus.direction === "desc" ? sorted.reverse() : sorted);
+  }, [sortStatus]);
 
   const filteredData = data
     ? data.filter((item) =>
@@ -121,7 +133,67 @@ const GroupManager = () => {
             </div> */}
           </div>
         </div>
-        <div className="employee_table table-responsive">
+
+        <div className="datatable-wrapper">
+          <DataTable
+            style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
+            className="datatable"
+            withTableBorder
+            withColumnBorders
+            striped
+            highlightOnHover
+            horizontalSpacing="sm"
+            verticalSpacing="sm"
+            fz="sm"
+            verticalAlign="center"
+            columns={[
+              {
+                accessor: "",
+                title: "SL",
+                render: (_, index) => index + 1,
+              },
+              {
+                accessor: "group_name",
+                title: "Group Name",
+                sortable: true,
+                // width: 150
+              },
+              {
+                accessor: "Remaks",
+                title: "Remaks",
+                sortable: true,
+                // width: 150
+              },
+
+              {
+                accessor: "actions",
+                title: "Actions",
+                // width: "0%",
+                render: (item) => (
+                  <>
+                    <EditGroup item={item} setItem={setData} />
+
+                    <button
+                      className="border-0 rounded-1"
+                      onClick={() => {
+                        setSelectedGroup(item);
+                        setShow(true);
+                      }}
+                    >
+                      <RiDeleteBin6Line color="#DB3545" />
+                    </button>
+                  </>
+                ),
+              },
+            ]}
+            fetching={isLoading}
+            records={filteredData}
+            sortStatus={sortStatus}
+            onSortStatusChange={setSortStatus}
+          />
+        </div>
+
+        {/* <div className="employee_table table-responsive">
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
@@ -175,7 +247,7 @@ const GroupManager = () => {
               )}
             </tbody>
           </table>
-        </div>
+        </div> */}
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>

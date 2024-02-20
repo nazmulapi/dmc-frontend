@@ -113,9 +113,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Edit Employee
-        </Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Edit Group</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={(e) => handleSubmit(e)}>

@@ -112,7 +112,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Edit Employee
+          Edit Department
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

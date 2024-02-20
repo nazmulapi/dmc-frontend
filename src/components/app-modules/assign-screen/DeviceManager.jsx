@@ -143,6 +143,7 @@ const DeviceManager = () => {
 
         <div className="datatable-wrapper">
           <DataTable
+            style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
             className="datatable"
             withTableBorder
             withColumnBorders
@@ -193,9 +194,8 @@ const DeviceManager = () => {
               {
                 accessor: "active_status",
                 title: "Status",
-                render: (item) => {
-                  item?.active_status === "active" ? "Active" : "Inactive";
-                },
+                render: (item) =>
+                  item?.active_status === "active" ? "Active" : "Inactive",
               },
               {
                 accessor: "actions",

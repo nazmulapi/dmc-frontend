@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import useSWR from "swr";
 import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -9,17 +9,27 @@ import Select from "react-select";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
-import Pagination from "../../utils/Pagination";
+import { DataTable } from "mantine-datatable";
+// import Pagination from "../../utils/Pagination";
 import { fetcher } from "../../../lib/fetch";
 import { getDate, getTime } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
+const PAGE_SIZES = [10, 20, 30, 40];
+
 const ManageInfo = () => {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
+  const [sortStatus, setSortStatus] = useState({
+    columnAccessor: "InTime",
+    direction: "desc", // desc
+  });
+
   const [formValues, setFormValues] = useState({
     group_id: "",
     department_id: "",
     designation_id: "",
-    year: "",
+    year: "2024",
     month: "",
     employee_id: "",
   });
@@ -37,7 +47,7 @@ const ManageInfo = () => {
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  // const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const {
@@ -47,9 +57,7 @@ const ManageInfo = () => {
     isLoading,
     mutate,
   } = useSWR(
-    formSubmitted
-      ? `/structuedlog/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&department_id=${formValues.department_id}&designation_id=${formValues.designation_id}&page=${currentPage}&page_size=${pageSize}`
-      : null,
+    `/structuedlog/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&department_id=${formValues.department_id}&designation_id=${formValues.designation_id}&page=${page}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
     fetcher,
     {
       errorRetryCount: 2,
@@ -57,9 +65,34 @@ const ManageInfo = () => {
     }
   );
 
-  const totalPages = Math.ceil(apiData?.count / Number(pageSize));
-  const startIndex = (currentPage - 1) * Number(pageSize);
-  const endIndex = startIndex + Number(pageSize);
+  console.log(formValues);
+
+  // const {
+  //   data: apiData,
+  //   error,
+  //   isValidating,
+  //   isLoading,
+  //   mutate,
+  // } = useSWR(
+  //   formSubmitted
+  //     ? `/structuedlog/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&department_id=${formValues.department_id}&designation_id=${formValues.designation_id}&page=${currentPage}&page_size=${pageSize}`
+  //     : null,
+  //   fetcher,
+  //   {
+  //     errorRetryCount: 2,
+  //     keepPreviousData: true,
+  //   }
+  // );
+
+  const handleSortStatusChange = (status) => {
+    console.log(status);
+    setPage(1);
+    setSortStatus(status);
+  };
+
+  // const totalPages = Math.ceil(apiData?.count / Number(pageSize));
+  // const startIndex = (currentPage - 1) * Number(pageSize);
+  // const endIndex = startIndex + Number(pageSize);
 
   const {
     data: groupsData,
@@ -199,27 +232,27 @@ const ManageInfo = () => {
     setFormSubmitted(true);
   };
 
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1) {
-      setCurrentPage(newPage);
-    }
-  };
+  // const handlePageChange = (newPage) => {
+  //   if (newPage >= 1) {
+  //     setCurrentPage(newPage);
+  //   }
+  // };
 
-  const handlePageSizeChange = (newPageSize) => {
-    setPageSize(newPageSize);
-    setCurrentPage(1);
-    mutate();
-  };
+  // const handlePageSizeChange = (newPageSize) => {
+  //   setPageSize(newPageSize);
+  //   setCurrentPage(1);
+  //   mutate();
+  // };
 
   const [employeeData, setEmployeeData] = useState([]);
 
-  useEffect(() => {
-    if (!isLoading && !error) {
-      console.log(apiData?.results);
-      setEmployeeData(apiData?.results || []);
-      console.log(apiData?.results);
-    }
-  }, [isLoading, isValidating]);
+  // useEffect(() => {
+  //   if (!isLoading && !error) {
+  //     console.log(apiData?.results);
+  //     setEmployeeData(apiData?.results || []);
+  //     console.log(apiData?.results);
+  //   }
+  // }, [isLoading, isValidating]);
 
   const handleExportToPDF = async () => {
     // console.log(employeeData);
@@ -422,62 +455,109 @@ const ManageInfo = () => {
             </div>
           </div>
         </div>
-        <div className="employee_table table-responsive">
+
+        <div className="datatable-wrapper">
+          <DataTable
+            style={{
+              height: apiData?.results?.length === 0 ? "300px" : "auto",
+            }}
+            className="datatable"
+            withTableBorder
+            withColumnBorders
+            striped
+            highlightOnHover
+            horizontalSpacing="sm"
+            verticalSpacing="sm"
+            fz="sm"
+            verticalAlign="center"
+            columns={[
+              {
+                title: "SL",
+                accessor: "na",
+                noWrap: true,
+                sortable: false,
+                render: (_, index) => (page - 1) * pageSize + index + 1,
+              },
+              {
+                accessor: "employee_id",
+                title: "Employee ID",
+                sortable: true,
+              },
+              {
+                accessor: "username",
+                title: "Employee Name",
+                noWrap: true,
+                sortable: true,
+                // visibleMediaQuery: aboveXs,
+              },
+              {
+                accessor: "designation_name",
+                title: "Device",
+                sortable: true,
+                // visibleMediaQuery: aboveXs,
+              },
+              {
+                accessor: "InTime",
+                title: "Date",
+                noWrap: true,
+                // visibleMediaQuery: aboveXs,
+                render: ({ InTime }) => getDate(InTime),
+              },
+              {
+                accessor: "InTime",
+                title: "Time",
+                // visibleMediaQuery: aboveXs,
+                render: ({ InTime }) => getTime(InTime),
+              },
+            ]}
+            fetching={isLoading}
+            records={apiData?.results || []}
+            page={page}
+            onPageChange={setPage}
+            totalRecords={apiData?.count}
+            recordsPerPage={pageSize}
+            sortStatus={sortStatus}
+            onSortStatusChange={handleSortStatusChange}
+            // selectedRecords={selectedRecords}
+            // onSelectedRecordsChange={setSelectedRecords}
+            recordsPerPageOptions={PAGE_SIZES}
+            onRecordsPerPageChange={setPageSize}
+            // rowExpansion={rowExpansion}
+            // onRowContextMenu={handleContextMenu}
+            // onScroll={hideContextMenu}
+          />
+        </div>
+
+        {/* <div className="employee_table table-responsive">
           <table className="table table-bordered table-striped font_14">
             <thead>
               <tr>
-                {/* <th scope="col">
-                  <div className="form-check p-0">
-                    <input
-                      className=""
-                      type="checkbox"
-                      value=""
-                      id="EmployeeListAllCheckbox"
-                    />
-                  </div>
-                </th> */}
                 <th scope="col">SL</th>
-                {/* <th scope="col">image</th> */}
                 <th scope="col">Employee ID</th>
                 <th scope="col">Employee Name</th>
                 <th scope="col">Device</th>
                 <th scope="col">Date</th>
                 <th scope="col">Time</th>
-                {/* <th scope="col">Designation</th>
-                <th scope="col">Status</th> */}
               </tr>
             </thead>
             {formSubmitted && (
               <tbody>
                 {employeeData?.map((item, index) => (
                   <tr key={index}>
-                    {/* <th scope="row">
-                      <div className="form-check p-0">
-                        <input className="" type="checkbox" value="" id="" />
-                      </div>
-                    </th> */}
                     <th scope="row">{startIndex + index + 1}</th>
-                    {/* <th scope="row" className="text-center">
-                      <img
-                        src={getStoragePath(item?.image_url)}
-                        alt=""
-                        className="table_user_img"
-                      />
-                    </th> */}
                     <td>{item?.employee_id}</td>
                     <td>{item?.username}</td>
                     <td>{item?.device_id}</td>
                     <td>{getDate(item?.InTime)}</td>
                     <td>{getTime(item?.InTime)}</td>
-                    {/* <td>N/A</td>
-                    <td>N/A</td> */}
                   </tr>
                 ))}
               </tbody>
             )}
           </table>
-        </div>
-        <Row>
+        </div> */}
+
+        {/* <Row>
           <Col xs lg="9">
             <Pagination
               currentPage={currentPage}
@@ -500,7 +580,7 @@ const ManageInfo = () => {
               </select>
             </div>
           </Col>
-        </Row>
+        </Row> */}
       </section>
     </>
   );
