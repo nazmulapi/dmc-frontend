@@ -14,10 +14,10 @@ import { DataTable } from "mantine-datatable";
 import { fetcher } from "../../../lib/fetch";
 import { getDate, getTime } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
-
-const PAGE_SIZES = [10, 20, 30, 40];
+import { constants } from "../../../lib/config";
 
 const ManageInfo = () => {
+  const { PAGE_SIZES } = constants;
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
@@ -26,6 +26,15 @@ const ManageInfo = () => {
   });
 
   const [formValues, setFormValues] = useState({
+    group_id: "",
+    department_id: "",
+    designation_id: "",
+    year: "",
+    month: "",
+    employee_id: "",
+  });
+
+  const [formData, setFormData] = useState({
     group_id: "",
     department_id: "",
     designation_id: "",
@@ -57,7 +66,7 @@ const ManageInfo = () => {
     isLoading,
     mutate,
   } = useSWR(
-    `/structuedlog/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&department_id=${formValues.department_id}&designation_id=${formValues.designation_id}&page=${page}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
+    `/structuedlog/?date=${formData.year}-${formData.month}&employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${page}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
     fetcher,
     {
       errorRetryCount: 2,
@@ -226,8 +235,15 @@ const ManageInfo = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    const isFormEmpty = Object.values(formValues).every(
+      (value) => value === ""
+    );
+    if (isFormEmpty) return;
+    setPage(1);
+
     setSuccess("");
     console.log(formValues);
+    setFormData(formValues);
     setIsSubmitLoading(true);
     setFormSubmitted(true);
   };
@@ -296,16 +312,17 @@ const ManageInfo = () => {
 
   return (
     <>
-      <section>
-        <div>
-          <h2 className="border-bottom pb-2 mb-4 text-capitalize">
-            attendance structured data
-          </h2>
-        </div>
-        <div className="form_part mb-3">
+      <div>
+        <h2 className="border-bottom pb-2 mb-4 text-capitalize">
+          attendance structured data
+        </h2>
+      </div>
+
+      <section className="mb-5">
+        <div className="form_part">
           <form onSubmit={handleFormSubmit}>
             <Row>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -323,7 +340,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -341,7 +358,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -359,7 +376,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -377,7 +394,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -395,7 +412,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div className="col-auto">
                   <input
                     type="search"
@@ -411,18 +428,23 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div className="d-flex justify-content-center">
+                  <button
+                    className="rounded-1 theme_color text-white px-3 border-0 filter_button"
+                    type="submit"
+                  >
+                    Apply Filter
+                  </button>
+                </div>
+              </Col>
             </Row>
-            <div className="d-flex justify-content-center">
-              <button
-                className="rounded-1 theme_color text-white px-3 py-2 border-0"
-                type="submit"
-              >
-                Submit
-              </button>
-            </div>
           </form>
         </div>
-        <div className="search_part border mb-3">
+      </section>
+
+      <section>
+        <div className="search_part mb-3">
           <div className="d-flex justify-content-end p-2">
             <div className="d-flex justify-content-between">
               <div className="me-2">
@@ -500,11 +522,12 @@ const ManageInfo = () => {
                 accessor: "InTime",
                 title: "Date",
                 noWrap: true,
+                sortable: true,
                 // visibleMediaQuery: aboveXs,
                 render: ({ InTime }) => getDate(InTime),
               },
               {
-                accessor: "InTime",
+                accessor: "",
                 title: "Time",
                 // visibleMediaQuery: aboveXs,
                 render: ({ InTime }) => getTime(InTime),

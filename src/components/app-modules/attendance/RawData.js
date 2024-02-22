@@ -413,7 +413,7 @@ const ManageInfo = () => {
             </div>
           </form>
         </div>
-        <div className="search_part border mb-3">
+        <div className="search_part mb-3">
           <div className="d-flex justify-content-end p-2">
             <div className="d-flex justify-content-between">
               <div className="me-2">

@@ -3,29 +3,21 @@
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import Button from "react-bootstrap/Button";
-// import { FaRegEdit } from "react-icons/fa";
-// import { RiDeleteBin6Line } from "react-icons/ri";
-import EditEmployee from "./EditEmployee";
-// import Form from "react-bootstrap/Form";
+import Select from "react-select";
 import Spinner from "react-bootstrap/Spinner";
 import { Row, Col } from "react-bootstrap";
 import classEase from "classease";
 import { toast } from "react-toastify";
 import { DataTable } from "mantine-datatable";
+import EditEmployee from "./EditEmployee";
 import { submit } from "../../../lib/submit";
 import { fetcher } from "../../../lib/fetch";
-// import Pagination from "../../utils/Pagination";
-import {
-  formatDate,
-  getDate,
-  getTime,
-  getStoragePath,
-} from "../../../lib/helper";
+import { getStoragePath } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
-
-const PAGE_SIZES = [10, 20, 30, 40];
+import { constants } from "../../../lib/config";
 
 const ManageInfo = () => {
+  const { PAGE_SIZES } = constants;
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
@@ -33,10 +25,10 @@ const ManageInfo = () => {
     direction: "asc", // desc
   });
 
-  // const { data, error, isLoading } = useSWR(
-  //   `/employee/?page=${currentPage}&page_size=${itemsPerPage}`,
-  //   fetcher
-  // );
+  const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState("");
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+
   const {
     data: apiData,
     error,
@@ -61,21 +53,129 @@ const ManageInfo = () => {
     console.log(sortStatus);
   };
 
-  // const totalPages = Math.ceil(apiData?.count / pageSize);
-  // const displayedData = apiData && apiData?.results;
+  const [formValues, setFormValues] = useState({
+    group_id: "",
+    department_id: "",
+    designation_id: "",
+    shift_id: "",
+    employee_id: "",
+  });
 
-  // const isLoading = isValidating && displayedData.length === 0;
+  const [selectFormValues, setSelectFormValues] = useState({
+    group_id: "",
+    department_id: "",
+    designation_id: "",
+    shift_id: "",
+  });
 
-  // const totalPages = Math.ceil(data?.length / pageSize);
+  const {
+    data: groupsData,
+    error: groupsFetchError,
+    isLoading: groupsFetchIsLoading,
+  } = useSWR(`/empgrp/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
-  // const { data, error, isLoading } = useSWR(`/employee/`, fetcher);
+  const groups = groupsData?.map((item) => ({
+    name: "group_id",
+    label: item.group_name,
+    value: item.group_id,
+  }));
 
-  // const startIndex = (currentPage - 1) * pageSize;
-  // const endIndex = startIndex + pageSize;
+  const {
+    data: departmentData,
+    error: departmentFetchError,
+    isLoading: departmentFetchIsLoading,
+  } = useSWR(`/department/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
-  // const displayedData = data?.slice(startIndex, endIndex);
+  const departments = departmentData?.map((item) => ({
+    name: "department_id",
+    label: item.department,
+    value: item.id,
+  }));
 
-  // const totalPages = Math.ceil((data?.length || 0) / pageSize);
+  const {
+    data: designationsData,
+    error: designationsFetchError,
+    isLoading: designationsFetchIsLoading,
+  } = useSWR(`/designation/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const designations = designationsData?.map((item) => ({
+    name: "designation_id",
+    label: item.designation,
+    value: item.id,
+  }));
+
+  const {
+    data: shiftsData,
+    error: shiftsFetchError,
+    isLoading: shiftsFetchIsLoading,
+  } = useSWR(`/shift/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const shifts = shiftsData?.map((item) => ({
+    name: "shift_id",
+    label: item.shift_name,
+    value: item.shift_id,
+  }));
+
+  const handleSelectChange = async (selectedOption, key) => {
+    setSuccess("");
+
+    // when cleared
+    if (!selectedOption || !selectedOption.value) {
+      setErrors({
+        ...errors,
+        [key]: "",
+      });
+
+      setFormValues((prev) => ({
+        ...prev,
+        [key]: "",
+      }));
+
+      setSelectFormValues((prev) => ({
+        ...prev,
+        [key]: "",
+      }));
+      return;
+    }
+
+    const { name, value } = selectedOption;
+
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: String(value),
+    }));
+
+    setSelectFormValues((prev) => ({
+      ...prev,
+      [name]: selectedOption,
+    }));
+
+    return;
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setSuccess("");
+    // setIsSubmitLoading(true);
+    // setFormSubmitted(true);
+  };
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1) {
@@ -255,9 +355,117 @@ const ManageInfo = () => {
 
   return (
     <>
-      <section className="app_box">
-        <div className="search_part border mb-3">
-          <div className="d-flex justify-content-between p-2">
+      <section className="mb-5">
+        <div className="form_part">
+          <form onSubmit={handleFormSubmit}>
+            <Row>
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div>
+                  <Select
+                    className={classEase("rounded-1 form_border_focus mb-3")}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.group_id}
+                    options={groups}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "group_id")
+                    }
+                    placeholder="Select group..."
+                  />
+                </div>
+              </Col>
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div>
+                  <Select
+                    className={classEase("rounded-1 form_border_focus mb-3")}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.department_id}
+                    options={departments}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "department_id")
+                    }
+                    placeholder="Select department..."
+                  />
+                </div>
+              </Col>
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div>
+                  <Select
+                    className={classEase("rounded-1 form_border_focus mb-3")}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.designation_id}
+                    options={designations}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "designation_id")
+                    }
+                    placeholder="Select designation..."
+                  />
+                </div>
+              </Col>
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div>
+                  <Select
+                    className={classEase("rounded-1 form_border_focus mb-3")}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.shift_id}
+                    options={shifts}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "shift_id")
+                    }
+                    placeholder="Select shift..."
+                  />
+                </div>
+              </Col>
+
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div className="col-auto">
+                  <input
+                    type="search"
+                    id=""
+                    placeholder="Employee ID"
+                    className="form-control form_border_focus rounded-1"
+                    onChange={(e) =>
+                      setFormValues((prev) => ({
+                        ...prev,
+                        employee_id: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              </Col>
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div className="d-flex justify-content-center">
+                  <button
+                    className="rounded-1 theme_color text-white px-3 border-0 filter_button"
+                    type="submit"
+                  >
+                    Apply Filter
+                  </button>
+                </div>
+              </Col>
+            </Row>
+          </form>
+        </div>
+      </section>
+
+      <section className="mb-3">
+        <div className="search_part">
+          <div className="d-flex justify-content-between py-2">
             <form className="" onSubmit={handleFileSubmit}>
               <div className="d-flex align-items-center">
                 <div>
@@ -346,7 +554,9 @@ const ManageInfo = () => {
             </div>
           </div>
         </div>
+      </section>
 
+      <section className="mb-3">
         <div className="datatable-wrapper">
           <DataTable
             style={{
