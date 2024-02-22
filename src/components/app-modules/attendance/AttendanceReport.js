@@ -14,10 +14,10 @@ import { DataTable } from "mantine-datatable";
 import { fetcher } from "../../../lib/fetch";
 import { getDate, getTime } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
-
-const PAGE_SIZES = [10, 20, 30, 40];
+import { constants } from "../../../lib/config";
 
 const AttendanceManage = () => {
+  const { PAGE_SIZES } = constants;
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
@@ -26,6 +26,15 @@ const AttendanceManage = () => {
   });
 
   const [formValues, setFormValues] = useState({
+    group_id: "",
+    department_id: "",
+    designation_id: "",
+    year: "",
+    month: "",
+    employee_id: "",
+  });
+
+  const [formData, setFormData] = useState({
     group_id: "",
     department_id: "",
     designation_id: "",
@@ -57,7 +66,7 @@ const AttendanceManage = () => {
     isLoading,
     mutate,
   } = useSWR(
-    `/attendance_log/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&department_id=${formValues.department_id}&designation_id=${formValues.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
+    `/attendance_log/?date=${formData.year}-${formData.month}&employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
     fetcher,
     {
       errorRetryCount: 2,
@@ -209,8 +218,15 @@ const AttendanceManage = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    const isFormEmpty = Object.values(formValues).every(
+      (value) => value === ""
+    );
+    if (isFormEmpty) return;
+    setCurrentPage(1);
+
     setSuccess("");
     console.log(formValues);
+    setFormData(formValues);
     setIsSubmitLoading(true);
     setFormSubmitted(true);
   };
@@ -285,14 +301,15 @@ const AttendanceManage = () => {
 
   return (
     <>
-      <section>
-        <div>
-          <h2 className="border-bottom pb-2 mb-4">Attendance Report</h2>
-        </div>
-        <div className="form_part mb-3">
+      <div>
+        <h2 className="border-bottom pb-2 mb-4">Attendance Report</h2>
+      </div>
+
+      <section className="mb-5">
+        <div className="form_part">
           <form onSubmit={handleFormSubmit}>
             <Row>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -310,7 +327,7 @@ const AttendanceManage = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -328,7 +345,7 @@ const AttendanceManage = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -346,7 +363,7 @@ const AttendanceManage = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -364,7 +381,7 @@ const AttendanceManage = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -382,7 +399,7 @@ const AttendanceManage = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div className="col-auto">
                   <input
                     type="search"
@@ -398,18 +415,21 @@ const AttendanceManage = () => {
                   />
                 </div>
               </Col>
+
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div className="d-flex justify-content-center">
+                  <button
+                    className="rounded-1 theme_color text-white px-3 py-2 border-0"
+                    type="submit"
+                  >
+                    Apply Filter
+                  </button>
+                </div>
+              </Col>
             </Row>
-            <div className="d-flex justify-content-center">
-              <button
-                className="rounded-1 theme_color text-white px-3 py-2 border-0"
-                type="submit"
-              >
-                Submit
-              </button>
-            </div>
           </form>
         </div>
-        <div className="search_part border mb-3">
+        <div className="search_part mb-3">
           <div className="d-flex justify-content-end p-2">
             <div className="d-flex justify-content-between">
               <div className="me-2">
