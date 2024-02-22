@@ -2,14 +2,17 @@
 
 import React from "react";
 import Link from "next/link";
-import { FaUser } from "react-icons/fa";
-import { BiTargetLock } from "react-icons/bi";
-import { MdDeviceHub } from "react-icons/md";
-import { LuNewspaper } from "react-icons/lu";
-import { FiSettings } from "react-icons/fi";
+import { LuCamera } from "react-icons/lu";
+import { GoPerson } from "react-icons/go";
+import { RiGraduationCapLine } from "react-icons/ri";
+import { RiGroupLine } from "react-icons/ri";
+import { AiOutlineBranches } from "react-icons/ai";
+import { MdOutlineSchedule } from "react-icons/md";
+import { IoSettingsOutline, IoSyncOutline } from "react-icons/io5";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import Accordion from "react-bootstrap/Accordion";
-import Image from "next/image";
-import Logo from "../../../../public/logo.png";
+// import Image from "next/image";
+// import Logo from "../../../../public/logo.png";
 
 const Page = () => {
   return (
@@ -33,7 +36,7 @@ const Page = () => {
 
               <Accordion.Item eventKey="0" className="pt-0">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <FaUser className="text-light sidenav-icon" />
+                  <GoPerson className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
                     employee
                   </span>
@@ -63,7 +66,7 @@ const Page = () => {
               {/* manu item 2 */}
               <Accordion.Item eventKey="1" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <BiTargetLock className="text-light sidenav-icon" />
+                  <RiGraduationCapLine className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
                     Designation
                   </span>
@@ -93,7 +96,7 @@ const Page = () => {
               {/* manu item 2 */}
               <Accordion.Item eventKey="2" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <MdDeviceHub className="text-light sidenav-icon" />
+                  <AiOutlineBranches className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
                     Departments
                   </span>
@@ -122,7 +125,7 @@ const Page = () => {
 
               <Accordion.Item eventKey="8" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <BiTargetLock className="text-light sidenav-icon" />
+                  <RiGroupLine className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
                     Group
                   </span>
@@ -151,7 +154,7 @@ const Page = () => {
 
               <Accordion.Item eventKey="3" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <MdDeviceHub className="text-light sidenav-icon" />
+                  <MdOutlineSchedule className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
                     employee Shift
                   </span>
@@ -189,7 +192,7 @@ const Page = () => {
               {/* Attendance item 2 */}
               <Accordion.Item eventKey="4" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <LuNewspaper className="text-light sidenav-icon" />
+                  <IoMdCheckmarkCircleOutline className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
                     Attendance
                   </span>
@@ -228,7 +231,7 @@ const Page = () => {
 
               <Accordion.Item eventKey="5" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <LuNewspaper className="text-light sidenav-icon" />
+                  <LuCamera className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
                     manage Device
                   </span>
@@ -263,10 +266,39 @@ const Page = () => {
                 </Accordion.Body>
               </Accordion.Item>
 
+              <Accordion.Item eventKey="7" className="">
+                <Accordion.Header className="p-0 m-0 text-capitalize">
+                  <IoSyncOutline className="text-light sidenav-icon" />
+                  <span className="text-white text-capitalize side_font">
+                    Sync log
+                  </span>
+                </Accordion.Header>
+                <Accordion.Body>
+                  <ul className="text-decoration-none mb-0 sidenav_submenu">
+                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
+                      <Link
+                        href="/sync-settings"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        Sync Log Data
+                      </Link>
+                    </li>
+                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
+                      <Link
+                        href="/sync-now"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        Sync Now
+                      </Link>
+                    </li>
+                  </ul>
+                </Accordion.Body>
+              </Accordion.Item>
+
               {/* Settings item 2 */}
               <Accordion.Item eventKey="6" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <FiSettings className="text-light sidenav-icon" />
+                  <IoSettingsOutline className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
                     Settings
                   </span>
@@ -287,36 +319,6 @@ const Page = () => {
                         className="text-decoration-none text-white side_font"
                       >
                         Manage
-                      </Link>
-                    </li>
-                  </ul>
-                </Accordion.Body>
-              </Accordion.Item>
-
-              {/* Settings item 2 */}
-              <Accordion.Item eventKey="7" className="">
-                <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <FiSettings className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
-                    Sync log Settings
-                  </span>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <ul className="text-decoration-none mb-0 sidenav_submenu">
-                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
-                      <Link
-                        href="/sync-settings"
-                        className="text-decoration-none text-white side_font"
-                      >
-                        Sync Log Data
-                      </Link>
-                    </li>
-                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
-                      <Link
-                        href="/sync-now"
-                        className="text-decoration-none text-white side_font"
-                      >
-                        Sync Now
                       </Link>
                     </li>
                   </ul>

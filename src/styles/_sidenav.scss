@@ -3,14 +3,13 @@
   border-right: 1px solid transparent;
   margin-top: 0;
   position: fixed;
-  top: 60px;
+  top: 64px;
   bottom: 0;
   left: 0;
-  -webkit-transition: all 0.2s ease;
-  -ms-transition: all 0.2s ease;
   transition: all 0.2s ease;
-  width: 230px;
+  width: 240px;
   z-index: 1001;
+  overflow-y: auto;
 }
 
 .main_logo {
@@ -22,11 +21,11 @@
   margin-right: 10px;
 }
 .main_logo .logo_text {
-  font-size: 14px;
+  font-size: 16px;
   text-align: left;
-  line-height: 1.5;
-  font-weight: normal;
+  line-height: 1;
   color: #fff;
+  font-weight: 500;
 }
 .side_nav_bg {
   // background-color: var(--dmc-theme-color-primary);
@@ -47,7 +46,7 @@
   padding: 0px !important;
   background-color: transparent !important;
   border: none !important;
-  line-height: 47px;
+  line-height: 44px;
 }
 #navigation_part .accordion-button:focus {
   box-shadow: none !important;
@@ -58,8 +57,8 @@
   width: 100%;
 }
 #navigation_part .accordion-item .sidenav-icon {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   margin-right: 10px;
 }
 .accordion-button::after {
@@ -75,7 +74,7 @@
   padding-bottom: 10px !important;
 }
 .accordion-item .sidenav_submenu {
-  padding-left: 47px;
+  padding-left: 42px;
   padding-right: 24px;
 }
 .accordion-item .sidenav_sub_item {
@@ -85,14 +84,15 @@
 }
 .accordion-item .sidenav_sub_item::before {
   content: "";
-  width: 6px;
-  height: 2px;
+  width: 4px;
+  height: 4px;
   background-color: #fff;
   position: absolute;
-  left: -18px;
-  top: 18px;
+  left: -12px;
+  top: 17px;
   transition: all 0.4s ease-in-out;
   opacity: 0.5;
+  border-radius: 50%;
 }
 .accordion-item .sidenav_sub_item a {
   font-size: 13px !important;
