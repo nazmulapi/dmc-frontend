@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
@@ -97,10 +98,17 @@ const CreateShift = () => {
 
   return (
     <>
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">Create Shift</h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Create Shift</li>
+        </ul>
+      </div>
+
       <section>
-        <div>
-          <h2 className="border-bottom pb-2">Create Shift</h2>
-        </div>
         <form onSubmit={handleSubmit}>
           <Row>
             <div className="col-lg-6">

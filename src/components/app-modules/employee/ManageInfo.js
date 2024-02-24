@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
+import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import Select from "react-select";
 import Spinner from "react-bootstrap/Spinner";
@@ -43,6 +44,16 @@ const ManageInfo = () => {
       keepPreviousData: true,
     }
   );
+
+  const modifiedData = apiData
+    ? {
+        ...apiData,
+        results: apiData.results.map((record) => ({
+          ...record,
+          id: record.employee_id,
+        })),
+      }
+    : null;
 
   const [selectedRecords, setSelectedRecords] = useState([]);
 
@@ -355,6 +366,16 @@ const ManageInfo = () => {
 
   return (
     <>
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">Employees</h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Employees</li>
+        </ul>
+      </div>
+
       <section className="mb-5">
         <div className="form_part">
           <form onSubmit={handleFormSubmit}>
@@ -556,6 +577,8 @@ const ManageInfo = () => {
         </div>
       </section>
 
+      {console.log(selectedRecords)}
+
       <section className="mb-3">
         <div className="datatable-wrapper">
           <DataTable
@@ -574,7 +597,7 @@ const ManageInfo = () => {
             columns={[
               {
                 title: "SL",
-                accessor: "na",
+                accessor: "",
                 noWrap: true,
                 sortable: false,
                 render: (_, index) => (currentPage - 1) * pageSize + index + 1,
@@ -646,7 +669,7 @@ const ManageInfo = () => {
               },
             ]}
             fetching={isLoading}
-            records={apiData?.results || []}
+            records={modifiedData?.results}
             page={currentPage}
             onPageChange={setCurrentPage}
             totalRecords={apiData?.count}
@@ -728,30 +751,6 @@ const ManageInfo = () => {
             </div>
           )}
         </div> */}
-        {/* <Row>
-          <Col xs lg="9">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </Col>
-          <Col xs lg="3">
-            <div className="w-100 d-flex align-items-center justify-content-end mb-3">
-              <label>Page Size</label>
-              <select
-                className="rounded-1 form_border_focus form-control w-50 ms-2"
-                value={pageSize}
-                onChange={(e) => handlePageSizeChange(e.target.value)}
-              >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-          </Col>
-        </Row> */}
       </section>
     </>
   );

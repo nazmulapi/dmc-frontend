@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import useSWR from "swr";
+import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
@@ -55,7 +56,7 @@ const ManageInfo = () => {
   const [success, setSuccess] = useState("");
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   // const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -73,8 +74,6 @@ const ManageInfo = () => {
       keepPreviousData: true,
     }
   );
-
-  console.log(formValues);
 
   // const {
   //   data: apiData,
@@ -94,7 +93,6 @@ const ManageInfo = () => {
   // );
 
   const handleSortStatusChange = (status) => {
-    console.log(status);
     setPage(1);
     setSortStatus(status);
   };
@@ -212,8 +210,6 @@ const ManageInfo = () => {
 
     const { name, value } = selectedOption;
 
-    console.log(name, value);
-
     setErrors({
       ...errors,
       [name]: "",
@@ -242,7 +238,7 @@ const ManageInfo = () => {
     setPage(1);
 
     setSuccess("");
-    console.log(formValues);
+
     setFormData(formValues);
     setIsSubmitLoading(true);
     setFormSubmitted(true);
@@ -312,13 +308,19 @@ const ManageInfo = () => {
 
   return (
     <>
-      <div>
-        <h2 className="border-bottom pb-2 mb-4 text-capitalize">
-          attendance structured data
-        </h2>
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">
+          Attendance Structured Data
+        </h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Structured Data</li>
+        </ul>
       </div>
 
-      <section className="mb-5">
+      <section className="mb-4">
         <div className="form_part">
           <form onSubmit={handleFormSubmit}>
             <Row>
@@ -443,41 +445,41 @@ const ManageInfo = () => {
         </div>
       </section>
 
-      <section>
-        <div className="search_part mb-3">
-          <div className="d-flex justify-content-end p-2">
-            <div className="d-flex justify-content-between">
-              <div className="me-2">
-                <Button
-                  type="button"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                  onClick={() => handleExportToPDF()}
-                >
-                  PDF
-                </Button>
-              </div>
-              <div className="me-2">
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                  onClick={() => handleExportToCSV()}
-                >
-                  CSV
-                </Button>
-              </div>
-              <div>
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                  onClick={() => handleExportToExcel()}
-                >
-                  Excel
-                </Button>
-              </div>
+      <div className="search_part mb-3">
+        <div className="d-flex justify-content-end p-2">
+          <div className="d-flex justify-content-between">
+            <div className="me-2">
+              <Button
+                type="button"
+                className="rounded-1 px-4 add_btn_color border-0"
+                onClick={() => handleExportToPDF()}
+              >
+                PDF
+              </Button>
+            </div>
+            <div className="me-2">
+              <Button
+                type="submit"
+                className="rounded-1 px-4 add_btn_color border-0"
+                onClick={() => handleExportToCSV()}
+              >
+                CSV
+              </Button>
+            </div>
+            <div>
+              <Button
+                type="submit"
+                className="rounded-1 px-4 add_btn_color border-0"
+                onClick={() => handleExportToExcel()}
+              >
+                Excel
+              </Button>
             </div>
           </div>
         </div>
+      </div>
 
+      <section>
         <div className="datatable-wrapper">
           <DataTable
             style={{
@@ -550,60 +552,6 @@ const ManageInfo = () => {
             // onScroll={hideContextMenu}
           />
         </div>
-
-        {/* <div className="employee_table table-responsive">
-          <table className="table table-bordered table-striped font_14">
-            <thead>
-              <tr>
-                <th scope="col">SL</th>
-                <th scope="col">Employee ID</th>
-                <th scope="col">Employee Name</th>
-                <th scope="col">Device</th>
-                <th scope="col">Date</th>
-                <th scope="col">Time</th>
-              </tr>
-            </thead>
-            {formSubmitted && (
-              <tbody>
-                {employeeData?.map((item, index) => (
-                  <tr key={index}>
-                    <th scope="row">{startIndex + index + 1}</th>
-                    <td>{item?.employee_id}</td>
-                    <td>{item?.username}</td>
-                    <td>{item?.device_id}</td>
-                    <td>{getDate(item?.InTime)}</td>
-                    <td>{getTime(item?.InTime)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            )}
-          </table>
-        </div> */}
-
-        {/* <Row>
-          <Col xs lg="9">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </Col>
-          <Col xs lg="3">
-            <div className="w-100 d-flex align-items-center justify-content-end mb-3">
-              <label>Page Size</label>
-              <select
-                className="rounded-1 form_border_focus form-control w-50 ms-2"
-                value={pageSize}
-                onChange={(e) => handlePageSizeChange(e.target.value)}
-              >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-          </Col>
-        </Row> */}
       </section>
     </>
   );

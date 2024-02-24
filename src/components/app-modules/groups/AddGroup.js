@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
@@ -92,10 +93,17 @@ const AddGroup = () => {
 
   return (
     <>
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">Create Group</h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Create Group</li>
+        </ul>
+      </div>
+
       <section>
-        <div>
-          <h2 className="border-bottom pb-2">Create Group</h2>
-        </div>
         <div className="col-lg-6">
           <form onSubmit={(e) => handleSubmit(e)} method="POST">
             <div className="mb-3">

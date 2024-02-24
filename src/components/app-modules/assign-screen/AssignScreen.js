@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 import { DataTable } from "mantine-datatable";
 import Select from "react-select";
@@ -221,39 +222,45 @@ const AssignDevice = () => {
 
   return (
     <>
-      <div>
-        <div>
-          <h2 className="border-bottom pb-2 mb-4 text-capitalize">
-            Assign Device
-          </h2>
-        </div>
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <Row>
-            <Col lg={4} className="px-2">
-              <div className="mb-3">
-                <label htmlFor="deviceSelect" className="form-label">
-                  Select Device<span className="text-danger"> *</span>
-                </label>
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">Assign Device</h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Assign Device</li>
+        </ul>
+      </div>
 
-                <Select
-                  id="deviceSelect"
-                  className={classEase(
-                    "rounded-1 form_border_focus",
-                    errors.device_id && "is-invalid"
-                  )}
-                  classNamePrefix="select"
-                  isDisabled={false}
-                  isLoading={false}
-                  isClearable={true}
-                  isSearchable={true}
-                  value={selectFormValues.device_id}
-                  options={devices}
-                  onChange={(selectedOption) =>
-                    handleSelectChange(selectedOption, "device_id")
-                  }
-                />
+      <section className="mb-4">
+        <div className="form_part">
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <Row>
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div className="mb-3">
+                  <label htmlFor="deviceSelect" className="form-label">
+                    Select Device<span className="text-danger"> *</span>
+                  </label>
 
-                {/*
+                  <Select
+                    id="deviceSelect"
+                    className={classEase(
+                      "rounded-1 form_border_focus",
+                      errors.device_id && "is-invalid"
+                    )}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.device_id}
+                    options={devices}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "device_id")
+                    }
+                  />
+
+                  {/*
                 <select
                   className="form-select rounded-1 py-2 form_border_focus"
                   aria-label="Default select example"
@@ -263,36 +270,36 @@ const AssignDevice = () => {
                   <option value="2">Two</option>
                   <option value="3">Three</option>
                 </select> */}
-                {errors.device_id && (
-                  <div className="invalid-feedback">{errors.device_id}</div>
-                )}
-              </div>
-            </Col>
-            <Col lg={4} className="px-2">
-              <div className="mb-3">
-                <label htmlFor="groupSelect" className="form-label">
-                  Select group<span className="text-danger"> *</span>
-                </label>
-
-                <Select
-                  id="groupSelect"
-                  className={classEase(
-                    "rounded-1 form_border_focus",
-                    errors.group_id && "is-invalid"
+                  {errors.device_id && (
+                    <div className="invalid-feedback">{errors.device_id}</div>
                   )}
-                  classNamePrefix="select"
-                  isDisabled={false}
-                  isLoading={false}
-                  isClearable={true}
-                  isSearchable={true}
-                  value={selectFormValues.group_id}
-                  options={groups}
-                  onChange={(selectedOption) =>
-                    handleSelectChange(selectedOption, "group_id")
-                  }
-                />
+                </div>
+              </Col>
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div className="mb-3">
+                  <label htmlFor="groupSelect" className="form-label">
+                    Select group<span className="text-danger"> *</span>
+                  </label>
 
-                {/* <select
+                  <Select
+                    id="groupSelect"
+                    className={classEase(
+                      "rounded-1 form_border_focus",
+                      errors.group_id && "is-invalid"
+                    )}
+                    classNamePrefix="select"
+                    isDisabled={false}
+                    isLoading={false}
+                    isClearable={true}
+                    isSearchable={true}
+                    value={selectFormValues.group_id}
+                    options={groups}
+                    onChange={(selectedOption) =>
+                      handleSelectChange(selectedOption, "group_id")
+                    }
+                  />
+
+                  {/* <select
                   className="form-select rounded-1 py-2 form_border_focus"
                   aria-label="Default select example"
                 >
@@ -301,46 +308,49 @@ const AssignDevice = () => {
                   <option value="2">Two</option>
                   <option value="3">Three</option>
                 </select> */}
-                {errors.group_id && (
-                  <div className="invalid-feedback">{errors.group_id}</div>
-                )}
-              </div>
-            </Col>
+                  {errors.group_id && (
+                    <div className="invalid-feedback">{errors.group_id}</div>
+                  )}
+                </div>
+              </Col>
 
-            {/* {success && success !== "" && (
+              {/* {success && success !== "" && (
               <div className="success-feedback mb-3">{success}</div>
             )} */}
 
-            <Col lg={4} className="px-2">
-              <div className="button-section d-flex align-items-end pt-4">
-                <button
-                  // className="dynami_button submit ms-2 rounded-1 d-flex"
-                  type="submit"
-                  className={classEase(
-                    "dynami_button submit rounded-1 mt-2 px-0 d-flex justify-content-center align-items-center app-button",
-                    isLoading ? "loading" : ""
-                  )}
-                  disabled={isLoading}
-                >
-                  Submit
-                  {isLoading && (
-                    <div className="spinner">
-                      <Spinner
-                        as="span"
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
-                  )}
-                </button>
-              </div>
-            </Col>
-          </Row>
-        </form>
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div className="d-flex justify-content-center pt-4">
+                  <button
+                    // className="dynami_button submit ms-2 rounded-1 d-flex"
+                    type="submit"
+                    className={classEase(
+                      "dynami_button submit rounded-1 mt-2 px-0 d-flex justify-content-center align-items-center app-button filter_button",
+                      isLoading ? "loading" : ""
+                    )}
+                    disabled={isLoading}
+                  >
+                    Submit
+                    {isLoading && (
+                      <div className="spinner">
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    )}
+                  </button>
+                </div>
+              </Col>
+            </Row>
+          </form>
+        </div>
+      </section>
 
+      <section>
         <div className="datatable-wrapper">
           <DataTable
             style={{ height: data.length === 0 ? "300px" : "auto" }}
@@ -394,61 +404,7 @@ const AssignDevice = () => {
             onSortStatusChange={setSortStatus}
           />
         </div>
-
-        {/* <div className="employee_table table-responsive mt-5">
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th scope="col">SL</th>
-                <th scope="col">Device</th>
-                <th scope="col">Group</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {error && (
-                <tr>
-                  <td colSpan={4}>Failed to load</td>
-                </tr>
-              )}
-              {loading && (
-                <tr>
-                  <td colSpan={4}>Loading...</td>
-                </tr>
-              )}
-
-              {data?.length ? (
-                data.map((item, index) => (
-                  <tr key={index}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{item.device_name}</td>
-                    <td>{item.group_name}</td>
-                    <td>
-                      <button
-                        className="border-0 rounded-1"
-                        onClick={() => {
-                          setSelected(item);
-                          setShow(true);
-                        }}
-                      >
-                        <RiDeleteBin6Line color="#DB3545" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <>
-                  {!loading && (
-                    <tr>
-                      <td colSpan={4}>No data found!</td>
-                    </tr>
-                  )}
-                </>
-              )}
-            </tbody>
-          </table>
-        </div> */}
-      </div>
+      </section>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

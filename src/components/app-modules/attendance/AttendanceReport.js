@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import useSWR from "swr";
+import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
@@ -301,11 +302,17 @@ const AttendanceManage = () => {
 
   return (
     <>
-      <div>
-        <h2 className="border-bottom pb-2 mb-4">Attendance Report</h2>
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">Attendance Report</h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Attendance Report</li>
+        </ul>
       </div>
 
-      <section className="mb-5">
+      <section className="mb-4">
         <div className="form_part">
           <form onSubmit={handleFormSubmit}>
             <Row>
@@ -419,7 +426,7 @@ const AttendanceManage = () => {
               <Col xs={12} md={6} lg={3} xl={3}>
                 <div className="d-flex justify-content-center">
                   <button
-                    className="rounded-1 theme_color text-white px-3 py-2 border-0"
+                    className="rounded-1 theme_color text-white px-3 border-0 filter_button"
                     type="submit"
                   >
                     Apply Filter
@@ -429,40 +436,42 @@ const AttendanceManage = () => {
             </Row>
           </form>
         </div>
-        <div className="search_part mb-3">
-          <div className="d-flex justify-content-end p-2">
-            <div className="d-flex justify-content-between">
-              <div className="me-2">
-                <Button
-                  type="button"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                  onClick={() => handleExportToPDF()}
-                >
-                  PDF
-                </Button>
-              </div>
-              <div className="me-2">
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                  onClick={() => handleExportToCSV()}
-                >
-                  CSV
-                </Button>
-              </div>
-              <div>
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                  onClick={() => handleExportToExcel()}
-                >
-                  Excel
-                </Button>
-              </div>
+      </section>
+
+      <div className="search_part mb-3">
+        <div className="d-flex justify-content-end p-2">
+          <div className="d-flex justify-content-between">
+            <div className="me-2">
+              <Button
+                type="button"
+                className="rounded-1 px-4 add_btn_color border-0"
+                onClick={() => handleExportToPDF()}
+              >
+                PDF
+              </Button>
+            </div>
+            <div className="me-2">
+              <Button
+                type="submit"
+                className="rounded-1 px-4 add_btn_color border-0"
+                onClick={() => handleExportToCSV()}
+              >
+                CSV
+              </Button>
+            </div>
+            <div>
+              <Button
+                type="submit"
+                className="rounded-1 px-4 add_btn_color border-0"
+                onClick={() => handleExportToExcel()}
+              >
+                Excel
+              </Button>
             </div>
           </div>
         </div>
-
+      </div>
+      <section>
         <div className="datatable-wrapper">
           <DataTable
             style={{
@@ -566,30 +575,6 @@ const AttendanceManage = () => {
             )}
           </table>
         </div> */}
-        {/* <Row>
-          <Col xs lg="9">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </Col>
-          <Col xs lg="3">
-            <div className="w-100 d-flex align-items-center justify-content-end mb-3">
-              <label>Page Size</label>
-              <select
-                className="rounded-1 form_border_focus form-control w-50 ms-2"
-                value={pageSize}
-                onChange={(e) => handlePageSizeChange(e.target.value)}
-              >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-          </Col>
-        </Row> */}
       </section>
     </>
   );

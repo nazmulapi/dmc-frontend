@@ -195,6 +195,18 @@ employee manage css end
   border-color: var(--dmc-theme-color-secondary) !important;
   z-index: 3 !important;
 }
+.select__indicator-separator {
+  display: none;
+}
+.select__dropdown-indicator {
+  padding-left: 4px !important;
+}
+.select__clear-indicator {
+  padding-right: 0 !important;
+}
+.select__value-container {
+  font-size: 16px;
+}
 
 // dynamic form
 .form-inline {
@@ -289,4 +301,10 @@ employee manage css end
 }
 .datatable .mantine-datatable-header {
   z-index: 0;
+}
+
+.filter_button {
+  width: 100%;
+  padding: 0 !important;
+  line-height: 38px;
 }

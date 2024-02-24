@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 import { DataTable } from "mantine-datatable";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
-import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import classEase from "classease";
 import { toast } from "react-toastify";
@@ -86,31 +86,33 @@ const DeviceManager = () => {
 
   return (
     <>
-      <section>
-        <div>
-          <h2 className="border-bottom pb-2 mb-4">Manage Device</h2>
-        </div>
-        <div className="search_part border mb-3">
-          <div className="d-flex justify-content-between p-2">
-            <div className="">
-              <div className="row g-3 align-items-center">
-                <div className="col-auto">
-                  <label htmlFor="inputPassword6" className="col-form-label">
-                    Search
-                  </label>
-                </div>
-                <div className="col-auto">
-                  <input
-                    type="search"
-                    id="device_search"
-                    className="form-control form_border_focus"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">Devices</h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Devices</li>
+        </ul>
+      </div>
+
+      <div className="search_part mb-3">
+        <div className="d-flex justify-content-between py-2">
+          <div className="">
+            <div className="row g-3 align-items-center">
+              <div className="col-auto">
+                <input
+                  type="search"
+                  id="device_search"
+                  className="form-control form_border_focus"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
             </div>
-            {/* <div className="d-flex justify-content-between">
+          </div>
+          {/* <div className="d-flex justify-content-between">
               <div className="me-2">
                 <Button
                   type="submit"
@@ -136,11 +138,10 @@ const DeviceManager = () => {
                 </Button>
               </div>
             </div> */}
-          </div>
         </div>
+      </div>
 
-        {console.log(data)}
-
+      <section>
         <div className="datatable-wrapper">
           <DataTable
             style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
@@ -220,73 +221,6 @@ const DeviceManager = () => {
             onSortStatusChange={setSortStatus}
           />
         </div>
-
-        {/* <div className="employee_table table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th scope="col">SL</th>
-                <th scope="col">Device ID</th>
-                <th scope="col">Device IP</th>
-                <th scope="col">Device Name</th>
-                <th scope="col">Device Username</th>
-                <th scope="col">Device Password</th>
-                <th scope="col">Location</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {error && (
-                <tr>
-                  <td colSpan={9}>Failed to load</td>
-                </tr>
-              )}
-
-              {isLoading && (
-                <tr>
-                  <td colSpan={9}>Loading...</td>
-                </tr>
-              )}
-
-              {filteredData?.length ? (
-                filteredData.map((item, index) => (
-                  <tr key={index}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{item.device_id}</td>
-                    <td>{item.device_ip}</td>
-                    <td>{item.device_name}</td>
-                    <td>{item.username}</td>
-                    <td>{item.password}</td>
-                    <td>{item.location}</td>
-                    <td>
-                      {item?.active_status === "active" ? "Active" : "Inactive"}
-                    </td>
-                    <td>
-                      <button
-                        className="border-0 rounded-1"
-                        onClick={() => {
-                          setSelectedDevice(item);
-                          setShow(true);
-                        }}
-                      >
-                        <RiDeleteBin6Line color="#DB3545" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <>
-                  {!isLoading && (
-                    <tr>
-                      <td colSpan={9}>No data found!</td>
-                    </tr>
-                  )}
-                </>
-              )}
-            </tbody>
-          </table>
-        </div> */}
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>

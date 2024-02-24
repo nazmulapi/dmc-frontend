@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import useSWR from "swr";
+import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
@@ -14,10 +15,10 @@ import { DataTable } from "mantine-datatable";
 import { fetcher } from "../../../lib/fetch";
 import { getDate, getTime } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
-
-const PAGE_SIZES = [10, 20, 30, 40];
+import { constants } from "../../../lib/config";
 
 const ManageInfo = () => {
+  const { PAGE_SIZES } = constants;
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
@@ -26,6 +27,15 @@ const ManageInfo = () => {
   });
 
   const [formValues, setFormValues] = useState({
+    group_id: "",
+    department_id: "",
+    designation_id: "",
+    year: "",
+    month: "",
+    employee_id: "",
+  });
+
+  const [formData, setFormData] = useState({
     group_id: "",
     department_id: "",
     designation_id: "",
@@ -57,7 +67,7 @@ const ManageInfo = () => {
     isLoading,
     mutate,
   } = useSWR(
-    `/log/raw_log/?date=${formValues.year}-${formValues.month}&employee_id=${formValues.employee_id}&group_id=${formValues.group_id}&department_id=${formValues.department_id}&designation_id=${formValues.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
+    `/log/raw_log/?date=${formData.year}-${formData.month}&employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
     fetcher,
     {
       errorRetryCount: 2,
@@ -66,7 +76,6 @@ const ManageInfo = () => {
   );
 
   const handleSortStatusChange = (status) => {
-    console.log(status);
     setCurrentPage(1);
     setSortStatus(status);
   };
@@ -184,8 +193,6 @@ const ManageInfo = () => {
 
     const { name, value } = selectedOption;
 
-    console.log(name, value);
-
     setErrors({
       ...errors,
       [name]: "",
@@ -207,8 +214,15 @@ const ManageInfo = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    const isFormEmpty = Object.values(formValues).every(
+      (value) => value === ""
+    );
+    if (isFormEmpty) return;
+    setCurrentPage(1);
+
     setSuccess("");
-    console.log(formValues);
+
+    setFormData(formValues);
     setIsSubmitLoading(true);
     setFormSubmitted(true);
   };
@@ -287,16 +301,21 @@ const ManageInfo = () => {
 
   return (
     <>
-      <section>
-        <div>
-          <h2 className="border-bottom pb-2 mb-4 text-capitalize">
-            Attendance raw data
-          </h2>
-        </div>
-        <div className="form_part mb-3">
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">Attendance Raw Data</h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Raw Data</li>
+        </ul>
+      </div>
+
+      <section className="mb-4">
+        <div className="form_part">
           <form onSubmit={handleFormSubmit}>
             <Row>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -314,7 +333,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -332,7 +351,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -350,7 +369,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -368,7 +387,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
@@ -386,7 +405,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col lg={4}>
+              <Col xs={12} md={6} lg={3} xl={3}>
                 <div className="col-auto">
                   <input
                     type="search"
@@ -402,51 +421,57 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
+
+              <Col xs={12} md={6} lg={3} xl={3}>
+                <div className="d-flex justify-content-center">
+                  <button
+                    className="rounded-1 theme_color text-white px-3 border-0 filter_button"
+                    type="submit"
+                  >
+                    Apply Filter
+                  </button>
+                </div>
+              </Col>
             </Row>
-            <div className="d-flex justify-content-center">
-              <button
-                className="rounded-1 theme_color text-white px-3 py-2 border-0"
-                type="submit"
-              >
-                Submit
-              </button>
-            </div>
           </form>
         </div>
-        <div className="search_part mb-3">
-          <div className="d-flex justify-content-end p-2">
-            <div className="d-flex justify-content-between">
-              <div className="me-2">
-                <Button
-                  type="button"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                  onClick={() => handleExportToPDF()}
-                >
-                  PDF
-                </Button>
-              </div>
-              <div className="me-2">
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                  onClick={() => handleExportToCSV()}
-                >
-                  CSV
-                </Button>
-              </div>
-              <div>
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                  onClick={() => handleExportToExcel()}
-                >
-                  Excel
-                </Button>
-              </div>
+      </section>
+
+      <div className="search_part mb-3">
+        <div className="d-flex justify-content-end p-2">
+          <div className="d-flex justify-content-between">
+            <div className="me-2">
+              <Button
+                type="button"
+                className="rounded-1 px-4 add_btn_color border-0"
+                onClick={() => handleExportToPDF()}
+              >
+                PDF
+              </Button>
+            </div>
+            <div className="me-2">
+              <Button
+                type="submit"
+                className="rounded-1 px-4 add_btn_color border-0"
+                onClick={() => handleExportToCSV()}
+              >
+                CSV
+              </Button>
+            </div>
+            <div>
+              <Button
+                type="submit"
+                className="rounded-1 px-4 add_btn_color border-0"
+                onClick={() => handleExportToExcel()}
+              >
+                Excel
+              </Button>
             </div>
           </div>
         </div>
+      </div>
 
+      <section>
         <div className="datatable-wrapper">
           <DataTable
             style={{
@@ -556,30 +581,6 @@ const ManageInfo = () => {
             )}
           </table>
         </div> */}
-        {/* <Row>
-          <Col xs lg="9">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </Col>
-          <Col xs lg="3">
-            <div className="w-100 d-flex align-items-center justify-content-end mb-3">
-              <label>Page Size</label>
-              <select
-                className="rounded-1 form_border_focus form-control w-50 ms-2"
-                value={pageSize}
-                onChange={(e) => handlePageSizeChange(e.target.value)}
-              >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-          </Col>
-        </Row> */}
       </section>
     </>
   );

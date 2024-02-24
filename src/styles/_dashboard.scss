@@ -24,3 +24,26 @@
 .screen_one svg {
   color: var(--dmc-text-color-primary) !important;
 }
+
+// page specific
+.page-top {
+  margin-bottom: 32px;
+}
+.page-title {
+  color: #1f1f1f;
+  font-size: 25px;
+  font-weight: 500;
+}
+.breadcrumb {
+  background-color: transparent;
+  color: #6c757d;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+.breadcrumb .breadcrumb-item {
+}
+.breadcrumb .breadcrumb-item a {
+  color: #333333;
+}

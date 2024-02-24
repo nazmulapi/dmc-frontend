@@ -38,7 +38,7 @@ const Page = () => {
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <GoPerson className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
-                    employee
+                    Employees
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -68,7 +68,7 @@ const Page = () => {
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <RiGraduationCapLine className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
-                    Designation
+                    Designations
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -127,7 +127,7 @@ const Page = () => {
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <RiGroupLine className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
-                    Group
+                    Groups
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -156,7 +156,7 @@ const Page = () => {
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <MdOutlineSchedule className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
-                    employee Shift
+                    Shifts
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -177,14 +177,14 @@ const Page = () => {
                         Manage Shift
                       </Link>
                     </li>
-                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
+                    {/* <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
                         href="/assign-shift"
                         className="text-decoration-none text-white side_font"
                       >
                         Assign Shift
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </Accordion.Body>
               </Accordion.Item>
@@ -233,7 +233,7 @@ const Page = () => {
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <LuCamera className="text-light sidenav-icon" />
                   <span className="text-white text-capitalize side_font">
-                    manage Device
+                    Devices
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>

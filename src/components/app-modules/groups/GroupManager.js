@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
+import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
@@ -81,24 +82,27 @@ const GroupManager = () => {
 
   return (
     <>
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">Groups</h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Groups</li>
+        </ul>
+      </div>
+
       <section>
-        <div>
-          <h2 className="border-bottom pb-2 mb-4">Manage Groups</h2>
-        </div>
-        <div className="search_part border mb-3">
-          <div className="d-flex justify-content-between p-2">
+        <div className="search_part mb-3">
+          <div className="d-flex justify-content-between py-2">
             <div className="">
               <div className="row g-3 align-items-center">
-                <div className="col-auto">
-                  <label htmlFor="inputPassword6" className="col-form-label">
-                    Search
-                  </label>
-                </div>
                 <div className="col-auto">
                   <input
                     type="search"
                     id="group_search"
                     className="form-control form_border_focus"
+                    placeholder="Search..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -192,62 +196,6 @@ const GroupManager = () => {
             onSortStatusChange={setSortStatus}
           />
         </div>
-
-        {/* <div className="employee_table table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th scope="col">SL</th>
-                <th scope="col">Group name</th>
-                <th scope="col">Remaks</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {error && (
-                <tr>
-                  <td colSpan={4}>Failed to load</td>
-                </tr>
-              )}
-              {isLoading && (
-                <tr>
-                  <td colSpan={4}>Loading...</td>
-                </tr>
-              )}
-
-              {filteredData?.length ? (
-                filteredData.map((item, index) => (
-                  <tr key={index}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{item.group_name}</td>
-                    <td>{item.Remaks}</td>
-                    <td>
-                      <EditGroup item={item} setItem={setData} />
-
-                      <button
-                        className="border-0 rounded-1"
-                        onClick={() => {
-                          setSelectedGroup(item);
-                          setShow(true);
-                        }}
-                      >
-                        <RiDeleteBin6Line color="#DB3545" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <>
-                  {!isLoading && (
-                    <tr>
-                      <td colSpan={4}>No data found!</td>
-                    </tr>
-                  )}
-                </>
-              )}
-            </tbody>
-          </table>
-        </div> */}
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>

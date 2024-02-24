@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
@@ -122,10 +123,17 @@ const AddDevice = () => {
 
   return (
     <>
+      <div className="page-top">
+        <h3 className="page-title text-capitalize">Add Device</h3>
+        <ul className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li className="breadcrumb-item">Add Device</li>
+        </ul>
+      </div>
+
       <section>
-        <div>
-          <h2 className="border-bottom pb-2">Add Device</h2>
-        </div>
         <div className="col-lg-6">
           <form onSubmit={(e) => handleSubmit(e)} method="POST">
             <div className="mb-3">
