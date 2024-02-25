@@ -350,14 +350,14 @@ const AssignDevice = () => {
         </div>
       </section>
 
-      <section>
+      <section className="datatable-box">
         <div className="datatable-wrapper">
           <DataTable
             style={{ height: data.length === 0 ? "300px" : "auto" }}
             className="datatable"
-            withTableBorder
-            withColumnBorders
-            striped
+            // withTableBorder
+            // withColumnBorders
+            // striped
             highlightOnHover
             horizontalSpacing="sm"
             verticalSpacing="sm"

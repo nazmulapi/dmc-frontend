@@ -11,6 +11,7 @@ import classEase from "classease";
 import { toast } from "react-toastify";
 import { DataTable } from "mantine-datatable";
 import EditEmployee from "./EditEmployee";
+import BulkShiftAssign from "./BulkShiftAssign";
 import { submit } from "../../../lib/submit";
 import { fetcher } from "../../../lib/fetch";
 import { getStoragePath } from "../../../lib/helper";
@@ -364,6 +365,33 @@ const ManageInfo = () => {
     exportToExcel(data, "employee");
   };
 
+  const [selectedShift, setSelectedShift] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [showShiftModal, setShowShiftModal] = useState(false);
+  const [showGroupModal, setShowGroupModal] = useState(false);
+
+  const handleShiftSelect = (shift) => {
+    setSelectedShift(shift);
+  };
+
+  const handleGroupSelect = (group) => {
+    setSelectedGroup(group);
+  };
+
+  const handleBulkShiftAssign = (show) => {
+    setShowShiftModal(show);
+  };
+
+  const handleBulkGroupAssign = () => {
+    setShowGroupModal(true);
+  };
+
+  const handleGroupSubmit = () => {
+    // Implement logic to submit selected group for bulk assignment
+    console.log("Selected Group:", selectedGroup);
+    setShowGroupModal(false);
+  };
+
   return (
     <>
       <div className="page-top">
@@ -376,19 +404,22 @@ const ManageInfo = () => {
         </ul>
       </div>
 
-      <section className="mb-5">
-        <div className="form_part">
-          <form onSubmit={handleFormSubmit}>
+      <div className="mb-4">
+        <div className="d-flex justify-content-between">
+          <form
+            className="d-flex justify-content-between"
+            onSubmit={handleFormSubmit}
+          >
             <Row>
-              <Col xs={12} md={6} lg={3} xl={3}>
+              <Col xs={12} md={6} lg={2} xl={2}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
                     classNamePrefix="select"
                     isDisabled={false}
                     isLoading={false}
-                    isClearable={true}
-                    isSearchable={true}
+                    // // // isClearable={true}
+                    // isSearchable={true}
                     value={selectFormValues.group_id}
                     options={groups}
                     onChange={(selectedOption) =>
@@ -398,15 +429,15 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col xs={12} md={6} lg={3} xl={3}>
+              <Col xs={12} md={6} lg={2} xl={2}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
                     classNamePrefix="select"
                     isDisabled={false}
                     isLoading={false}
-                    isClearable={true}
-                    isSearchable={true}
+                    // // // isClearable={true}
+                    // isSearchable={true}
                     value={selectFormValues.department_id}
                     options={departments}
                     onChange={(selectedOption) =>
@@ -416,15 +447,15 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col xs={12} md={6} lg={3} xl={3}>
+              <Col xs={12} md={6} lg={2} xl={2}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
                     classNamePrefix="select"
                     isDisabled={false}
                     isLoading={false}
-                    isClearable={true}
-                    isSearchable={true}
+                    // // isClearable={true}
+                    // // // isSearchable={true}
                     value={selectFormValues.designation_id}
                     options={designations}
                     onChange={(selectedOption) =>
@@ -434,15 +465,15 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col xs={12} md={6} lg={3} xl={3}>
+              <Col xs={12} md={6} lg={2} xl={2}>
                 <div>
                   <Select
                     className={classEase("rounded-1 form_border_focus mb-3")}
                     classNamePrefix="select"
                     isDisabled={false}
                     isLoading={false}
-                    isClearable={true}
-                    isSearchable={true}
+                    // // isClearable={true}
+                    // isSearchable={true}
                     value={selectFormValues.shift_id}
                     options={shifts}
                     onChange={(selectedOption) =>
@@ -452,8 +483,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-
-              <Col xs={12} md={6} lg={3} xl={3}>
+              <Col xs={12} md={6} lg={2} xl={2}>
                 <div className="col-auto">
                   <input
                     type="search"
@@ -469,7 +499,7 @@ const ManageInfo = () => {
                   />
                 </div>
               </Col>
-              <Col xs={12} md={6} lg={3} xl={3}>
+              <Col xs={12} md={6} lg={2} xl={2}>
                 <div className="d-flex justify-content-center">
                   <button
                     className="rounded-1 theme_color text-white px-3 border-0 filter_button"
@@ -481,114 +511,69 @@ const ManageInfo = () => {
               </Col>
             </Row>
           </form>
-        </div>
-      </section>
 
-      <section className="mb-3">
-        <div className="search_part">
-          <div className="d-flex justify-content-between py-2">
-            <form className="" onSubmit={handleFileSubmit}>
-              <div className="d-flex align-items-center">
-                <div>
-                  <input
-                    type="file"
-                    className="form-control rounded-1 form_border_focus"
-                    multiple
-                    onChange={handleFileChange}
-                  />
-                </div>
-                <div className="ms-3">
-                  <Button
-                    type="submit"
-                    // className="rounded-1 mt-2 px-4 add_btn_color border-0"
-                    className={classEase(
-                      "d-flex justify-content-center align-items-center form-control form_border_focus rounded-1 theme_color fw-semibold text-white",
-                      isUploading ? "loading" : ""
-                    )}
-                    disabled={isUploading}
-                  >
-                    import
-                    {isUploading && (
-                      <div className="spinner">
-                        <Spinner
-                          as="span"
-                          animation="border"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    )}
-                  </Button>
-
-                  {/* <input
-                    type="submit"
-                    className="form-control form_border_focus rounded-1 theme_color fw-semibold text-white ms-3"
-                    value="import"
-                    disabled={isUploading}
-                  /> */}
-                </div>
-                <div className="ms-2 d-flex align-items-center">
-                  <a
-                    className="me-2"
-                    href="/csv_file.csv"
-                    download="csv_file.csv"
-                  >
-                    Sample CSV
-                  </a>
-                  <a href="/zip_file.zip" download="zip_file.zip">
-                    Sample ZIP
-                  </a>
-                </div>
-              </div>
-            </form>
-
-            <div className="d-flex justify-content-between">
-              <div className="me-2">
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 btn btn-success border-0"
-                  onClick={() => handleExportToPDF()}
-                >
-                  PDF
-                </Button>
-              </div>
-              <div className="me-2">
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 btn btn-success border-0"
-                  onClick={() => handleExportToCSV()}
-                >
-                  CSV
-                </Button>
-              </div>
-              <div>
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 btn btn-success border-0"
-                  onClick={() => handleExportToExcel()}
-                >
-                  Excel
-                </Button>
-              </div>
+          <div className="d-flex justify-content-end">
+            <div className="me-2">
+              <Button
+                type="submit"
+                className="rounded-1 px-4 btn btn-success border-0"
+                onClick={() => handleExportToPDF()}
+              >
+                PDF
+              </Button>
+            </div>
+            <div className="me-2">
+              <Button
+                type="submit"
+                className="rounded-1 px-4 btn btn-success border-0"
+                onClick={() => handleExportToCSV()}
+              >
+                CSV
+              </Button>
+            </div>
+            <div>
+              <Button
+                type="submit"
+                className="rounded-1 px-4 btn btn-success border-0"
+                onClick={() => handleExportToExcel()}
+              >
+                Excel
+              </Button>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {console.log(selectedRecords)}
+      <section className="datatable-box">
+        <div className="d-flex justify-content-between">
+          <div className="">
+            {selectedRecords?.length ? (
+              <div className="bulk_buttons mb-3">
+                <button
+                  className="me-3"
+                  onClick={() => handleBulkShiftAssign(true)}
+                >
+                  Bulk Shift Assign
+                </button>
+                <button className="me-3" onClick={handleBulkGroupAssign}>
+                  Bulk Group Assign
+                </button>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
 
-      <section className="mb-3">
         <div className="datatable-wrapper">
           <DataTable
             style={{
               height: apiData?.results?.length === 0 ? "300px" : "auto",
             }}
             className="datatable"
-            withTableBorder
-            withColumnBorders
-            striped
+            // withTableBorder
+            // withColumnBorders
+            // striped
             highlightOnHover
             horizontalSpacing="sm"
             verticalSpacing="sm"
@@ -685,73 +670,69 @@ const ManageInfo = () => {
             // onScroll={hideContextMenu}
           />
         </div>
-
-        {/* <div className="employee_table table-responsive">
-          <table className="table table-bordered table-striped font_14">
-            <thead>
-              <tr>
-                <th scope="col">SL</th>
-                <th scope="col">image</th>
-                <th scope="col">Employee ID</th>
-                <th scope="col">Employee Name</th>
-                <th scope="col">Designation</th>
-                <th scope="col">Group</th>
-                <th scope="col">Department</th>
-                <th scope="col">Shift</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {error && (
-                <tr>
-                  <td colSpan={10}>Failed to load</td>
-                </tr>
-              )}
-
-              {displayedData && !error
-                ? displayedData.map((item, index) => (
-                    <tr key={index}>
-                      <th scope="row">{startIndex + index + 1}</th>
-                      <th scope="row" className="text-center">
-                        <img
-                          src={getStoragePath(item?.image)}
-                          alt=""
-                          className="table_user_img"
-                        />
-                      </th>
-                      <td>{item.employee_id}</td>
-                      <td>{item.username}</td>
-                      <td>{item?.designation_name || "N/A"}</td>
-                      <td>{item?.group_name || "N/A"}</td>
-                      <td>{item?.department_name || "N/A"}</td>
-                      <td>{item?.shift_name || "N/A"}</td>
-                      <td>{item?.is_active ? "Active" : "Inactive"}</td>
-                      <td>
-                        <EditEmployee
-                          employee={item}
-                          setData={setDisplayedData}
-                        />
-                      </td>
-                    </tr>
-                  ))
-                : ""}
-            </tbody>
-          </table>
-
-          {isLoading && (
-            <div className="loading-overlay">
-              <p>Loading...</p>
-            </div>
-          )}
-
-          {isValidating && (
-            <div className="loading-overlay">
-              <p>Loading...</p>
-            </div>
-          )}
-        </div> */}
       </section>
+
+      <div className="mt-5">
+        <form className="" onSubmit={handleFileSubmit}>
+          <div className="d-flex align-items-center">
+            <div>
+              <input
+                type="file"
+                className="form-control rounded-1 form_border_focus"
+                multiple
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="ms-3">
+              <Button
+                type="submit"
+                // className="rounded-1 mt-2 px-4 add_btn_color border-0"
+                className={classEase(
+                  "d-flex justify-content-center align-items-center form-control form_border_focus rounded-1 theme_color fw-semibold text-white",
+                  isUploading ? "loading" : ""
+                )}
+                disabled={isUploading}
+              >
+                import
+                {isUploading && (
+                  <div className="spinner">
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                )}
+              </Button>
+
+              {/* <input
+                    type="submit"
+                    className="form-control form_border_focus rounded-1 theme_color fw-semibold text-white ms-3"
+                    value="import"
+                    disabled={isUploading}
+                  /> */}
+            </div>
+            <div className="ms-2 d-flex align-items-center">
+              <a className="me-2" href="/csv_file.csv" download="csv_file.csv">
+                Sample CSV
+              </a>
+              <a href="/zip_file.zip" download="zip_file.zip">
+                Sample ZIP
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <BulkShiftAssign
+        show={showShiftModal}
+        records={selectedRecords}
+        setRecords={setSelectedRecords}
+        onHide={handleBulkShiftAssign}
+      />
     </>
   );
 };

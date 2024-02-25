@@ -406,7 +406,7 @@ export default function ComplexUsageExample() {
         highlightOnHover
         // borderRadius="sm"
         // withColumnBorders
-        striped
+        // striped
         verticalAlign="top"
         // pinLastColumn
         columns={columns}

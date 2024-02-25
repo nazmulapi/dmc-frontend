@@ -471,16 +471,16 @@ const ManageInfo = () => {
         </div>
       </div>
 
-      <section>
+      <section className="datatable-box">
         <div className="datatable-wrapper">
           <DataTable
             style={{
               height: apiData?.results?.length === 0 ? "300px" : "auto",
             }}
             className="datatable"
-            withTableBorder
-            withColumnBorders
-            striped
+            // withTableBorder
+            // withColumnBorders
+            // striped
             highlightOnHover
             horizontalSpacing="sm"
             verticalSpacing="sm"

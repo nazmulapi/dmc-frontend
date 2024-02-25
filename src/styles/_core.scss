@@ -293,6 +293,12 @@ employee manage css end
     --dmc-theme-color-secondary
   ) !important;
 }
+.datatable-box {
+  padding: 30px 30px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a;
+}
 .datatable-wrapper {
 }
 .datatable .mantine-datatable {

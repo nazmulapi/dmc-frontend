@@ -138,64 +138,66 @@ const DesignationManager = () => {
           </div>
         </div>
 
-        <div className="datatable-wrapper">
-          <DataTable
-            style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
-            className="datatable"
-            withTableBorder
-            withColumnBorders
-            striped
-            highlightOnHover
-            horizontalSpacing="sm"
-            verticalSpacing="sm"
-            fz="sm"
-            verticalAlign="center"
-            columns={[
-              {
-                accessor: "",
-                title: "SL",
-                render: (_, index) => index + 1,
-              },
-              {
-                accessor: "designation",
-                title: "Designation",
-                sortable: true,
-                // width: 150
-              },
-              {
-                accessor: "description",
-                title: "Designation Details",
-                sortable: true,
-                // width: 150
-              },
+        <section className="datatable-box">
+          <div className="datatable-wrapper">
+            <DataTable
+              style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
+              className="datatable"
+              // withTableBorder
+              // withColumnBorders
+              // striped
+              highlightOnHover
+              horizontalSpacing="sm"
+              verticalSpacing="sm"
+              fz="sm"
+              verticalAlign="center"
+              columns={[
+                {
+                  accessor: "",
+                  title: "SL",
+                  render: (_, index) => index + 1,
+                },
+                {
+                  accessor: "designation",
+                  title: "Designation",
+                  sortable: true,
+                  // width: 150
+                },
+                {
+                  accessor: "description",
+                  title: "Designation Details",
+                  sortable: true,
+                  // width: 150
+                },
 
-              {
-                accessor: "actions",
-                title: "Actions",
-                // width: "0%",
-                render: (item) => (
-                  <>
-                    <EditDesignation item={item} setItem={setData} />
+                {
+                  accessor: "actions",
+                  title: "Actions",
+                  // width: "0%",
+                  render: (item) => (
+                    <>
+                      <EditDesignation item={item} setItem={setData} />
 
-                    <button
-                      className="border-0 rounded-1"
-                      onClick={() => {
-                        setSelectedDesignation(item);
-                        setShow(true);
-                      }}
-                    >
-                      <RiDeleteBin6Line color="#DB3545" />
-                    </button>
-                  </>
-                ),
-              },
-            ]}
-            fetching={isLoading}
-            records={filteredData}
-            sortStatus={sortStatus}
-            onSortStatusChange={setSortStatus}
-          />
-        </div>
+                      <button
+                        className="border-0 rounded-1"
+                        onClick={() => {
+                          setSelectedDesignation(item);
+                          setShow(true);
+                        }}
+                      >
+                        <RiDeleteBin6Line color="#DB3545" />
+                      </button>
+                    </>
+                  ),
+                },
+              ]}
+              fetching={isLoading}
+              records={filteredData}
+              sortStatus={sortStatus}
+              onSortStatusChange={setSortStatus}
+            />
+          </div>
+        </section>
 
         {/* <div className="employee_table table-responsive">
           <table className="table table-bordered table-striped">

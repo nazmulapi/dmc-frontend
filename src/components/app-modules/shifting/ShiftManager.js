@@ -138,76 +138,78 @@ const ShiftManager = () => {
           </div>
         </div>
 
-        <div className="datatable-wrapper">
-          <DataTable
-            style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
-            className="datatable"
-            withTableBorder
-            withColumnBorders
-            striped
-            highlightOnHover
-            horizontalSpacing="sm"
-            verticalSpacing="sm"
-            fz="sm"
-            verticalAlign="center"
-            columns={[
-              {
-                accessor: "",
-                title: "SL",
-                render: (_, index) => index + 1,
-              },
-              {
-                accessor: "shift_name",
-                title: "Shift Name",
-                sortable: true,
-                // width: 150
-              },
-              {
-                accessor: "shift_beginning",
-                title: "Shift Beginning",
-                sortable: true,
-                // width: 150
-              },
-              {
-                accessor: "shift_end",
-                title: "Shift End",
-                sortable: true,
-                // width: 150
-              },
-              {
-                accessor: "total_time",
-                title: "Total Time",
-                sortable: true,
-                // width: 150
-              },
+        <section className="datatable-box">
+          <div className="datatable-wrapper">
+            <DataTable
+              style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
+              className="datatable"
+              // withTableBorder
+              // withColumnBorders
+              // striped
+              highlightOnHover
+              horizontalSpacing="sm"
+              verticalSpacing="sm"
+              fz="sm"
+              verticalAlign="center"
+              columns={[
+                {
+                  accessor: "",
+                  title: "SL",
+                  render: (_, index) => index + 1,
+                },
+                {
+                  accessor: "shift_name",
+                  title: "Shift Name",
+                  sortable: true,
+                  // width: 150
+                },
+                {
+                  accessor: "shift_beginning",
+                  title: "Shift Beginning",
+                  sortable: true,
+                  // width: 150
+                },
+                {
+                  accessor: "shift_end",
+                  title: "Shift End",
+                  sortable: true,
+                  // width: 150
+                },
+                {
+                  accessor: "total_time",
+                  title: "Total Time",
+                  sortable: true,
+                  // width: 150
+                },
 
-              {
-                accessor: "actions",
-                title: "Actions",
-                // width: "0%",
-                render: (item) => (
-                  <>
-                    {/* <EditShift item={item} setItem={setData} /> */}
+                {
+                  accessor: "actions",
+                  title: "Actions",
+                  // width: "0%",
+                  render: (item) => (
+                    <>
+                      {/* <EditShift item={item} setItem={setData} /> */}
 
-                    <button
-                      className="border-0 rounded-1"
-                      onClick={() => {
-                        setSelectedShift(item);
-                        setShow(true);
-                      }}
-                    >
-                      <RiDeleteBin6Line color="#DB3545" />
-                    </button>
-                  </>
-                ),
-              },
-            ]}
-            fetching={isLoading}
-            records={filteredData}
-            sortStatus={sortStatus}
-            onSortStatusChange={setSortStatus}
-          />
-        </div>
+                      <button
+                        className="border-0 rounded-1"
+                        onClick={() => {
+                          setSelectedShift(item);
+                          setShow(true);
+                        }}
+                      >
+                        <RiDeleteBin6Line color="#DB3545" />
+                      </button>
+                    </>
+                  ),
+                },
+              ]}
+              fetching={isLoading}
+              records={filteredData}
+              sortStatus={sortStatus}
+              onSortStatusChange={setSortStatus}
+            />
+          </div>
+        </section>
 
         {/* <div className="employee_table table-responsive">
           <table className="table table-bordered table-striped">

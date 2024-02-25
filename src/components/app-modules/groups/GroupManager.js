@@ -138,64 +138,66 @@ const GroupManager = () => {
           </div>
         </div>
 
-        <div className="datatable-wrapper">
-          <DataTable
-            style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
-            className="datatable"
-            withTableBorder
-            withColumnBorders
-            striped
-            highlightOnHover
-            horizontalSpacing="sm"
-            verticalSpacing="sm"
-            fz="sm"
-            verticalAlign="center"
-            columns={[
-              {
-                accessor: "",
-                title: "SL",
-                render: (_, index) => index + 1,
-              },
-              {
-                accessor: "group_name",
-                title: "Group Name",
-                sortable: true,
-                // width: 150
-              },
-              {
-                accessor: "Remaks",
-                title: "Remaks",
-                sortable: true,
-                // width: 150
-              },
+        <section className="datatable-box">
+          <div className="datatable-wrapper">
+            <DataTable
+              style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
+              className="datatable"
+              // withTableBorder
+              // withColumnBorders
+              // striped
+              highlightOnHover
+              horizontalSpacing="sm"
+              verticalSpacing="sm"
+              fz="sm"
+              verticalAlign="center"
+              columns={[
+                {
+                  accessor: "",
+                  title: "SL",
+                  render: (_, index) => index + 1,
+                },
+                {
+                  accessor: "group_name",
+                  title: "Group Name",
+                  sortable: true,
+                  // width: 150
+                },
+                {
+                  accessor: "Remaks",
+                  title: "Remaks",
+                  sortable: true,
+                  // width: 150
+                },
 
-              {
-                accessor: "actions",
-                title: "Actions",
-                // width: "0%",
-                render: (item) => (
-                  <>
-                    <EditGroup item={item} setItem={setData} />
+                {
+                  accessor: "actions",
+                  title: "Actions",
+                  // width: "0%",
+                  render: (item) => (
+                    <>
+                      <EditGroup item={item} setItem={setData} />
 
-                    <button
-                      className="border-0 rounded-1"
-                      onClick={() => {
-                        setSelectedGroup(item);
-                        setShow(true);
-                      }}
-                    >
-                      <RiDeleteBin6Line color="#DB3545" />
-                    </button>
-                  </>
-                ),
-              },
-            ]}
-            fetching={isLoading}
-            records={filteredData}
-            sortStatus={sortStatus}
-            onSortStatusChange={setSortStatus}
-          />
-        </div>
+                      <button
+                        className="border-0 rounded-1"
+                        onClick={() => {
+                          setSelectedGroup(item);
+                          setShow(true);
+                        }}
+                      >
+                        <RiDeleteBin6Line color="#DB3545" />
+                      </button>
+                    </>
+                  ),
+                },
+              ]}
+              fetching={isLoading}
+              records={filteredData}
+              sortStatus={sortStatus}
+              onSortStatusChange={setSortStatus}
+            />
+          </div>
+        </section>
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
