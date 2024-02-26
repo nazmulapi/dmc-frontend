@@ -50,13 +50,23 @@ const Navbar = () => {
   return (
     <div className="topbar d-flex justify-content-between align-items-center">
       <div className="header-left d-flex justify-content-center align-items-center">
-        <Link
-          href="/dashboard"
-          className="main_logo text-decoration-none d-flex justify-content-start align-items-center"
-        >
-          <Image src={Logo} className="" alt="logo" />
+        <div className="header-logo">
+          <Link
+            href="/dashboard"
+            className="main_logo text-decoration-none d-flex justify-content-start align-items-center"
+          >
+            <Image src={Logo} className="" alt="logo" />
+          </Link>
+        </div>
+
+        <div className="header-text">
+          <span class="bar-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
           <span className="logo_text">Dhaka Medical College Hospital</span>
-        </Link>
+        </div>
       </div>
       <Dropdown>
         <Dropdown.Toggle className="border-0 pro_img_bg">

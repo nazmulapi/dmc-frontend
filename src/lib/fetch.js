@@ -141,4 +141,12 @@ export const fetchEmployeeDataFromMis = async (employeeId) => {
   }
 };
 
+export const getData = async (url) => {
+  let token = Cookies.get(authTokenKey);
+  setAuthToken(token);
+
+  const response = await api.get(url);
+  return response;
+};
+
 export default api;

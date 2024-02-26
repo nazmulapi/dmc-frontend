@@ -37,12 +37,18 @@ const Page = () => {
               <Accordion.Item eventKey="0" className="pt-0">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <GoPerson className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
-                    Employees
-                  </span>
+                  <span className="text-capitalize side_font">Employees</span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
+                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
+                      <Link
+                        href="/employees"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        All Employees
+                      </Link>
+                    </li>
                     <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
                         href="/add-employee"
@@ -53,10 +59,10 @@ const Page = () => {
                     </li>
                     <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/manage-info"
+                        href="/upload-csv"
                         className="text-decoration-none text-white side_font"
                       >
-                        manage employee
+                        Upload CSV
                       </Link>
                     </li>
                   </ul>
@@ -67,7 +73,7 @@ const Page = () => {
               <Accordion.Item eventKey="1" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <RiGraduationCapLine className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
+                  <span className="text-capitalize side_font">
                     Designations
                   </span>
                 </Accordion.Header>
@@ -86,7 +92,7 @@ const Page = () => {
                         href="/designation-info"
                         className="text-decoration-none text-white side_font"
                       >
-                        Manage Designation
+                        All Designations
                       </Link>
                     </li>
                   </ul>
@@ -97,9 +103,7 @@ const Page = () => {
               <Accordion.Item eventKey="2" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <AiOutlineBranches className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
-                    Departments
-                  </span>
+                  <span className="text-capitalize side_font">Departments</span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
@@ -116,7 +120,7 @@ const Page = () => {
                         href="/departments-info"
                         className="text-decoration-none text-white side_font"
                       >
-                        Manage Departments
+                        All Departments
                       </Link>
                     </li>
                   </ul>
@@ -126,9 +130,7 @@ const Page = () => {
               <Accordion.Item eventKey="8" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <RiGroupLine className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
-                    Groups
-                  </span>
+                  <span className="text-capitalize side_font">Groups</span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
@@ -145,7 +147,7 @@ const Page = () => {
                         href="/group-info"
                         className="text-decoration-none text-white side_font"
                       >
-                        Manage Group
+                        All Groups
                       </Link>
                     </li>
                   </ul>
@@ -155,9 +157,7 @@ const Page = () => {
               <Accordion.Item eventKey="3" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <MdOutlineSchedule className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
-                    Shifts
-                  </span>
+                  <span className="text-capitalize side_font">Shifts</span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
@@ -174,7 +174,7 @@ const Page = () => {
                         href="/shift-info"
                         className="text-decoration-none text-white side_font"
                       >
-                        Manage Shift
+                        All Shifts
                       </Link>
                     </li>
                     {/* <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
@@ -193,9 +193,7 @@ const Page = () => {
               <Accordion.Item eventKey="4" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <IoMdCheckmarkCircleOutline className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
-                    Attendance
-                  </span>
+                  <span className="text-capitalize side_font">Attendance</span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
@@ -232,9 +230,7 @@ const Page = () => {
               <Accordion.Item eventKey="5" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <LuCamera className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
-                    Devices
-                  </span>
+                  <span className="text-capitalize side_font">Devices</span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
@@ -251,7 +247,7 @@ const Page = () => {
                         href="/device-info"
                         className="text-decoration-none text-white side_font"
                       >
-                        Manage Device
+                        All Devices
                       </Link>
                     </li>
                     <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
@@ -269,12 +265,19 @@ const Page = () => {
               <Accordion.Item eventKey="7" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <IoSyncOutline className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
-                    Sync log
-                  </span>
+                  <span className="text-capitalize side_font">Sync log</span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
+                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
+                      <Link
+                        href="/clean-raw-data"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        Clean Raw Data
+                      </Link>
+                    </li>
+
                     <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
                         href="/sync-settings"
@@ -299,20 +302,10 @@ const Page = () => {
               <Accordion.Item eventKey="6" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <IoSettingsOutline className="text-light sidenav-icon" />
-                  <span className="text-white text-capitalize side_font">
-                    Settings
-                  </span>
+                  <span className="text-capitalize side_font">Settings</span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
-                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
-                      <Link
-                        href="/clean-raw-data"
-                        className="text-decoration-none text-white side_font"
-                      >
-                        Clean Raw Data
-                      </Link>
-                    </li>
                     <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
                         href="/settings"

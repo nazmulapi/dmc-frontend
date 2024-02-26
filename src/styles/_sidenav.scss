@@ -7,7 +7,7 @@
   bottom: 0;
   left: 0;
   transition: all 0.2s ease;
-  width: 240px;
+  width: 230px;
   z-index: 1001;
   overflow-y: auto;
 }
@@ -20,7 +20,7 @@
   height: 50px;
   margin-right: 10px;
 }
-.main_logo .logo_text {
+.logo_text {
   font-size: 16px;
   text-align: left;
   line-height: 1;
@@ -60,6 +60,10 @@
   width: 20px;
   height: 20px;
   margin-right: 10px;
+  color: #b7c0cd !important;
+}
+#navigation_part .accordion-item:hover .sidenav-icon {
+  color: #fff !important;
 }
 .accordion-button::after {
   background-image: url('data:image/svg+xml,%3csvg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"%3e%3cpath d="M201.4 137.4c12.5-12.5 32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 205.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160z"%3e%3c/path%3e%3c/svg%3e') !important;
@@ -78,7 +82,7 @@
   padding-bottom: 10px !important;
 }
 .accordion-item .sidenav_submenu {
-  padding-left: 42px;
+  padding-left: 30px;
   padding-right: 24px;
 }
 .accordion-item .sidenav_sub_item {
@@ -86,21 +90,28 @@
   list-style: none;
   position: relative;
 }
-.accordion-item .sidenav_sub_item::before {
-  content: "";
-  width: 4px;
-  height: 4px;
-  background-color: #fff;
-  position: absolute;
-  left: -12px;
-  top: 17px;
-  transition: all 0.4s ease-in-out;
-  opacity: 0.5;
-  border-radius: 50%;
-}
+// .accordion-item .sidenav_sub_item::before {
+//   content: "";
+//   width: 4px;
+//   height: 4px;
+//   background-color: #fff;
+//   position: absolute;
+//   left: -12px;
+//   top: 17px;
+//   transition: all 0.4s ease-in-out;
+//   opacity: 0.5;
+//   border-radius: 50%;
+// }
 .accordion-item .sidenav_sub_item a {
   font-size: 13px !important;
-  opacity: 0.6;
+  opacity: 0.8;
+  color: #b7c0cd !important;
+  font-weight: 500;
+}
+.accordion-item .sidenav_sub_item a:hover {
+  text-decoration: underline !important;
+  color: var(--dmc-theme-color-secondary) !important;
+  opacity: 1;
 }
 /* topbar start*/
 
