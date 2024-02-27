@@ -60,7 +60,7 @@ const Navbar = () => {
         </div>
 
         <div className="header-text">
-          <span class="bar-icon">
+          <span className="bar-icon">
             <span></span>
             <span></span>
             <span></span>

@@ -183,6 +183,7 @@ employee manage css end
   min-height: 38px;
   border-color: hsl(0, 0%, 80%) !important;
   transition: all 100ms !important;
+  font-size: 14px !important;
 }
 .form-select:hover,
 .form-control:hover {
@@ -322,7 +323,8 @@ employee manage css end
 }
 .filter_button {
   height: 36px !important;
-  width: 36px !important;
+  // width: 36px !important;
+  width: 70px !important;
   padding: 0 !important;
 }
 .filter_button svg {
@@ -343,4 +345,7 @@ employee manage css end
 }
 .bulk_edit_btn:hover {
   text-decoration: underline;
+}
+.button-left-icon {
+  margin-right: 2px !important;
 }

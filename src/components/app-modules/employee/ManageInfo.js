@@ -12,6 +12,7 @@ import { DataTable } from "mantine-datatable";
 import { Select as MantineSelect } from "@mantine/core";
 import { Flex, Group, Button, Tooltip } from "@mantine/core";
 import { MdRefresh } from "react-icons/md";
+import { RiFileExcel2Line } from "react-icons/ri";
 import {
   BsFileEarmarkPdf,
   BsFileEarmarkText,
@@ -220,19 +221,31 @@ const ManageInfo = () => {
     }
   }, [isLoading, isValidating]);
 
-  // file download
-  const [dataToDownload, setDataToDownload] = useState(null);
+  // file export
+  const [isExportDataFetching, setIsExportDataFetching] = useState({
+    pdf: false,
+    csv: false,
+    excel: false,
+  });
 
-  const handleExportToPDF = async () => {
+  const [dataToExport, setDataToExport] = useState(null);
+
+  const handleExportToPDF = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      pdf: true,
+    }));
+
     try {
-      let exportedData = dataToDownload; // Use cached data if available
+      let exportedData = dataToExport; // Use cached data if available
 
       if (!exportedData) {
         const url = `/employee/`;
         const response = await getData(url);
         exportedData = response?.data?.results;
         // Cache the data
-        setDataToDownload(exportedData);
+        setDataToExport(exportedData);
       }
 
       const headers = [
@@ -255,23 +268,42 @@ const ManageInfo = () => {
         Status: item?.is_active ? "Active" : "Inactive",
       }));
 
-      exportToPDF(headers, data, "employee");
+      setTimeout(() => {
+        exportToPDF(headers, data, "employee");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+      }, 1000);
     } catch (error) {
       console.error("Error exporting data to PDF:", error);
       // Handle error
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
     }
   };
 
-  const handleExportToCSV = async () => {
+  const handleExportToCSV = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      csv: true,
+    }));
+
     try {
-      let exportedData = dataToDownload; // Use cached data if available
+      let exportedData = dataToExport; // Use cached data if available
 
       if (!exportedData) {
         const url = `/employee/`;
         const response = await getData(url);
         exportedData = response?.data?.results;
         // Cache the data
-        setDataToDownload(exportedData);
+        setDataToExport(exportedData);
       }
 
       const data = exportedData.map((item) => ({
@@ -284,22 +316,41 @@ const ManageInfo = () => {
         Status: item?.is_active ? "Active" : "Inactive",
       }));
 
-      exportToCSV(data, "employee");
+      setTimeout(() => {
+        exportToCSV(data, "employee");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+      }, 1000);
     } catch (error) {
       console.error("Error exporting data to CSV:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
     }
   };
 
-  const handleExportToExcel = async () => {
+  const handleExportToExcel = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      excel: true,
+    }));
+
     try {
-      let exportedData = dataToDownload; // Use cached data if available
+      let exportedData = dataToExport; // Use cached data if available
 
       if (!exportedData) {
         const url = `/employee/`;
         const response = await getData(url);
         exportedData = response?.data?.results;
         // Cache the data
-        setDataToDownload(exportedData);
+        setDataToExport(exportedData);
       }
 
       const data = exportedData.map((item) => ({
@@ -312,9 +363,22 @@ const ManageInfo = () => {
         Status: item?.is_active ? "Active" : "Inactive",
       }));
 
-      exportToExcel(data, "employee");
+      setTimeout(() => {
+        exportToExcel(data, "employee");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+      }, 1000);
     } catch (error) {
       console.error("Error exporting data to Excel:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
     }
   };
 
@@ -418,7 +482,7 @@ const ManageInfo = () => {
             <input
               type="search"
               id=""
-              placeholder="Employee ID"
+              placeholder="Employee ID or name"
               className="form-control form_border_focus rounded-1"
               onChange={(e) =>
                 setFormValues((prev) => ({
@@ -434,10 +498,11 @@ const ManageInfo = () => {
             arrowSize={4}
             label="Apply"
             withArrow
-            position="top-start"
+            position="top"
           >
             <Button className="rounded-1 border-0 filter_button" type="submit">
-              <MdRefresh />
+              {/* <MdRefresh /> */}
+              Filter
             </Button>
           </Tooltip>
         </div>
@@ -486,28 +551,49 @@ const ManageInfo = () => {
           <div className="">
             <Group justify="center" gap="xs">
               <Button
-                // variant="light"
+                styles={{
+                  section: {
+                    marginRight: 5,
+                  },
+                }}
+                variant="filled"
                 size="sm"
                 leftSection={<BsFileEarmarkPdf size={14} />}
-                onClick={() => handleExportToPDF()}
+                onClick={(e) => handleExportToPDF(e)}
+                loading={isExportDataFetching?.pdf}
+                loaderProps={{ type: "dots" }}
               >
                 PDF
               </Button>
 
               <Button
-                // variant="light"
+                styles={{
+                  section: {
+                    marginRight: 5,
+                  },
+                }}
+                variant="filled"
                 size="sm"
                 leftSection={<BsFileEarmarkText size={14} />}
-                onClick={() => handleExportToCSV()}
+                onClick={(e) => handleExportToCSV(e)}
+                loading={isExportDataFetching?.csv}
+                loaderProps={{ type: "dots" }}
               >
                 CSV
               </Button>
 
               <Button
-                // variant="light"
+                styles={{
+                  section: {
+                    marginRight: 5,
+                  },
+                }}
+                variant="filled"
                 size="sm"
-                leftSection={<BsFileEarmarkExcel size={14} />}
-                onClick={() => handleExportToExcel()}
+                leftSection={<RiFileExcel2Line size={14} />}
+                onClick={(e) => handleExportToExcel(e)}
+                loading={isExportDataFetching?.excel}
+                loaderProps={{ type: "dots" }}
               >
                 Excel
               </Button>
