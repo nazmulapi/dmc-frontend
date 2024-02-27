@@ -354,10 +354,15 @@ const AssignDevice = () => {
         <div className="datatable-wrapper">
           <DataTable
             style={{ height: data.length === 0 ? "300px" : "auto" }}
-            className="datatable"
-            // withTableBorder
-            // withColumnBorders
-            // striped
+            classNames={{
+              root: "datatable",
+              table: "datatable_table",
+              header: "datatable_header",
+              pagination: "datatable_pagination",
+            }}
+            borderColor="#e0e6ed66"
+            rowBorderColor="#e0e6ed66"
+            c={{ dark: "#ffffff", light: "#0E1726" }}
             highlightOnHover
             horizontalSpacing="sm"
             verticalSpacing="sm"

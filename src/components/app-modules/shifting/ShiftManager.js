@@ -3,17 +3,22 @@
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import Button from "react-bootstrap/Button";
+import BSButton from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
+import { Flex, Group, Button, Input, CloseButton } from "@mantine/core";
 import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { RiDeleteBin6Line, RiFileExcel2Line } from "react-icons/ri";
+import { BsFileEarmarkPdf, BsFileEarmarkText } from "react-icons/bs";
+import { GoSearch } from "react-icons/go";
 import classEase from "classease";
 import { DataTable } from "mantine-datatable";
 import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
 import { sortBy } from "../../../lib/helper";
+import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
+import { getData } from "../../../lib/fetch";
 import EditShift from "./EditShift";
 
 const ShiftManager = () => {
@@ -80,6 +85,171 @@ const ShiftManager = () => {
     }
   };
 
+  // file export
+  const [isExportDataFetching, setIsExportDataFetching] = useState({
+    pdf: false,
+    csv: false,
+    excel: false,
+  });
+
+  const [dataToExport, setDataToExport] = useState(null);
+
+  const handleExportToPDF = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      pdf: true,
+    }));
+
+    try {
+      let exportedData = dataToExport; // Use cached data if available
+
+      if (!exportedData) {
+        const url = `/shift/`;
+        const response = await getData(url);
+        exportedData = response?.data;
+        // Cache the data
+        setDataToExport(exportedData);
+      }
+
+      // console.log(exportedData);
+
+      // shift_beginning
+      // shift_end
+      // shift_id
+      // shift_name
+      // total_time
+
+      const headers = [
+        "SL",
+        "Shift Name",
+        "Shift Beginning",
+        "Shift End",
+        "Total Time",
+      ];
+
+      const data = exportedData.map((item, index) => ({
+        sl: index + 1,
+        shift_name: item?.shift_name || "",
+        shift_beginning: item?.shift_beginning || "",
+        shift_end: item?.shift_end || "",
+        total_time: item?.total_time || "",
+      }));
+
+      setTimeout(() => {
+        exportToPDF(headers, data, "shifts");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to PDF:", error);
+      // Handle error
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
+  };
+
+  const handleExportToCSV = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      csv: true,
+    }));
+
+    try {
+      let exportedData = dataToExport; // Use cached data if available
+
+      if (!exportedData) {
+        const url = `/shift/`;
+        const response = await getData(url);
+        exportedData = response?.data;
+        // Cache the data
+        setDataToExport(exportedData);
+      }
+
+      const data = exportedData.map((item, index) => ({
+        SL: index + 1,
+        "Shift Name": item?.shift_name || "",
+        "Shift Beginning": item?.shift_beginning || "",
+        "Shift End": item?.shift_end || "",
+        "Total Time": item?.total_time || "",
+      }));
+
+      setTimeout(() => {
+        exportToCSV(data, "shifts");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to CSV:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
+  };
+
+  const handleExportToExcel = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      excel: true,
+    }));
+
+    try {
+      let exportedData = dataToExport; // Use cached data if available
+
+      if (!exportedData) {
+        const url = `/shift/`;
+        const response = await getData(url);
+        // console.log(response);
+        // return;
+        exportedData = response?.data;
+        // Cache the data
+        setDataToExport(exportedData);
+      }
+
+      console.log(exportedData);
+
+      const data = exportedData.map((item, index) => ({
+        SL: index + 1,
+        "Shift Name": item?.shift_name || "",
+        "Shift Beginning": item?.shift_beginning || "",
+        "Shift End": item?.shift_end || "",
+        "Total Time": item?.total_time || "",
+      }));
+
+      setTimeout(() => {
+        exportToExcel(data, "shifts");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to Excel:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
+  };
+
   return (
     <>
       <div className="page-top">
@@ -92,188 +262,202 @@ const ShiftManager = () => {
         </ul>
       </div>
 
-      <section>
-        <div className="search_part mb-3">
-          <div className="d-flex justify-content-between py-2">
-            <div className="">
-              <div className="row g-3 align-items-center">
-                <div className="col-auto">
-                  <input
-                    type="search"
-                    id="shift_search"
-                    className="form-control form_border_focus"
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
+      <section className="datatable-box">
+        <div className="d-flex justify-content-between mb-4">
+          <div className="">
+            <div className="row g-3 align-items-center">
+              <div className="col-auto">
+                <Input
+                  leftSection={<GoSearch size={16} />}
+                  placeholder="Search with name.."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.currentTarget.value)}
+                  rightSectionPointerEvents="all"
+                  rightSection={
+                    <CloseButton
+                      aria-label="Clear input"
+                      onClick={() => setSearchQuery("")}
+                      style={{ display: searchQuery ? undefined : "none" }}
+                    />
+                  }
+                />
               </div>
             </div>
-            {/* <div className="d-flex justify-content-between">
-              <div className="me-2">
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                >
-                  PDF
-                </Button>
-              </div>
-              <div className="me-2">
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                >
-                  CSV
-                </Button>
-              </div>
-              <div>
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                >
-                  Excel
-                </Button>
-              </div>
-            </div> */}
           </div>
+          <Group justify="center" gap="xs">
+            <Button
+              styles={{
+                section: {
+                  marginRight: 5,
+                },
+              }}
+              variant="filled"
+              size="sm"
+              leftSection={<BsFileEarmarkPdf size={14} />}
+              onClick={(e) => handleExportToPDF(e)}
+              loading={isExportDataFetching?.pdf}
+              loaderProps={{ type: "dots" }}
+            >
+              PDF
+            </Button>
+
+            <Button
+              styles={{
+                section: {
+                  marginRight: 5,
+                },
+              }}
+              variant="filled"
+              size="sm"
+              leftSection={<BsFileEarmarkText size={14} />}
+              onClick={(e) => handleExportToCSV(e)}
+              loading={isExportDataFetching?.csv}
+              loaderProps={{ type: "dots" }}
+            >
+              CSV
+            </Button>
+
+            <Button
+              styles={{
+                section: {
+                  marginRight: 5,
+                },
+              }}
+              variant="filled"
+              size="sm"
+              leftSection={<RiFileExcel2Line size={14} />}
+              onClick={(e) => handleExportToExcel(e)}
+              loading={isExportDataFetching?.excel}
+              loaderProps={{ type: "dots" }}
+            >
+              Excel
+            </Button>
+          </Group>
         </div>
 
-        <section className="datatable-box">
-          <div className="datatable-wrapper">
-            <DataTable
-              style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
-              className="datatable"
-              // withTableBorder
-              // withColumnBorders
-              // striped
-              highlightOnHover
-              horizontalSpacing="sm"
-              verticalSpacing="sm"
-              fz="sm"
-              verticalAlign="center"
-              columns={[
-                {
-                  accessor: "",
-                  title: "SL",
-                  render: (_, index) => index + 1,
-                },
-                {
-                  accessor: "shift_name",
-                  title: "Shift Name",
-                  sortable: true,
-                  // width: 150
-                },
-                {
-                  accessor: "shift_beginning",
-                  title: "Shift Beginning",
-                  sortable: true,
-                  // width: 150
-                },
-                {
-                  accessor: "shift_end",
-                  title: "Shift End",
-                  sortable: true,
-                  // width: 150
-                },
-                {
-                  accessor: "total_time",
-                  title: "Total Time",
-                  sortable: true,
-                  // width: 150
-                },
+        <div className="datatable-wrapper">
+          <DataTable
+            style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
+            classNames={{
+              root: "datatable",
+              table: "datatable_table",
+              header: "datatable_header",
+              pagination: "datatable_pagination",
+            }}
+            borderColor="#e0e6ed66"
+            rowBorderColor="#e0e6ed66"
+            c={{ dark: "#ffffff", light: "#0E1726" }}
+            highlightOnHover
+            horizontalSpacing="sm"
+            verticalSpacing="sm"
+            fz="sm"
+            verticalAlign="center"
+            columns={[
+              {
+                accessor: "",
+                title: "SL",
+                render: (_, index) => index + 1,
+              },
+              {
+                accessor: "shift_name",
+                title: "Shift Name",
+                sortable: true,
+                // width: 150
+              },
+              {
+                accessor: "shift_beginning",
+                title: "Shift Beginning",
+                sortable: true,
+                // width: 150
+              },
+              {
+                accessor: "shift_end",
+                title: "Shift End",
+                sortable: true,
+                // width: 150
+              },
+              {
+                accessor: "total_time",
+                title: "Total Time",
+                sortable: true,
+                // width: 150
+              },
 
-                {
-                  accessor: "actions",
-                  title: "Actions",
-                  // width: "0%",
-                  render: (item) => (
-                    <>
-                      {/* <EditShift item={item} setItem={setData} /> */}
+              {
+                accessor: "actions",
+                title: "Actions",
+                // width: "0%",
+                render: (item) => (
+                  <>
+                    {/* <EditShift item={item} setItem={setData} /> */}
 
-                      <button
-                        className="border-0 rounded-1"
-                        onClick={() => {
-                          setSelectedShift(item);
-                          setShow(true);
-                        }}
-                      >
-                        <RiDeleteBin6Line color="#DB3545" />
-                      </button>
-                    </>
-                  ),
-                },
-              ]}
-              fetching={isLoading}
-              records={filteredData}
-              sortStatus={sortStatus}
-              onSortStatusChange={setSortStatus}
-            />
-          </div>
-        </section>
-
-        {/* <div className="employee_table table-responsive">
-          <table className="table table-bordered table-striped">
-            <tbody>
-              {filteredData?.length ? (
-                filteredData.map((item, index) => (
-                  <tr key={index}>
-                    <td>
-                      <EditShift item={item} setItem={setData} />
-                    </td>
-                  </tr>
-                ))
-              )
-            </tbody>
-          </table>
-        </div> */}
-
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>
-              <h4 className="pt-2">Are you sure want to delete?</h4>
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Footer>
-            <Button
-              onClick={() => {
-                setSelectedShift(null);
-                setShow(false);
-              }}
-              variant="success"
-              className={classEase(
-                "rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button"
-              )}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                handleDelete(selectedShift);
-              }}
-              variant="success"
-              className={classEase(
-                "rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button",
-                deleting ? "loading" : ""
-              )}
-              disabled={deleting}
-            >
-              Delete
-              {deleting && (
-                <div className="spinner">
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-              )}
-            </Button>
-          </Modal.Footer>
-        </Modal>
+                    <button
+                      className="border-0 rounded-1"
+                      onClick={() => {
+                        setSelectedShift(item);
+                        setShow(true);
+                      }}
+                    >
+                      <RiDeleteBin6Line color="#DB3545" />
+                    </button>
+                  </>
+                ),
+              },
+            ]}
+            fetching={isLoading}
+            records={filteredData}
+            sortStatus={sortStatus}
+            onSortStatusChange={setSortStatus}
+          />
+        </div>
       </section>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <h4 className="pt-2">Are you sure want to delete?</h4>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <BSButton
+            onClick={() => {
+              setSelectedShift(null);
+              setShow(false);
+            }}
+            variant="success"
+            className={classEase(
+              "rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button"
+            )}
+          >
+            Cancel
+          </BSButton>
+          <BSButton
+            onClick={() => {
+              handleDelete(selectedShift);
+            }}
+            variant="success"
+            className={classEase(
+              "rounded-1 mt-2 px-0 add_btn_color border-0 d-flex justify-content-center align-items-center app-button",
+              deleting ? "loading" : ""
+            )}
+            disabled={deleting}
+          >
+            Delete
+            {deleting && (
+              <div className="spinner">
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
+          </BSButton>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

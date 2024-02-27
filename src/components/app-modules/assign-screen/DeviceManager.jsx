@@ -4,15 +4,20 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import useSWR from "swr";
 import { DataTable } from "mantine-datatable";
-import Button from "react-bootstrap/Button";
+import BSButton from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { Flex, Group, Button, Input, CloseButton } from "@mantine/core";
+import { RiDeleteBin6Line, RiFileExcel2Line } from "react-icons/ri";
+import { BsFileEarmarkPdf, BsFileEarmarkText } from "react-icons/bs";
+import { GoSearch } from "react-icons/go";
 import classEase from "classease";
 import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
 import { sortBy } from "../../../lib/helper";
+import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
+import { getData } from "../../../lib/fetch";
 import EditDevice from "./EditDevice";
 
 const DeviceManager = () => {
@@ -84,6 +89,185 @@ const DeviceManager = () => {
     }
   };
 
+  // file export
+  const [isExportDataFetching, setIsExportDataFetching] = useState({
+    pdf: false,
+    csv: false,
+    excel: false,
+  });
+
+  const [dataToExport, setDataToExport] = useState(null);
+
+  const handleExportToPDF = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      pdf: true,
+    }));
+
+    try {
+      let exportedData = dataToExport; // Use cached data if available
+
+      if (!exportedData) {
+        const url = `/devices/`;
+        const response = await getData(url);
+        exportedData = response?.data;
+        // Cache the data
+        setDataToExport(exportedData);
+      }
+
+      // console.log(exportedData);
+
+      // active_status
+      // device_id
+      // device_ip
+      // device_name
+      // location
+      // password
+      // username
+
+      const headers = [
+        "SL",
+        "Device ID",
+        "Device IP",
+        "Device Name",
+        "Device Username",
+        "Device Password",
+        "Location",
+        "Status",
+      ];
+
+      const data = exportedData.map((item, index) => ({
+        sl: index + 1,
+        device_id: item?.device_id || "",
+        device_ip: item?.device_ip || "",
+        device_name: item?.device_name || "",
+        username: item?.username || "",
+        password: item?.password || "",
+        location: item?.location || "",
+        active_status: item?.active_status === "active" ? "Active" : "Inactive",
+      }));
+
+      setTimeout(() => {
+        exportToPDF(headers, data, "devices");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to PDF:", error);
+      // Handle error
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
+  };
+
+  const handleExportToCSV = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      csv: true,
+    }));
+
+    try {
+      let exportedData = dataToExport; // Use cached data if available
+
+      if (!exportedData) {
+        const url = `/devices/`;
+        const response = await getData(url);
+        exportedData = response?.data;
+        // Cache the data
+        setDataToExport(exportedData);
+      }
+
+      const data = exportedData.map((item, index) => ({
+        SL: index + 1,
+        "Device ID": item?.device_id || "",
+        "Device IP": item?.device_ip || "",
+        "Device Name": item?.device_name || "",
+        "Device Username": item?.username || "",
+        "Device Password": item?.password || "",
+        Location: item?.location || "",
+        Status: item?.active_status === "active" ? "Active" : "Inactive",
+      }));
+
+      setTimeout(() => {
+        exportToCSV(data, "devices");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to CSV:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
+  };
+
+  const handleExportToExcel = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      excel: true,
+    }));
+
+    try {
+      let exportedData = dataToExport; // Use cached data if available
+
+      if (!exportedData) {
+        const url = `/devices/`;
+        const response = await getData(url);
+        // console.log(response);
+        // return;
+        exportedData = response?.data;
+        // Cache the data
+        setDataToExport(exportedData);
+      }
+
+      console.log(exportedData);
+
+      const data = exportedData.map((item, index) => ({
+        SL: index + 1,
+        "Device ID": item?.device_id || "",
+        "Device IP": item?.device_ip || "",
+        "Device Name": item?.device_name || "",
+        "Device Username": item?.username || "",
+        "Device Password": item?.password || "",
+        Location: item?.location || "",
+        Status: item?.active_status === "active" ? "Active" : "Inactive",
+      }));
+
+      setTimeout(() => {
+        exportToExcel(data, "devices");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to Excel:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
+  };
+
   return (
     <>
       <div className="page-top">
@@ -96,59 +280,91 @@ const DeviceManager = () => {
         </ul>
       </div>
 
-      <div className="search_part mb-3">
-        <div className="d-flex justify-content-between py-2">
+      <section className="datatable-box">
+        <div className="d-flex justify-content-between mb-4">
           <div className="">
             <div className="row g-3 align-items-center">
               <div className="col-auto">
-                <input
-                  type="search"
-                  id="device_search"
-                  className="form-control form_border_focus"
-                  placeholder="Search..."
+                <Input
+                  leftSection={<GoSearch size={16} />}
+                  placeholder="Search with name.."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.currentTarget.value)}
+                  rightSectionPointerEvents="all"
+                  rightSection={
+                    <CloseButton
+                      aria-label="Clear input"
+                      onClick={() => setSearchQuery("")}
+                      style={{ display: searchQuery ? undefined : "none" }}
+                    />
+                  }
                 />
               </div>
             </div>
           </div>
-          {/* <div className="d-flex justify-content-between">
-              <div className="me-2">
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                >
-                  PDF
-                </Button>
-              </div>
-              <div className="me-2">
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                >
-                  CSV
-                </Button>
-              </div>
-              <div>
-                <Button
-                  type="submit"
-                  className="rounded-1 px-4 add_btn_color border-0"
-                >
-                  Excel
-                </Button>
-              </div>
-            </div> */}
-        </div>
-      </div>
+          <Group justify="center" gap="xs">
+            <Button
+              styles={{
+                section: {
+                  marginRight: 5,
+                },
+              }}
+              variant="filled"
+              size="sm"
+              leftSection={<BsFileEarmarkPdf size={14} />}
+              onClick={(e) => handleExportToPDF(e)}
+              loading={isExportDataFetching?.pdf}
+              loaderProps={{ type: "dots" }}
+            >
+              PDF
+            </Button>
 
-      <section className="datatable-box">
+            <Button
+              styles={{
+                section: {
+                  marginRight: 5,
+                },
+              }}
+              variant="filled"
+              size="sm"
+              leftSection={<BsFileEarmarkText size={14} />}
+              onClick={(e) => handleExportToCSV(e)}
+              loading={isExportDataFetching?.csv}
+              loaderProps={{ type: "dots" }}
+            >
+              CSV
+            </Button>
+
+            <Button
+              styles={{
+                section: {
+                  marginRight: 5,
+                },
+              }}
+              variant="filled"
+              size="sm"
+              leftSection={<RiFileExcel2Line size={14} />}
+              onClick={(e) => handleExportToExcel(e)}
+              loading={isExportDataFetching?.excel}
+              loaderProps={{ type: "dots" }}
+            >
+              Excel
+            </Button>
+          </Group>
+        </div>
+
         <div className="datatable-wrapper">
           <DataTable
             style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
-            className="datatable"
-            // withTableBorder
-            // withColumnBorders
-            // striped
+            classNames={{
+              root: "datatable",
+              table: "datatable_table",
+              header: "datatable_header",
+              pagination: "datatable_pagination",
+            }}
+            borderColor="#e0e6ed66"
+            rowBorderColor="#e0e6ed66"
+            c={{ dark: "#ffffff", light: "#0E1726" }}
             highlightOnHover
             horizontalSpacing="sm"
             verticalSpacing="sm"
@@ -229,7 +445,7 @@ const DeviceManager = () => {
             </Modal.Title>
           </Modal.Header>
           <Modal.Footer>
-            <Button
+            <BSButton
               onClick={() => {
                 setSelectedDevice(null);
                 setShow(false);
@@ -240,8 +456,8 @@ const DeviceManager = () => {
               )}
             >
               Cancel
-            </Button>
-            <Button
+            </BSButton>
+            <BSButton
               onClick={() => {
                 handleDelete(selectedDevice);
               }}
@@ -265,7 +481,7 @@ const DeviceManager = () => {
                   <span className="visually-hidden">Loading...</span>
                 </div>
               )}
-            </Button>
+            </BSButton>
           </Modal.Footer>
         </Modal>
       </section>
