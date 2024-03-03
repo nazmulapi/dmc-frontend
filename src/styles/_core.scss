@@ -283,7 +283,9 @@ employee manage css end
 .app_box {
   padding: 30px 30px;
   background-color: #fff;
-  border-radius: 0;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1019607843),
+    0 1px 2px -1px rgba(0, 0, 0, 0.1019607843);
 }
 
 .form-check-input:checked {
@@ -325,7 +327,7 @@ employee manage css end
 }
 
 .filter_form {
-  margin-bottom: 24px;
+  margin-bottom: 5px;
 }
 .filter_button {
   height: 36px !important;

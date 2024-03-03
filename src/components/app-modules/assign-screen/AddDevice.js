@@ -133,7 +133,7 @@ const AddDevice = () => {
         </ul>
       </div>
 
-      <section>
+      <section className="app_box">
         <div className="col-lg-6">
           <form onSubmit={(e) => handleSubmit(e)} method="POST">
             <div className="mb-3">

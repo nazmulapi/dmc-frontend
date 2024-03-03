@@ -4,18 +4,26 @@ import React, { useState, useEffect, useCallback } from "react";
 import useSWR from "swr";
 import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Select from "react-select";
 import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { RiFileExcel2Line } from "react-icons/ri";
+import {
+  BsFileEarmarkPdf,
+  BsFileEarmarkText,
+  BsFileEarmarkExcel,
+} from "react-icons/bs";
 import classEase from "classease";
 import { DataTable } from "mantine-datatable";
+import { Select as MantineSelect } from "@mantine/core";
+import { Flex, Group, Button, Tooltip } from "@mantine/core";
+import { toast } from "react-toastify";
 // import Pagination from "../../utils/Pagination";
 import { fetcher } from "../../../lib/fetch";
 import { getDate, getTime } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 import { constants } from "../../../lib/config";
+import { getData } from "../../../lib/fetch";
 
 const AttendanceManage = () => {
   const { PAGE_SIZES } = constants;
@@ -238,11 +246,11 @@ const AttendanceManage = () => {
   //   }
   // };
 
-  // const handlePageSizeChange = (newPageSize) => {
-  //   setPageSize(newPageSize);
-  //   setCurrentPage(1);
-  //   mutate();
-  // };
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1);
+    mutate();
+  };
 
   const [employeeData, setEmployeeData] = useState([]);
 
@@ -254,50 +262,159 @@ const AttendanceManage = () => {
   //   }
   // }, [isLoading, isValidating]);
 
-  const handleExportToPDF = async () => {
-    // console.log(employeeData);
-    // return;
-    const headers = [
-      "Employee ID",
-      "Employee Name",
-      "In Time",
-      "Out Time",
-      "Date",
-    ];
+  // file export
+  const [isExportDataFetching, setIsExportDataFetching] = useState({
+    pdf: false,
+    csv: false,
+    excel: false,
+  });
 
-    const data = employeeData.map((item) => ({
-      ID: item.employee_id,
-      username: item.username,
-      InTime: getTime(item.InTime),
-      OutTime: getTime(item.OutTime),
-      Date: getDate(item.InTime),
+  const [dataToExport, setDataToExport] = useState(null);
+
+  const handleExportToPDF = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      pdf: true,
     }));
 
-    exportToPDF(headers, data, "attendance-report");
+    try {
+      let exportedData = dataToExport; // Use cached data if available
+
+      if (!exportedData) {
+        const url = `/attendance_log/?date=${formData.year}-${formData.month}`;
+        const response = await getData(url);
+        // console.log(response?.data?.results);
+        // return;
+        exportedData = response?.data?.results;
+        // Cache the data
+        setDataToExport(exportedData);
+      }
+
+      const headers = [
+        "Employee ID",
+        "Employee Name",
+        "In Time",
+        "Out Time",
+        "Date",
+      ];
+
+      const data = exportedData.map((item) => ({
+        ID: item.employee_id,
+        username: item.username,
+        InTime: getTime(item.InTime),
+        OutTime: getTime(item.OutTime),
+        Date: getDate(item.InTime),
+      }));
+
+      setTimeout(() => {
+        exportToPDF(headers, data, "attendance-report");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to PDF:", error);
+      // Handle error
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
   };
 
-  const handleExportToCSV = () => {
-    const data = employeeData.map((item) => ({
-      "Employee ID": item.employee_id,
-      "Employee Name": item.username,
-      "In Time": getTime(item.InTime),
-      "Out Time": getTime(item.OutTime),
-      Date: getDate(item.InTime),
+  const handleExportToCSV = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      csv: true,
     }));
 
-    exportToCSV(data, "attendance-report");
+    try {
+      let exportedData = dataToExport; // Use cached data if available
+
+      if (!exportedData) {
+        const url = `/attendance_log/?date=${formData.year}-${formData.month}`;
+        const response = await getData(url);
+        exportedData = response?.data?.results;
+        // Cache the data
+        setDataToExport(exportedData);
+      }
+
+      const data = exportedData.map((item) => ({
+        "Employee ID": item.employee_id,
+        "Employee Name": item.username,
+        "In Time": getTime(item.InTime),
+        "Out Time": getTime(item.OutTime),
+        Date: getDate(item.InTime),
+      }));
+
+      setTimeout(() => {
+        exportToCSV(data, "attendance-report");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to CSV:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
   };
 
-  const handleExportToExcel = () => {
-    const data = employeeData.map((item) => ({
-      "Employee ID": item.employee_id,
-      "Employee Name": item.username,
-      "In Time": getTime(item.InTime),
-      "Out Time": getTime(item.OutTime),
-      Date: getDate(item.InTime),
+  const handleExportToExcel = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      excel: true,
     }));
 
-    exportToExcel(data, "attendance-report");
+    try {
+      let exportedData = dataToExport; // Use cached data if available
+
+      if (!exportedData) {
+        const url = `/attendance_log/?date=${formData.year}-${formData.month}`;
+        const response = await getData(url);
+        exportedData = response?.data?.results;
+        // Cache the data
+        setDataToExport(exportedData);
+      }
+
+      const data = exportedData.map((item) => ({
+        "Employee ID": item.employee_id,
+        "Employee Name": item.username,
+        "In Time": getTime(item.InTime),
+        "Out Time": getTime(item.OutTime),
+        Date: getDate(item.InTime),
+      }));
+
+      setTimeout(() => {
+        exportToExcel(data, "attendance-report");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to Excel:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
   };
 
   return (
@@ -312,166 +429,202 @@ const AttendanceManage = () => {
         </ul>
       </div>
 
-      <section className="mb-4">
-        <div className="form_part">
-          <form onSubmit={handleFormSubmit}>
-            <Row>
-              <Col xs={12} md={6} lg={3} xl={3}>
-                <div>
-                  <Select
-                    className={classEase("rounded-1 form_border_focus mb-3")}
-                    classNamePrefix="select"
-                    isDisabled={false}
-                    isLoading={false}
-                    isClearable={true}
-                    isSearchable={true}
-                    value={selectFormValues.group_id}
-                    options={groups}
-                    onChange={(selectedOption) =>
-                      handleSelectChange(selectedOption, "group_id")
-                    }
-                    placeholder="Select group..."
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={3} xl={3}>
-                <div>
-                  <Select
-                    className={classEase("rounded-1 form_border_focus mb-3")}
-                    classNamePrefix="select"
-                    isDisabled={false}
-                    isLoading={false}
-                    isClearable={true}
-                    isSearchable={true}
-                    value={selectFormValues.department_id}
-                    options={departments}
-                    onChange={(selectedOption) =>
-                      handleSelectChange(selectedOption, "department_id")
-                    }
-                    placeholder="Select department..."
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={3} xl={3}>
-                <div>
-                  <Select
-                    className={classEase("rounded-1 form_border_focus mb-3")}
-                    classNamePrefix="select"
-                    isDisabled={false}
-                    isLoading={false}
-                    isClearable={true}
-                    isSearchable={true}
-                    value={selectFormValues.designation_id}
-                    options={designations}
-                    onChange={(selectedOption) =>
-                      handleSelectChange(selectedOption, "designation_id")
-                    }
-                    placeholder="Select designation..."
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={3} xl={3}>
-                <div>
-                  <Select
-                    className={classEase("rounded-1 form_border_focus mb-3")}
-                    classNamePrefix="select"
-                    isDisabled={false}
-                    isLoading={false}
-                    isClearable={true}
-                    isSearchable={true}
-                    value={selectFormValues.year}
-                    options={years}
-                    onChange={(selectedOption) =>
-                      handleSelectChange(selectedOption, "year")
-                    }
-                    placeholder="Select year..."
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={3} xl={3}>
-                <div>
-                  <Select
-                    className={classEase("rounded-1 form_border_focus mb-3")}
-                    classNamePrefix="select"
-                    isDisabled={false}
-                    isLoading={false}
-                    isClearable={true}
-                    isSearchable={true}
-                    value={selectFormValues.month}
-                    options={months}
-                    onChange={(selectedOption) =>
-                      handleSelectChange(selectedOption, "month")
-                    }
-                    placeholder="Select month..."
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={3} xl={3}>
-                <div className="col-auto">
-                  <input
-                    type="search"
-                    id=""
-                    placeholder="Employee ID"
-                    className="form-control form_border_focus rounded-1"
-                    onChange={(e) =>
-                      setFormValues((prev) => ({
-                        ...prev,
-                        employee_id: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-              </Col>
+      <form
+        className="d-flex justify-content-between filter_form"
+        onSubmit={handleFormSubmit}
+      >
+        <div className="d-flex justify-content-start flex-wrap">
+          <div className="me-2">
+            <Select
+              className={classEase("rounded-1 form_border_focus mb-3")}
+              classNamePrefix="select"
+              isDisabled={false}
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              value={selectFormValues.group_id}
+              options={groups}
+              onChange={(selectedOption) =>
+                handleSelectChange(selectedOption, "group_id")
+              }
+              placeholder="Select group..."
+            />
+          </div>
 
-              <Col xs={12} md={6} lg={3} xl={3}>
-                <div className="d-flex justify-content-center">
-                  <button
-                    className="rounded-1 theme_color text-white px-3 border-0 filter_button"
-                    type="submit"
-                  >
-                    Apply Filter
-                  </button>
-                </div>
-              </Col>
-            </Row>
-          </form>
+          <div className="me-2">
+            <Select
+              className={classEase("rounded-1 form_border_focus mb-3")}
+              classNamePrefix="select"
+              isDisabled={false}
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              value={selectFormValues.department_id}
+              options={departments}
+              onChange={(selectedOption) =>
+                handleSelectChange(selectedOption, "department_id")
+              }
+              placeholder="Select department..."
+            />
+          </div>
+
+          <div className="me-2">
+            <Select
+              className={classEase("rounded-1 form_border_focus mb-3")}
+              classNamePrefix="select"
+              isDisabled={false}
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              value={selectFormValues.designation_id}
+              options={designations}
+              onChange={(selectedOption) =>
+                handleSelectChange(selectedOption, "designation_id")
+              }
+              placeholder="Select designation..."
+            />
+          </div>
+
+          <div className="me-2">
+            <Select
+              className={classEase("rounded-1 form_border_focus mb-3")}
+              classNamePrefix="select"
+              isDisabled={false}
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              value={selectFormValues.year}
+              options={years}
+              onChange={(selectedOption) =>
+                handleSelectChange(selectedOption, "year")
+              }
+              placeholder="Select year..."
+            />
+          </div>
+
+          <div className="me-2">
+            <Select
+              className={classEase("rounded-1 form_border_focus mb-3")}
+              classNamePrefix="select"
+              isDisabled={false}
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              value={selectFormValues.month}
+              options={months}
+              onChange={(selectedOption) =>
+                handleSelectChange(selectedOption, "month")
+              }
+              placeholder="Select month..."
+            />
+          </div>
+
+          <div className="me-2">
+            <input
+              type="search"
+              id=""
+              placeholder="Employee ID or name"
+              className="form-control form_border_focus rounded-1 mb-3"
+              onChange={(e) =>
+                setFormValues((prev) => ({
+                  ...prev,
+                  employee_id: e.target.value,
+                }))
+              }
+            />
+          </div>
+
+          <Tooltip
+            arrowOffset={"calc(50% - 2px)"}
+            arrowSize={4}
+            label="Apply"
+            withArrow
+            position="top"
+          >
+            <Button
+              className="rounded-1 border-0 filter_button mb-3"
+              type="submit"
+            >
+              {/* <MdRefresh /> */}
+              Filter
+            </Button>
+          </Tooltip>
         </div>
-      </section>
+      </form>
 
-      <div className="search_part mb-3">
-        <div className="d-flex justify-content-end p-2">
-          <div className="d-flex justify-content-between">
-            <div className="me-2">
+      <section className="datatable-box">
+        <div className="d-flex justify-content-between mb-4">
+          <div className="d-flex justify-content-start align-items-center">
+            <Flex
+              gap="7"
+              justify="flex-start"
+              align="center"
+              direction="row"
+              wrap="wrap"
+            >
+              <span>Show</span>
+              <MantineSelect
+                className="records_per_page"
+                data={["10", "20", "30", "40"]}
+                value={pageSize.toString()}
+                onChange={(_value, option) => handlePageSizeChange(_value)}
+                withCheckIcon={false}
+              />
+              <span>entries</span>
+            </Flex>
+          </div>
+          <div className="">
+            <Group justify="center" gap="xs">
               <Button
-                type="button"
-                className="rounded-1 px-4 add_btn_color border-0"
-                onClick={() => handleExportToPDF()}
+                styles={{
+                  section: {
+                    marginRight: 5,
+                  },
+                }}
+                variant="filled"
+                size="sm"
+                leftSection={<BsFileEarmarkPdf size={14} />}
+                onClick={(e) => handleExportToPDF(e)}
+                loading={isExportDataFetching?.pdf}
+                loaderProps={{ type: "dots" }}
               >
                 PDF
               </Button>
-            </div>
-            <div className="me-2">
+
               <Button
-                type="submit"
-                className="rounded-1 px-4 add_btn_color border-0"
-                onClick={() => handleExportToCSV()}
+                styles={{
+                  section: {
+                    marginRight: 5,
+                  },
+                }}
+                variant="filled"
+                size="sm"
+                leftSection={<BsFileEarmarkText size={14} />}
+                onClick={(e) => handleExportToCSV(e)}
+                loading={isExportDataFetching?.csv}
+                loaderProps={{ type: "dots" }}
               >
                 CSV
               </Button>
-            </div>
-            <div>
+
               <Button
-                type="submit"
-                className="rounded-1 px-4 add_btn_color border-0"
-                onClick={() => handleExportToExcel()}
+                styles={{
+                  section: {
+                    marginRight: 5,
+                  },
+                }}
+                variant="filled"
+                size="sm"
+                leftSection={<RiFileExcel2Line size={14} />}
+                onClick={(e) => handleExportToExcel(e)}
+                loading={isExportDataFetching?.excel}
+                loaderProps={{ type: "dots" }}
               >
                 Excel
               </Button>
-            </div>
+            </Group>
           </div>
         </div>
-      </div>
-      <section className="datatable-box">
         <div className="datatable-wrapper">
           <DataTable
             style={{
@@ -542,8 +695,8 @@ const AttendanceManage = () => {
             onSortStatusChange={handleSortStatusChange}
             // selectedRecords={selectedRecords}
             // onSelectedRecordsChange={setSelectedRecords}
-            recordsPerPageOptions={PAGE_SIZES}
-            onRecordsPerPageChange={setPageSize}
+            // recordsPerPageOptions={PAGE_SIZES}
+            // onRecordsPerPageChange={setPageSize}
             // rowExpansion={rowExpansion}
             // onRowContextMenu={handleContextMenu}
             // onScroll={hideContextMenu}

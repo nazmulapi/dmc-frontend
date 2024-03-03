@@ -108,7 +108,7 @@ const CreateShift = () => {
         </ul>
       </div>
 
-      <section>
+      <section className="app_box">
         <form onSubmit={handleSubmit}>
           <Row>
             <div className="col-lg-6">
