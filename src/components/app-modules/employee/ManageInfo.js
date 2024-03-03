@@ -531,7 +531,30 @@ const ManageInfo = () => {
 
             {selectedRecords?.length ? (
               <div className="bulk_buttons">
-                <button
+                <Button
+                  classNames={{
+                    root: "bulk_edit_btn",
+                  }}
+                  variant="filled"
+                  size="sm"
+                  // leftSection={<BsFileEarmarkPdf size={14} />}
+                  onClick={() => handleBulkShiftAssign(true)}
+                >
+                  Bulk Shift Assign
+                </Button>
+                <Button
+                  classNames={{
+                    root: "bulk_edit_btn",
+                  }}
+                  variant="filled"
+                  size="sm"
+                  // leftSection={<BsFileEarmarkPdf size={14} />}
+                  onClick={() => handleBulkShiftAssign(true)}
+                >
+                  Bulk Group Assign
+                </Button>
+
+                {/* <button
                   className="bulk_edit_btn"
                   onClick={() => handleBulkShiftAssign(true)}
                 >
@@ -542,7 +565,7 @@ const ManageInfo = () => {
                   onClick={handleBulkGroupAssign}
                 >
                   Bulk Group Assign
-                </button>
+                </button> */}
               </div>
             ) : (
               ""
