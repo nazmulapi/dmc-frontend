@@ -342,7 +342,7 @@ const GroupManager = () => {
             columns={[
               {
                 accessor: "group_id",
-                title: "SL",
+                title: "#",
                 render: (_, index) => index + 1,
               },
               {

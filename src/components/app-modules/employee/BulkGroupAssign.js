@@ -15,7 +15,7 @@ import { submit } from "../../../lib/submit";
 const EditModal = ({ show, onHide, records, setRecords, mutate }) => {
   const [formValues, setFormValues] = useState({
     // id: item.id,
-    shift_id: "",
+    group_id: "",
     employee_id_list: [],
   });
 
@@ -28,8 +28,12 @@ const EditModal = ({ show, onHide, records, setRecords, mutate }) => {
     }
   }, [records]);
 
+  useEffect(() => {
+    console.log(records);
+  }, [show]);
+
   const [selectFormValues, setSelectFormValues] = useState({
-    shift_id: "",
+    group_id: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -37,18 +41,18 @@ const EditModal = ({ show, onHide, records, setRecords, mutate }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    data: shiftsData,
-    error: shiftsFetchError,
-    isLoading: shiftsFetchIsLoading,
-  } = useSWR(`/shift/`, fetcher, {
+    data: groupsData,
+    error: groupsFetchError,
+    isLoading: groupsFetchIsLoading,
+  } = useSWR(`/empgrp/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
   });
 
-  const shifts = shiftsData?.map((item) => ({
-    name: "shift_id",
-    label: item.shift_name,
-    value: item.shift_id,
+  const groups = groupsData?.map((item) => ({
+    name: "group_id",
+    label: item.group_name,
+    value: item.group_id,
   }));
 
   // useEffect(() => {
@@ -65,10 +69,10 @@ const EditModal = ({ show, onHide, records, setRecords, mutate }) => {
     const newErrors = {};
 
     if (
-      !formValues.shift_id ||
-      (typeof formValues.shift_id === "string" && !formValues.shift_id.trim())
+      !formValues.group_id ||
+      (typeof formValues.group_id === "string" && !formValues.group_id.trim())
     ) {
-      newErrors.shift_id = "Shift ID is required";
+      newErrors.group_id = "Group ID is required";
       valid = false;
     }
     setErrors(newErrors);
@@ -148,7 +152,7 @@ const EditModal = ({ show, onHide, records, setRecords, mutate }) => {
       setIsLoading(true);
 
       const response = await submit(
-        `/shift_assign/bulk/${formValues.shift_id}/`,
+        `/empgrp/assign-group/${formValues.group_id}/`,
         formValues
       );
 
@@ -162,7 +166,7 @@ const EditModal = ({ show, onHide, records, setRecords, mutate }) => {
           // setItem((prevData) =>
           //   prevData.map((i) => (i.id === formValues.id ? formValues : i))
           // );
-          setSuccess("Shifts updated successfully");
+          setSuccess("Groups updated successfully");
           setIsLoading(false);
           setRecords([]);
           // setErrors({});
@@ -190,33 +194,33 @@ const EditModal = ({ show, onHide, records, setRecords, mutate }) => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Bulk Shift Assign
+          Bulk Group Assign
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={(e) => handleSubmit(e)}>
           <div className="mb-2">
             <div className="mb-2">
-              Shift <span className="text-danger"> *</span>
+              Group <span className="text-danger"> *</span>
             </div>
             <Select
               className={classEase(
                 "rounded-1 form_border_focus",
-                errors.shift_id && "is-invalid"
+                errors.group_id && "is-invalid"
               )}
               classNamePrefix="select"
               isDisabled={false}
               isLoading={false}
               isClearable={true}
               isSearchable={true}
-              value={selectFormValues.shift_id}
-              options={shifts}
+              value={selectFormValues.group_id}
+              options={groups}
               onChange={(selectedOption) =>
-                handleSelectChange(selectedOption, "shift_id")
+                handleSelectChange(selectedOption, "group_id")
               }
             />
-            {errors.shift_id && (
-              <div className="invalid-feedback">{errors.shift_id}</div>
+            {errors.group_id && (
+              <div className="invalid-feedback">{errors.group_id}</div>
             )}
           </div>
 

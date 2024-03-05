@@ -21,6 +21,7 @@ import {
 
 import EditEmployee from "./EditEmployee";
 import BulkShiftAssign from "./BulkShiftAssign";
+import BulkGroupAssign from "./BulkGroupAssign";
 import { submit } from "../../../lib/submit";
 import { fetcher } from "../../../lib/fetch";
 import { getStoragePath } from "../../../lib/helper";
@@ -42,20 +43,53 @@ const ManageInfo = () => {
     direction: "asc",
   });
 
+  const [formValues, setFormValues] = useState({
+    group_id: "",
+    department_id: "",
+    designation_id: "",
+    shift_id: "",
+    employee_id: "",
+  });
+
+  const [selectFormValues, setSelectFormValues] = useState({
+    group_id: "",
+    department_id: "",
+    designation_id: "",
+    shift_id: "",
+  });
+
+  const [formData, setFormData] = useState({
+    group_id: "",
+    department_id: "",
+    designation_id: "",
+    shift_id: "",
+    employee_id: "",
+  });
+
+  const buildApiUrl = (formData) => {
+    const {
+      group_id,
+      department_id,
+      designation_id,
+      shift_id,
+      employee_id,
+      // year,
+      // month,
+    } = formData;
+
+    return `/employee/?page=${currentPage}&page_size=${pageSize}&employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&shift_id=${shift_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+  };
+
   const {
     data: apiData,
     error,
     isValidating,
     isLoading,
     mutate,
-  } = useSWR(
-    `/employee/?page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
-    fetcher,
-    {
-      errorRetryCount: 2,
-      keepPreviousData: true,
-    }
-  );
+  } = useSWR(buildApiUrl(formData), fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
   const modifiedData = apiData
     ? {
@@ -75,21 +109,6 @@ const ManageInfo = () => {
     setSortStatus(status);
     console.log(sortStatus);
   };
-
-  const [formValues, setFormValues] = useState({
-    group_id: "",
-    department_id: "",
-    designation_id: "",
-    shift_id: "",
-    employee_id: "",
-  });
-
-  const [selectFormValues, setSelectFormValues] = useState({
-    group_id: "",
-    department_id: "",
-    designation_id: "",
-    shift_id: "",
-  });
 
   const {
     data: groupsData,
@@ -195,8 +214,17 @@ const ManageInfo = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+
+    const isFormEmpty = Object.values(formValues).every(
+      (value) => value === ""
+    );
+    if (isFormEmpty) return;
+    setCurrentPage(1);
+
     setSuccess("");
-    // setIsSubmitLoading(true);
+
+    setFormData(formValues);
+    setIsSubmitLoading(true);
     // setFormSubmitted(true);
   };
 
@@ -389,8 +417,8 @@ const ManageInfo = () => {
     setShowShiftModal(show);
   };
 
-  const handleBulkGroupAssign = () => {
-    setShowGroupModal(true);
+  const handleBulkGroupAssign = (show) => {
+    setShowGroupModal(show);
   };
 
   return (
@@ -549,7 +577,7 @@ const ManageInfo = () => {
                   variant="filled"
                   size="sm"
                   // leftSection={<BsFileEarmarkPdf size={14} />}
-                  onClick={() => handleBulkShiftAssign(true)}
+                  onClick={() => handleBulkGroupAssign(true)}
                 >
                   Bulk Group Assign
                 </Button>
@@ -645,7 +673,7 @@ const ManageInfo = () => {
             verticalAlign="center"
             columns={[
               {
-                title: "SL",
+                title: "#",
                 accessor: "",
                 noWrap: true,
                 sortable: false,
@@ -713,7 +741,7 @@ const ManageInfo = () => {
                 title: "Actions",
                 // width: "0%",
                 render: (item) => (
-                  <EditEmployee employee={item} setData={setDisplayedData} />
+                  <EditEmployee employee={item} mutate={mutate} />
                 ),
               },
             ]}
@@ -741,6 +769,15 @@ const ManageInfo = () => {
         records={selectedRecords}
         setRecords={setSelectedRecords}
         onHide={handleBulkShiftAssign}
+        mutate={mutate}
+      />
+
+      <BulkGroupAssign
+        show={showGroupModal}
+        records={selectedRecords}
+        setRecords={setSelectedRecords}
+        onHide={handleBulkGroupAssign}
+        mutate={mutate}
       />
     </>
   );

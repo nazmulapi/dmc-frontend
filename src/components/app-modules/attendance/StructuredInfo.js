@@ -68,20 +68,22 @@ const ManageInfo = () => {
   // const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
+  let apiUrl = `/structuedlog/?employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${page}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+
+  if (formData.year || formData.month) {
+    apiUrl += `&date=${formData.year}-${formData.month}`;
+  }
+
   const {
     data: apiData,
     error,
     isValidating,
     isLoading,
     mutate,
-  } = useSWR(
-    `/structuedlog/?date=${formData.year}-${formData.month}&employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${page}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
-    fetcher,
-    {
-      errorRetryCount: 2,
-      keepPreviousData: true,
-    }
-  );
+  } = useSWR(apiUrl, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
   // const {
   //   data: apiData,
@@ -661,7 +663,7 @@ const ManageInfo = () => {
             verticalAlign="center"
             columns={[
               {
-                title: "SL",
+                title: "#",
                 accessor: "na",
                 noWrap: true,
                 sortable: false,

@@ -373,7 +373,7 @@ const DeviceManager = () => {
             columns={[
               {
                 accessor: "",
-                title: "SL",
+                title: "#",
                 render: (_, index) => index + 1,
               },
               {
@@ -397,7 +397,7 @@ const DeviceManager = () => {
               {
                 accessor: "username",
                 title: "Device Username",
-                sortable: true,
+                // sortable: true,
                 // width: 150
               },
               {

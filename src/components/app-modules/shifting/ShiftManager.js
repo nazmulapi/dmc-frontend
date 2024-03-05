@@ -355,7 +355,7 @@ const ShiftManager = () => {
             columns={[
               {
                 accessor: "",
-                title: "SL",
+                title: "#",
                 render: (_, index) => index + 1,
               },
               {

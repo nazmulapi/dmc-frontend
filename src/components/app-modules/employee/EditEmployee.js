@@ -12,13 +12,13 @@ import useSWR from "swr";
 import { fetcher } from "../../../lib/fetch";
 import { submit } from "../../../lib/submit";
 
-function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
+function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
   // console.log(employee);
   const [empId, setEmpId] = useState(employee.employee_id);
 
   const [formValues, setFormValues] = useState({
     shift_id: employee.shift_id,
-    image: employee.image,
+    image: "",
     group_id: employee.group_id,
     department: employee.department,
     designation: employee.designation,
@@ -36,11 +36,35 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
     setFormValues((prev) => ({
       ...prev,
       shift_id: employee.shift_id,
-      image: employee.image,
+      image: "",
       group_id: employee.group_id,
       department: employee.department,
       designation: employee.designation,
       is_active: Boolean(employee.is_active),
+    }));
+
+    setSelectFormValues((prev) => ({
+      ...prev,
+      department: {
+        label: employee.department_name,
+        name: employee.department,
+        value: employee.department,
+      },
+      designation: {
+        label: employee.designation_name,
+        name: employee.designation,
+        value: employee.designation,
+      },
+      shift_id: {
+        label: employee.shift_name,
+        name: employee.shift_id,
+        value: employee.shift_id,
+      },
+      group_id: {
+        label: employee.group_name,
+        name: employee.group_id,
+        value: employee.group_id,
+      },
     }));
   }, [employee]);
 
@@ -169,7 +193,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
     return;
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     // e.preventDefault();
     setSuccess("");
 
@@ -238,21 +262,22 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
 
       if (response?.employee_id) {
         setTimeout(() => {
-          setData((prevData) => {
-            const d = prevData.map((i) =>
-              i.employee_id === response.employee_id
-                ? {
-                    ...i,
-                    shift_id: response.shift_id,
-                    shift_name: selectFormValues.shift_id.label,
-                    is_active: response.is_active,
-                  }
-                : i
-            );
-            return d;
-          });
+          // setData((prevData) => {
+          //   const d = prevData.map((i) =>
+          //     i.employee_id === response.employee_id
+          //       ? {
+          //           ...i,
+          //           shift_id: response.shift_id,
+          //           shift_name: selectFormValues.shift_id.label,
+          //           is_active: response.is_active,
+          //         }
+          //       : i
+          //   );
+          //   return d;
+          // });
           setSuccess("Employee updated successfully");
           setIsLoading(false);
+          mutate();
           // setErrors({});
           // setFormValues(initialValues);
         }, 1000);
@@ -451,7 +476,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, setData }) {
   );
 }
 
-function EditEmployee({ employee, setData }) {
+function EditEmployee({ employee, mutate }) {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -469,7 +494,7 @@ function EditEmployee({ employee, setData }) {
         show={modalShow}
         onHide={() => setModalShow(false)}
         employee={employee}
-        setData={setData}
+        mutate={mutate}
       />
     </>
   );

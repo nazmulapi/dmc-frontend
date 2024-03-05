@@ -68,20 +68,22 @@ const AttendanceManage = () => {
   // const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
+  let apiUrl = `/attendance_log/?employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+
+  if (formData.year || formData.month) {
+    apiUrl += `&date=${formData.year}-${formData.month}`;
+  }
+
   const {
     data: apiData,
     error,
     isValidating,
     isLoading,
     mutate,
-  } = useSWR(
-    `/attendance_log/?date=${formData.year}-${formData.month}&employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
-    fetcher,
-    {
-      errorRetryCount: 2,
-      keepPreviousData: true,
-    }
-  );
+  } = useSWR(apiUrl, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
   console.log(apiData);
 
@@ -646,7 +648,7 @@ const AttendanceManage = () => {
             verticalAlign="center"
             columns={[
               {
-                title: "SL",
+                title: "#",
                 accessor: "na",
                 noWrap: true,
                 sortable: false,

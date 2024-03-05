@@ -68,20 +68,22 @@ const ManageInfo = () => {
   // const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
+  let apiUrl = `/log/raw_log/?employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+
+  if (formData.year || formData.month) {
+    apiUrl += `&date=${formData.year}-${formData.month}`;
+  }
+
   const {
     data: apiData,
     error,
     isValidating,
     isLoading,
     mutate,
-  } = useSWR(
-    `/log/raw_log/?date=${formData.year}-${formData.month}&employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
-    fetcher,
-    {
-      errorRetryCount: 2,
-      keepPreviousData: true,
-    }
-  );
+  } = useSWR(apiUrl, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
   const handleSortStatusChange = (status) => {
     setCurrentPage(1);
@@ -642,7 +644,7 @@ const ManageInfo = () => {
             verticalAlign="center"
             columns={[
               {
-                title: "SL",
+                title: "#",
                 accessor: "na",
                 noWrap: true,
                 sortable: false,
