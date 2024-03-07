@@ -668,7 +668,7 @@ const AttendanceManage = () => {
                 // render: ({ username }) => username,
               },
               {
-                accessor: "InTime",
+                accessor: "",
                 title: "In Time",
                 noWrap: true,
                 // visibleMediaQuery: aboveXs,
@@ -679,16 +679,16 @@ const AttendanceManage = () => {
                 ),
               },
               {
-                accessor: "InTime",
+                accessor: "",
                 title: "Out Time",
-                sortable: false,
+
                 // visibleMediaQuery: aboveXs,
                 render: ({ OutTime }) => getTime(OutTime),
               },
               {
-                accessor: "InTime",
+                accessor: "",
                 title: "Date",
-                sortable: false,
+
                 // visibleMediaQuery: aboveXs,
                 render: ({ InTime }) => getDate(InTime),
               },
