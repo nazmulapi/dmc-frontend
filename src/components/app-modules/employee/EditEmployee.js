@@ -18,7 +18,6 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
 
   const [formValues, setFormValues] = useState({
     shift_id: employee.shift_id,
-    image: "",
     group_id: employee.group_id,
     department: employee.department,
     designation: employee.designation,
@@ -36,7 +35,6 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
     setFormValues((prev) => ({
       ...prev,
       shift_id: employee.shift_id,
-      image: "",
       group_id: employee.group_id,
       department: employee.department,
       designation: employee.designation,
@@ -138,13 +136,13 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
 
     // console.log(formValues);
 
-    if (
-      !formValues.shift_id ||
-      (typeof formValues.shift_id === "string" && !formValues.shift_id.trim())
-    ) {
-      newErrors.shift_id = "Shift ID is required";
-      valid = false;
-    }
+    // if (
+    //   !formValues.shift_id ||
+    //   (typeof formValues.shift_id === "string" && !formValues.shift_id.trim())
+    // ) {
+    //   newErrors.shift_id = "Shift ID is required";
+    //   valid = false;
+    // }
 
     setErrors(newErrors);
 
@@ -233,6 +231,9 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
     // console.log("Error: ", errors);
     // return;
 
+    // console.log(formValues);
+    // return;
+
     if (valid) {
       setIsLoading(true);
 
@@ -240,14 +241,28 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
 
       // Append form data
       Object.entries(formValues).forEach(([key, value]) => {
-        if (key !== "image") {
-          formData.append(key, value);
+        // Check if the value is not empty before appending
+        if (value !== null && value !== undefined && value !== "") {
+          if (key !== "image") {
+            formData.append(key, value);
+          } else if (key === "image" && value instanceof File) {
+            formData.append("image", value);
+          }
         }
       });
 
-      // Append image file
-      formData.append("image", formValues.image);
-      console.log("Form data", formData);
+      // // Append form data
+      // Object.entries(formValues).forEach(([key, value]) => {
+      //   if (key !== "image") {
+      //     formData.append(key, value);
+      //   }
+      // });
+
+      // // Append image file
+      // formData.append("image", formValues.image);
+      // console.log("Form data", formData);
+      // setIsLoading(false);
+      // return;
 
       const response = await submit(
         `/employee/${employee.employee_id}/`,
@@ -295,7 +310,10 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
   return (
     <Modal
       show={show}
-      onHide={onHide}
+      onHide={() => {
+        onHide();
+        setSuccess("");
+      }}
       size="md"
       aria-labelledby="contained-modal-title-vcenter"
       centered
