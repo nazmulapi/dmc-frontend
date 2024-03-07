@@ -672,19 +672,25 @@ const AttendanceManage = () => {
                 title: "In Time",
                 noWrap: true,
                 // visibleMediaQuery: aboveXs,
-                render: ({ InTime }) => getTime(InTime),
+                render: ({ InTime, delay_minutes }) => (
+                  <span className={delay_minutes && "text-danger"}>
+                    {getTime(InTime)}
+                  </span>
+                ),
               },
               {
                 accessor: "InTime",
                 title: "Out Time",
+                sortable: false,
                 // visibleMediaQuery: aboveXs,
                 render: ({ OutTime }) => getTime(OutTime),
               },
               {
-                accessor: "Type",
+                accessor: "InTime",
                 title: "Date",
+                sortable: false,
                 // visibleMediaQuery: aboveXs,
-                render: ({ Type }) => Type,
+                render: ({ InTime }) => getDate(InTime),
               },
             ]}
             fetching={isLoading}
@@ -707,26 +713,15 @@ const AttendanceManage = () => {
 
         {/* <div className="employee_table table-responsive">
           <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th scope="col">SL</th>
-                <th scope="col">Employee ID</th>
-                <th scope="col">Employee Name</th>
-                <th scope="col">In Time</th>
-                <th scope="col">Out Time</th>
-                <th scope="col">Date</th>
-              </tr>
-            </thead>
+
             {formSubmitted && (
               <tbody>
                 {employeeData?.map((item, index) => (
                   <tr key={index}>
-                    <th scope="row">{startIndex + index + 1}</th>
-                    <td>{item?.employee_id}</td>
+
+
                     <td>{item?.username}</td>
-                    <td className={item?.delay_minutes && "text-danger"}>
-                      {getTime(item?.InTime)}
-                    </td>
+
                     <td>{getTime(item?.OutTime)}</td>
                     <td>{getDate(item?.InTime)}</td>
                   </tr>

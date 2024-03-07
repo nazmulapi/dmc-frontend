@@ -642,6 +642,8 @@ const ManageInfo = () => {
           </div>
         </div>
 
+        {/* {console.log(apiData?.results)} */}
+
         <div className="datatable-wrapper">
           <DataTable
             style={{
@@ -682,7 +684,7 @@ const ManageInfo = () => {
                 // visibleMediaQuery: aboveXs,
               },
               {
-                accessor: "designation_name",
+                accessor: "device_id",
                 title: "Device",
                 sortable: true,
                 // visibleMediaQuery: aboveXs,
