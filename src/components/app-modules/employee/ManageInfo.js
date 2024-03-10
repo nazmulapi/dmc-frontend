@@ -258,6 +258,20 @@ const ManageInfo = () => {
 
   const [dataToExport, setDataToExport] = useState(null);
 
+  const getExportDataUrl = (formData) => {
+    const {
+      group_id, //
+      department_id,
+      designation_id,
+      shift_id,
+      employee_id,
+    } = formData;
+
+    let url = `/employee/?employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&shift_id=${shift_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+
+    return url;
+  };
+
   const handleExportToPDF = async (e) => {
     e.preventDefault();
     setIsExportDataFetching((prev) => ({
@@ -266,10 +280,11 @@ const ManageInfo = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/employee/`;
+        const url = getExportDataUrl(formData);
         const response = await getData(url);
         exportedData = response?.data?.results;
         // Cache the data
@@ -324,10 +339,11 @@ const ManageInfo = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/employee/`;
+        const url = getExportDataUrl(formData);
         const response = await getData(url);
         exportedData = response?.data?.results;
         // Cache the data
@@ -371,10 +387,11 @@ const ManageInfo = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/employee/`;
+        const url = getExportDataUrl(formData);
         const response = await getData(url);
         exportedData = response?.data?.results;
         // Cache the data
@@ -444,7 +461,7 @@ const ManageInfo = () => {
               classNamePrefix="select"
               isDisabled={false}
               isLoading={false}
-              // isClearable={true}
+              isClearable={true}
               // isSearchable={true}
               value={selectFormValues.group_id}
               options={groups}
@@ -461,7 +478,7 @@ const ManageInfo = () => {
               classNamePrefix="select"
               isDisabled={false}
               isLoading={false}
-              // isClearable={true}
+              isClearable={true}
               // isSearchable={true}
               value={selectFormValues.department_id}
               options={departments}
@@ -478,7 +495,7 @@ const ManageInfo = () => {
               classNamePrefix="select"
               isDisabled={false}
               isLoading={false}
-              // isClearable={true}
+              isClearable={true}
               // isSearchable={true}
               value={selectFormValues.designation_id}
               options={designations}
@@ -495,7 +512,7 @@ const ManageInfo = () => {
               classNamePrefix="select"
               isDisabled={false}
               isLoading={false}
-              // isClearable={true}
+              isClearable={true}
               // isSearchable={true}
               value={selectFormValues.shift_id}
               options={shifts}

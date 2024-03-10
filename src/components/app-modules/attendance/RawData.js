@@ -268,6 +268,16 @@ const ManageInfo = () => {
 
   const [dataToExport, setDataToExport] = useState(null);
 
+  const getExportDataUrl = () => {
+    let url = `/log/raw_log/?employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+
+    if (formData.year || formData.month) {
+      url += `&date=${formData.year}-${formData.month}`;
+    }
+
+    return url;
+  };
+
   const handleExportToPDF = async (e) => {
     e.preventDefault();
     setIsExportDataFetching((prev) => ({
@@ -276,10 +286,11 @@ const ManageInfo = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/log/raw_log/?date=${formData.year}-${formData.month}`;
+        const url = getExportDataUrl();
         const response = await getData(url);
         exportedData = response?.data?.results;
         setDataToExport(exportedData);
@@ -331,10 +342,11 @@ const ManageInfo = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/log/raw_log/?date=${formData.year}-${formData.month}`;
+        const url = getExportDataUrl();
         const response = await getData(url);
         exportedData = response?.data?.results;
         // Cache the data
@@ -377,10 +389,11 @@ const ManageInfo = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/log/raw_log/?date=${formData.year}-${formData.month}`;
+        const url = getExportDataUrl();
         const response = await getData(url);
         exportedData = response?.data?.results;
         // Cache the data
