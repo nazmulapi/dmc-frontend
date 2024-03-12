@@ -672,7 +672,10 @@ const ManageInfo = () => {
         <div className="datatable-wrapper">
           <DataTable
             style={{
-              height: apiData?.results?.length === 0 ? "300px" : "auto",
+              height:
+                !apiData?.results || apiData.results.length === 0
+                  ? "300px"
+                  : "auto",
             }}
             classNames={{
               root: "datatable",
