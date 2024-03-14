@@ -218,7 +218,14 @@ const ManageInfo = () => {
     const isFormEmpty = Object.values(formValues).every(
       (value) => value === ""
     );
-    if (isFormEmpty) return;
+    // if (isFormEmpty) return;
+    if (isFormEmpty) {
+      setSortStatus({
+        columnAccessor: "username",
+        direction: "asc",
+      });
+    }
+
     setCurrentPage(1);
 
     setSuccess("");
