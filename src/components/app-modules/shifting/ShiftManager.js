@@ -359,6 +359,10 @@ const ShiftManager = () => {
                 render: (_, index) => index + 1,
               },
               {
+                accessor: "shift_id",
+                title: "Shift ID",
+              },
+              {
                 accessor: "shift_name",
                 title: "Shift Name",
                 sortable: true,

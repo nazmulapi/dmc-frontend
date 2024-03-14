@@ -341,9 +341,13 @@ const GroupManager = () => {
             verticalAlign="center"
             columns={[
               {
-                accessor: "group_id",
+                accessor: "",
                 title: "#",
                 render: (_, index) => index + 1,
+              },
+              {
+                accessor: "group_id",
+                title: "Group ID",
               },
               {
                 accessor: "group_name",
