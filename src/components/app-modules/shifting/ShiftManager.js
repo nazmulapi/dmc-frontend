@@ -337,7 +337,7 @@ const ShiftManager = () => {
 
         <div className="datatable-wrapper">
           <DataTable
-            style={{ height: filteredData.length === 0 ? "300px" : "auto" }}
+            style={{ height: filteredData.length === 0 ? "192px" : "auto" }}
             classNames={{
               root: "datatable",
               table: "datatable_table",
@@ -352,6 +352,7 @@ const ShiftManager = () => {
             verticalSpacing="sm"
             fz="sm"
             verticalAlign="center"
+            idAccessor="shift_id"
             columns={[
               {
                 accessor: "",
@@ -383,10 +384,15 @@ const ShiftManager = () => {
               {
                 accessor: "total_time",
                 title: "Total Time",
-                sortable: true,
+                // sortable: true,
                 // width: 150
               },
 
+              {
+                accessor: "shift_tardiness_hour",
+                title: "Tardiness Hour",
+                // width: 130,
+              },
               {
                 accessor: "actions",
                 title: "Actions",
