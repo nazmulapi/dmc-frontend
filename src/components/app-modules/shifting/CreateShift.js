@@ -14,6 +14,7 @@ const CreateShift = () => {
     shift_name: "",
     shift_beginning: "",
     shift_end: "",
+    shift_tardiness_hour: 1,
   });
 
   const [errors, setErrors] = useState({});
@@ -31,6 +32,12 @@ const CreateShift = () => {
 
     if (!formData?.shift_beginning?.trim()) {
       newErrors.shift_beginning = "Shift beginning time is required";
+      valid = false;
+    }
+
+    if (formData?.shift_tardiness_hour?.trim() <= 0) {
+      newErrors.shift_tardiness_hour =
+        "Shift tardiness hour might be more than 0";
       valid = false;
     }
 
@@ -81,6 +88,7 @@ const CreateShift = () => {
           shift_name: "",
           shift_beginning: "",
           shift_end: "",
+          shift_tardiness_hour: 1,
         });
       } else {
         toast.success(response?.message || "Something went wrong!");
@@ -91,6 +99,7 @@ const CreateShift = () => {
           shift_name: "",
           shift_beginning: "",
           shift_end: "",
+          shift_tardiness_hour: 1,
         });
       }
     }
@@ -184,6 +193,29 @@ const CreateShift = () => {
                 />
                 {errors.shift_end && (
                   <div className="invalid-feedback">{errors.shift_end}</div>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="" className="form-label">
+                  Shift Tardiness Hour<span className="text-danger"> *</span>
+                </label>
+                <input
+                  type="number"
+                  className={`form-control rounded-1 form_border_focus ${
+                    errors.shift_tardiness_hour ? "is-invalid" : ""
+                  }`}
+                  name="shift_tardiness_hour"
+                  id=""
+                  placeholder="Enter Start Time"
+                  value={formData.shift_tardiness_hour}
+                  onChange={handleChange}
+                  // step="1"
+                />
+                {errors.shift_tardiness_hour && (
+                  <div className="invalid-feedback">
+                    {errors.shift_tardiness_hour}
+                  </div>
                 )}
               </div>
             </div>
