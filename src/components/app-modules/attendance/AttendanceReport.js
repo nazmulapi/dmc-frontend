@@ -3,11 +3,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import { Col, Row } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import Select from "react-select";
 import { FaRegEdit } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
+import { MdKeyboardArrowDown } from "react-icons/md";
 import {
   BsFileEarmarkPdf,
   BsFileEarmarkText,
@@ -15,8 +15,16 @@ import {
 } from "react-icons/bs";
 import classEase from "classease";
 import { DataTable } from "mantine-datatable";
-import { Select as MantineSelect } from "@mantine/core";
-import { Flex, Group, Button, Tooltip } from "@mantine/core";
+import {
+  Select as MantineSelect,
+  MultiSelect,
+  Popover,
+  Flex,
+  Group,
+  Button,
+  Tooltip,
+} from "@mantine/core";
+
 import { toast } from "react-toastify";
 // import Pagination from "../../utils/Pagination";
 import { fetcher } from "../../../lib/fetch";
@@ -261,15 +269,124 @@ const AttendanceManage = () => {
     mutate();
   };
 
-  const [employeeData, setEmployeeData] = useState([]);
+  const columns = [
+    {
+      // for table
+      title: "#",
+      accessor: "na",
+      noWrap: true,
+      sortable: false,
+      render: (_, index) => (currentPage - 1) * pageSize + index + 1,
+      // for export
+      key: "title",
+      modifier: (_, index) => (currentPage - 1) * pageSize + index + 1,
+    },
+    {
+      // for table
+      accessor: "employee_id",
+      title: "Employee ID",
+      sortable: true,
+      // for export
+      key: "employee_id",
+    },
+    {
+      // for table
+      accessor: "username",
+      title: "Employee Name",
+      noWrap: true,
+      sortable: true,
+      // for export
+      key: "username",
+    },
+    {
+      // for table
+      accessor: "InTime",
+      title: "In Time",
+      noWrap: true,
+      render: ({ InTime, delay_minutes }) => (
+        <span className={delay_minutes && "text-danger"}>
+          {getTime(InTime)}
+        </span>
+      ),
+      // for export
+      key: "InTime",
+      modifier: ({ InTime, delay_minutes }) => getTime(InTime),
+    },
+    {
+      // for table
+      accessor: "OutTime",
+      title: "Out Time",
+      render: ({ OutTime }) => getTime(OutTime),
+      // for export
+      key: "OutTime",
+      modifier: ({ OutTime }) => getTime(OutTime),
+    },
+    {
+      // for table
+      accessor: "Date",
+      title: "Date",
+      render: ({ InTime }) => getDate(InTime),
+      // for export
+      key: "Date",
+      modifier: ({ InTime }) => getDate(InTime),
+    },
+  ];
 
-  // useEffect(() => {
-  //   if (!isLoading && !error) {
-  //     console.log(apiData?.results);
-  //     setEmployeeData(apiData?.results || []);
-  //     console.log(apiData?.results);
-  //   }
-  // }, [isLoading, isValidating]);
+  const visibleColumns = [
+    {
+      label: "Serial",
+      value: "title",
+    },
+    {
+      label: "Employee ID",
+      value: "employee_id",
+    },
+    {
+      label: "Employee Name",
+      value: "username",
+    },
+    {
+      label: "In Time",
+      value: "InTime",
+    },
+    {
+      label: "Out Time",
+      value: "OutTime",
+    },
+    {
+      label: "Date",
+      value: "Date",
+    },
+  ];
+
+  const [selectedOptions, setSelectedOptions] = useState([
+    "title",
+    "employee_id",
+    "username",
+    "InTime",
+    "OutTime",
+  ]);
+
+  const handleChange = (keys) => {
+    const updatedKeys = [
+      ...new Set(["title", "employee_id", "username", ...keys]),
+    ]; // Ensure "title", "employee_id", and "username" are always included
+
+    // // If the length of updatedKeys is less than 4, don't update the state
+    // if (updatedKeys.length < 4) {
+    //   console.log("Minimum 4 columns must be selected.");
+    //   return;
+    // }
+
+    // Preserve the order of selectedOptions as per visibleColumns
+    const reorderedOptions = visibleColumns.filter((column) =>
+      updatedKeys.includes(column.value)
+    );
+
+    setSelectedOptions(reorderedOptions.map((column) => column.value));
+
+    setSelectedOptions(updatedKeys);
+  };
 
   // file export
   const [isExportDataFetching, setIsExportDataFetching] = useState({
@@ -311,21 +428,42 @@ const AttendanceManage = () => {
         setDataToExport(exportedData);
       }
 
-      const headers = [
-        "Employee ID",
-        "Employee Name",
-        "In Time",
-        "Out Time",
-        "Date",
-      ];
+      // const headers = [
+      //   "Employee ID",
+      //   "Employee Name",
+      //   "In Time",
+      //   "Out Time",
+      //   "Date",
+      // ];
 
-      const data = exportedData.map((item) => ({
-        ID: item.employee_id,
-        username: item.username,
-        InTime: getTime(item.InTime),
-        OutTime: getTime(item.OutTime),
-        Date: getDate(item.InTime),
-      }));
+      // const data = exportedData.map((item) => ({
+      //   ID: item.employee_id,
+      //   username: item.username,
+      //   InTime: getTime(item.InTime),
+      //   OutTime: getTime(item.OutTime),
+      //   Date: getDate(item.InTime),
+      // }));
+
+      const headers = selectedOptions.map((columnKey) => {
+        const selectedColumn = columns.find(
+          (column) => column.key === columnKey
+        );
+        return selectedColumn ? selectedColumn.title : "";
+      });
+
+      const data = exportedData.map((item, index) => {
+        const rowData = {};
+        selectedOptions.forEach((columnKey) => {
+          const selectedColumn = columns.find(
+            (column) => column.key === columnKey
+          );
+          const columnModifier = selectedColumn?.modifier;
+          rowData[columnKey] = columnModifier
+            ? columnModifier(item, index)
+            : item[columnKey] ?? "";
+        });
+        return rowData;
+      });
 
       setTimeout(() => {
         exportToPDF(headers, data, "attendance-report");
@@ -593,6 +731,42 @@ const AttendanceManage = () => {
                 withCheckIcon={false}
               />
               <span>entries</span>
+
+              <Popover
+                classNames={{
+                  dropdown: "column_visibility_dropdown",
+                }}
+                width={0}
+                shadow="md"
+                position="bottom-start"
+                offset={0}
+              >
+                <Popover.Target>
+                  <Button
+                    variant="light"
+                    rightSection={<MdKeyboardArrowDown size={18} />}
+                  >
+                    Visible Columns
+                  </Button>
+                </Popover.Target>
+                <Popover.Dropdown>
+                  <MultiSelect
+                    classNames={{
+                      root: "column_visibility_root",
+                      label: "column_visibility_label",
+                      input: "column_visibility_input",
+                    }}
+                    label=""
+                    placeholder="Pick values"
+                    rightSection={<></>}
+                    data={visibleColumns}
+                    value={selectedOptions}
+                    onChange={handleChange}
+                    dropdownOpened={true}
+                    comboboxProps={{ withinPortal: false }}
+                  />
+                </Popover.Dropdown>
+              </Popover>
             </Flex>
           </div>
           <div className="">
@@ -669,53 +843,57 @@ const AttendanceManage = () => {
             verticalSpacing="sm"
             fz="sm"
             verticalAlign="center"
-            columns={[
-              {
-                title: "#",
-                accessor: "na",
-                noWrap: true,
-                sortable: false,
-                render: (_, index) => (currentPage - 1) * pageSize + index + 1,
-              },
-              {
-                accessor: "employee_id",
-                title: "Employee ID",
-                sortable: true,
-              },
-              {
-                accessor: "username",
-                title: "Employee Name",
-                noWrap: true,
-                sortable: true,
-                // visibleMediaQuery: aboveXs,
-                // render: ({ username }) => username,
-              },
-              {
-                accessor: "",
-                title: "In Time",
-                noWrap: true,
-                // visibleMediaQuery: aboveXs,
-                render: ({ InTime, delay_minutes }) => (
-                  <span className={delay_minutes && "text-danger"}>
-                    {getTime(InTime)}
-                  </span>
-                ),
-              },
-              {
-                accessor: "",
-                title: "Out Time",
+            idAccessor="ID"
+            // columns={[
+            //   {
+            //     title: "#",
+            //     accessor: "na",
+            //     noWrap: true,
+            //     sortable: false,
+            //     render: (_, index) => (currentPage - 1) * pageSize + index + 1,
+            //   },
+            //   {
+            //     accessor: "employee_id",
+            //     title: "Employee ID",
+            //     sortable: true,
+            //   },
+            //   {
+            //     accessor: "username",
+            //     title: "Employee Name",
+            //     noWrap: true,
+            //     sortable: true,
+            //     // visibleMediaQuery: aboveXs,
+            //     // render: ({ username }) => username,
+            //   },
+            //   {
+            //     accessor: "",
+            //     title: "In Time",
+            //     noWrap: true,
+            //     // visibleMediaQuery: aboveXs,
+            //     render: ({ InTime, delay_minutes }) => (
+            //       <span className={delay_minutes && "text-danger"}>
+            //         {getTime(InTime)}
+            //       </span>
+            //     ),
+            //   },
+            //   {
+            //     accessor: "",
+            //     title: "Out Time",
 
-                // visibleMediaQuery: aboveXs,
-                render: ({ OutTime }) => getTime(OutTime),
-              },
-              {
-                accessor: "",
-                title: "Date",
+            //     // visibleMediaQuery: aboveXs,
+            //     render: ({ OutTime }) => getTime(OutTime),
+            //   },
+            //   {
+            //     accessor: "",
+            //     title: "Date",
 
-                // visibleMediaQuery: aboveXs,
-                render: ({ InTime }) => getDate(InTime),
-              },
-            ]}
+            //     // visibleMediaQuery: aboveXs,
+            //     render: ({ InTime }) => getDate(InTime),
+            //   },
+            // ]}
+            columns={columns.filter((column) =>
+              selectedOptions.includes(column.key)
+            )}
             fetching={isLoading}
             records={apiData?.results || []}
             page={currentPage}

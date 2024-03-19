@@ -342,6 +342,27 @@ employee manage css end
 .records_per_page {
   width: 64px;
 }
+.column_visibility_dropdown {
+  height: 0;
+  padding: 0 !important;
+}
+.column_visibility_root {
+  width: 200px;
+  height: 0;
+}
+.column_visibility_input {
+  height: 0 !important;
+  visibility: hidden;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.column_visibility_input span {
+  background-color: transparent;
+}
+.column_visibility_input button,
+.column_visibility_input svg {
+  display: none;
+}
 .bulk_edit_btn {
   // border: none;
   // color: var(--dmc-theme-color-secondary);

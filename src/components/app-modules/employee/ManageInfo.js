@@ -20,7 +20,7 @@ import {
 } from "react-icons/bs";
 
 import EditEmployee from "./EditEmployee";
-import BulkShiftAssign from "./BulkShiftAssign";
+// import BulkShiftAssign from "./BulkShiftAssign";
 import BulkGroupAssign from "./BulkGroupAssign";
 import { submit } from "../../../lib/submit";
 import { fetcher } from "../../../lib/fetch";
@@ -47,7 +47,7 @@ const ManageInfo = () => {
     group_id: "",
     department_id: "",
     designation_id: "",
-    shift_id: "",
+    // shift_id: "",
     employee_id: "",
   });
 
@@ -55,14 +55,14 @@ const ManageInfo = () => {
     group_id: "",
     department_id: "",
     designation_id: "",
-    shift_id: "",
+    // shift_id: "",
   });
 
   const [formData, setFormData] = useState({
     group_id: "",
     department_id: "",
     designation_id: "",
-    shift_id: "",
+    // shift_id: "",
     employee_id: "",
   });
 
@@ -71,13 +71,15 @@ const ManageInfo = () => {
       group_id,
       department_id,
       designation_id,
-      shift_id,
+      // shift_id,
       employee_id,
       // year,
       // month,
     } = formData;
 
-    return `/employee/?page=${currentPage}&page_size=${pageSize}&employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&shift_id=${shift_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+    // return `/employee/?page=${currentPage}&page_size=${pageSize}&employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&shift_id=${shift_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+
+    return `/employee/?page=${currentPage}&page_size=${pageSize}&employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
   };
 
   const {
@@ -155,20 +157,20 @@ const ManageInfo = () => {
     value: item.id,
   }));
 
-  const {
-    data: shiftsData,
-    error: shiftsFetchError,
-    isLoading: shiftsFetchIsLoading,
-  } = useSWR(`/shift/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-  });
+  // const {
+  //   data: shiftsData,
+  //   error: shiftsFetchError,
+  //   isLoading: shiftsFetchIsLoading,
+  // } = useSWR(`/shift/`, fetcher, {
+  //   errorRetryCount: 2,
+  //   keepPreviousData: true,
+  // });
 
-  const shifts = shiftsData?.map((item) => ({
-    name: "shift_id",
-    label: item.shift_name,
-    value: item.shift_id,
-  }));
+  // const shifts = shiftsData?.map((item) => ({
+  //   name: "shift_id",
+  //   label: item.shift_name,
+  //   value: item.shift_id,
+  // }));
 
   const handleSelectChange = async (selectedOption, key) => {
     setSuccess("");
@@ -270,11 +272,12 @@ const ManageInfo = () => {
       group_id, //
       department_id,
       designation_id,
-      shift_id,
+      // shift_id,
       employee_id,
     } = formData;
 
-    let url = `/employee/?employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&shift_id=${shift_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+    // let url = `/employee/?employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&shift_id=${shift_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+    let url = `/employee/?employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
 
     return url;
   };
@@ -304,7 +307,7 @@ const ManageInfo = () => {
         "Designation",
         "Group",
         "Department",
-        "Shift",
+        // "Shift",
         "Status",
       ];
 
@@ -314,7 +317,7 @@ const ManageInfo = () => {
         Designation: item?.designation_name || "N/A",
         Group: item?.group_name || "N/A",
         Department: item?.department_name || "N/A",
-        Shift: item?.shift_name || "N/A",
+        // Shift: item?.shift_name || "N/A",
         Status: item?.is_active ? "Active" : "Inactive",
       }));
 
@@ -363,7 +366,7 @@ const ManageInfo = () => {
         Designation: item?.designation_name || "N/A",
         Group: item?.group_name || "N/A",
         Department: item?.department_name || "N/A",
-        Shift: item?.shift_name || "N/A",
+        // Shift: item?.shift_name || "N/A",
         Status: item?.is_active ? "Active" : "Inactive",
       }));
 
@@ -411,7 +414,7 @@ const ManageInfo = () => {
         Designation: item?.designation_name || "N/A",
         Group: item?.group_name || "N/A",
         Department: item?.department_name || "N/A",
-        Shift: item?.shift_name || "N/A",
+        // Shift: item?.shift_name || "N/A",
         Status: item?.is_active ? "Active" : "Inactive",
       }));
 
@@ -434,12 +437,12 @@ const ManageInfo = () => {
     }
   };
 
-  const [showShiftModal, setShowShiftModal] = useState(false);
+  // const [showShiftModal, setShowShiftModal] = useState(false);
   const [showGroupModal, setShowGroupModal] = useState(false);
 
-  const handleBulkShiftAssign = (show) => {
-    setShowShiftModal(show);
-  };
+  // const handleBulkShiftAssign = (show) => {
+  //   setShowShiftModal(show);
+  // };
 
   const handleBulkGroupAssign = (show) => {
     setShowGroupModal(show);
@@ -513,7 +516,7 @@ const ManageInfo = () => {
             />
           </div>
 
-          <div className="me-2">
+          {/* <div className="me-2">
             <Select
               className={classEase("rounded-1 form_border_focus mb-3")}
               classNamePrefix="select"
@@ -528,7 +531,7 @@ const ManageInfo = () => {
               }
               placeholder="Select shift..."
             />
-          </div>
+          </div> */}
 
           <div className="me-2">
             <input
@@ -583,7 +586,7 @@ const ManageInfo = () => {
 
             {selectedRecords?.length ? (
               <div className="bulk_buttons">
-                <Button
+                {/* <Button
                   classNames={{
                     root: "bulk_edit_btn",
                   }}
@@ -593,7 +596,7 @@ const ManageInfo = () => {
                   onClick={() => handleBulkShiftAssign(true)}
                 >
                   Bulk Shift Assign
-                </Button>
+                </Button> */}
                 <Button
                   classNames={{
                     root: "bulk_edit_btn",
@@ -751,12 +754,12 @@ const ManageInfo = () => {
                 // visibleMediaQuery: aboveXs,
                 render: ({ department_name }) => department_name || "N/A",
               },
-              {
-                accessor: "shift_name",
-                title: "Shift",
-                // visibleMediaQuery: aboveXs,
-                render: ({ shift_name }) => shift_name || "N/A",
-              },
+              // {
+              //   accessor: "shift_name",
+              //   title: "Shift",
+              //   // visibleMediaQuery: aboveXs,
+              //   render: ({ shift_name }) => shift_name || "N/A",
+              // },
               {
                 accessor: "is_active",
                 title: "Status",
@@ -791,13 +794,13 @@ const ManageInfo = () => {
         </div>
       </section>
 
-      <BulkShiftAssign
+      {/* <BulkShiftAssign
         show={showShiftModal}
         records={selectedRecords}
         setRecords={setSelectedRecords}
         onHide={handleBulkShiftAssign}
         mutate={mutate}
-      />
+      /> */}
 
       <BulkGroupAssign
         show={showGroupModal}

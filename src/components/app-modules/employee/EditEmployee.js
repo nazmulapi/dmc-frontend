@@ -17,7 +17,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
   const [empId, setEmpId] = useState(employee.employee_id);
 
   const [formValues, setFormValues] = useState({
-    shift_id: employee.shift_id,
+    // shift_id: employee.shift_id,
     group_id: employee.group_id,
     department: employee.department,
     designation: employee.designation,
@@ -27,14 +27,14 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
   const [selectFormValues, setSelectFormValues] = useState({
     department: "",
     designation: "",
-    shift_id: "",
+    // shift_id: "",
     group_id: "",
   });
 
   useEffect(() => {
     setFormValues((prev) => ({
       ...prev,
-      shift_id: employee.shift_id,
+      // shift_id: employee.shift_id,
       group_id: employee.group_id,
       department: employee.department,
       designation: employee.designation,
@@ -53,11 +53,11 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
         name: employee.designation,
         value: employee.designation,
       },
-      shift_id: {
-        label: employee.shift_name,
-        name: employee.shift_id,
-        value: employee.shift_id,
-      },
+      // shift_id: {
+      //   label: employee.shift_name,
+      //   name: employee.shift_id,
+      //   value: employee.shift_id,
+      // },
       group_id: {
         label: employee.group_name,
         name: employee.group_id,
@@ -100,20 +100,20 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
     value: item.id,
   }));
 
-  const {
-    data: shiftsData,
-    error: shiftsFetchError,
-    isLoading: shiftsFetchIsLoading,
-  } = useSWR(`/shift/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-  });
+  // const {
+  //   data: shiftsData,
+  //   error: shiftsFetchError,
+  //   isLoading: shiftsFetchIsLoading,
+  // } = useSWR(`/shift/`, fetcher, {
+  //   errorRetryCount: 2,
+  //   keepPreviousData: true,
+  // });
 
-  const shifts = shiftsData?.map((item) => ({
-    name: "shift_id",
-    label: item.shift_name,
-    value: item.shift_id,
-  }));
+  // const shifts = shiftsData?.map((item) => ({
+  //   name: "shift_id",
+  //   label: item.shift_name,
+  //   value: item.shift_id,
+  // }));
 
   const {
     data: groupsData,
@@ -377,10 +377,10 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
                 )} */}
           </div>
 
-          <div className="mb-2">
+          {/* <div className="mb-2">
             Shift <span className="text-danger"> *</span>
-          </div>
-          <Select
+          </div> */}
+          {/* <Select
             className={classEase(
               "rounded-1 form_border_focus",
               errors.shift_id && "is-invalid"
@@ -395,11 +395,11 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
             onChange={(selectedOption) =>
               handleSelectChange(selectedOption, "shift_id")
             }
-          />
+          /> */}
 
-          {errors.shift_id && (
+          {/* {errors.shift_id && (
             <div className="invalid-feedback">{errors.shift_id}</div>
-          )}
+          )} */}
 
           <div className="mb-2">
             <div className="mb-2">

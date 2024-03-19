@@ -24,7 +24,7 @@ const initialValues = {
   password: "",
   confirm_password: "",
   phone_number: "",
-  shift_id: "",
+  // shift_id: "",
   image: "",
   group_id: "",
   department: "",
@@ -36,7 +36,7 @@ const AddEmployee = () => {
   const [selectFormValues, setSelectFormValues] = useState({
     department: "",
     designation: "",
-    shift_id: "",
+    // shift_id: "",
     group_id: "",
   });
   const [errors, setErrors] = useState({});
@@ -73,20 +73,20 @@ const AddEmployee = () => {
     value: item.id,
   }));
 
-  const {
-    data: shiftsData,
-    error: shiftsFetchError,
-    isLoading: shiftsFetchIsLoading,
-  } = useSWR(`/shift/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-  });
+  // const {
+  //   data: shiftsData,
+  //   error: shiftsFetchError,
+  //   isLoading: shiftsFetchIsLoading,
+  // } = useSWR(`/shift/`, fetcher, {
+  //   errorRetryCount: 2,
+  //   keepPreviousData: true,
+  // });
 
-  const shifts = shiftsData?.map((item) => ({
-    name: "shift_id",
-    label: item.shift_name,
-    value: item.shift_id,
-  }));
+  // const shifts = shiftsData?.map((item) => ({
+  //   name: "shift_id",
+  //   label: item.shift_name,
+  //   value: item.shift_id,
+  // }));
 
   const {
     data: groupsData,
@@ -400,7 +400,7 @@ const AddEmployee = () => {
               data={{
                 designations: designationsData,
                 departments: departmentsData,
-                shifts: shiftsData,
+                // shifts: shiftsData,
               }}
             />
           </div>
@@ -578,7 +578,7 @@ const AddEmployee = () => {
               </Col>
 
               <Col lg={6}>
-                <div className="mb-2">
+                {/* <div className="mb-2">
                   <div className="mb-2">
                     Shift <span className="text-danger"> *</span>
                   </div>
@@ -601,7 +601,7 @@ const AddEmployee = () => {
                   {errors.shift_id && (
                     <div className="invalid-feedback">{errors.shift_id}</div>
                   )}
-                </div>
+                </div> */}
 
                 <div className="mb-2">
                   <div className="mb-2">
