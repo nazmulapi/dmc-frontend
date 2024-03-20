@@ -363,6 +363,12 @@ employee manage css end
 .column_visibility_input svg {
   display: none;
 }
+.column_visibility_btn {
+  padding: 0 7px 0 14px !important;
+}
+.column_visibility_btn_section {
+  --_button-section-margin-left: 5px !important;
+}
 .bulk_edit_btn {
   // border: none;
   // color: var(--dmc-theme-color-secondary);

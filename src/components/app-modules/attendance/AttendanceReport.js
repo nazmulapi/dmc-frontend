@@ -300,6 +300,20 @@ const AttendanceManage = () => {
     },
     {
       // for table
+      accessor: "department_name",
+      title: "Department",
+      // for export
+      key: "department_name",
+    },
+    {
+      // for table
+      accessor: "designation_name",
+      title: "Designation",
+      // for export
+      key: "designation_name",
+    },
+    {
+      // for table
       accessor: "InTime",
       title: "In Time",
       noWrap: true,
@@ -323,12 +337,33 @@ const AttendanceManage = () => {
     },
     {
       // for table
-      accessor: "Date",
+      accessor: "date",
       title: "Date",
-      render: ({ InTime }) => getDate(InTime),
+      render: ({ date }) => getDate(date),
       // for export
-      key: "Date",
-      modifier: ({ InTime }) => getDate(InTime),
+      key: "date",
+      modifier: ({ date }) => getDate(date),
+    },
+    {
+      // for table
+      accessor: "device_id",
+      title: "Device ID",
+      // for export
+      key: "device_id",
+    },
+    {
+      // for table
+      accessor: "shift_name",
+      title: "Shift",
+      // for export
+      key: "shift_name",
+    },
+    {
+      // for table
+      accessor: "shift_tardiness_hour",
+      title: "Shift Tardiness Hour",
+      // for export
+      key: "shift_tardiness_hour",
     },
   ];
 
@@ -346,6 +381,14 @@ const AttendanceManage = () => {
       value: "username",
     },
     {
+      label: "Department",
+      value: "department_name",
+    },
+    {
+      label: "Designation",
+      value: "designation_name",
+    },
+    {
       label: "In Time",
       value: "InTime",
     },
@@ -355,7 +398,19 @@ const AttendanceManage = () => {
     },
     {
       label: "Date",
-      value: "Date",
+      value: "date",
+    },
+    {
+      label: "Device ID",
+      value: "device_id",
+    },
+    {
+      label: "Shift",
+      value: "shift_name",
+    },
+    {
+      label: "Shift Tardiness Hour",
+      value: "shift_tardiness_hour",
     },
   ];
 
@@ -365,6 +420,7 @@ const AttendanceManage = () => {
     "username",
     "InTime",
     "OutTime",
+    "date",
   ]);
 
   const handleChange = (keys) => {
@@ -372,19 +428,12 @@ const AttendanceManage = () => {
       ...new Set(["title", "employee_id", "username", ...keys]),
     ]; // Ensure "title", "employee_id", and "username" are always included
 
-    // // If the length of updatedKeys is less than 4, don't update the state
-    // if (updatedKeys.length < 4) {
-    //   console.log("Minimum 4 columns must be selected.");
-    //   return;
-    // }
-
     // Preserve the order of selectedOptions as per visibleColumns
     const reorderedOptions = visibleColumns.filter((column) =>
       updatedKeys.includes(column.value)
     );
 
     setSelectedOptions(reorderedOptions.map((column) => column.value));
-
     setSelectedOptions(updatedKeys);
   };
 
@@ -504,13 +553,27 @@ const AttendanceManage = () => {
         setDataToExport(exportedData);
       }
 
-      const data = exportedData.map((item) => ({
-        "Employee ID": item.employee_id,
-        "Employee Name": item.username,
-        "In Time": getTime(item.InTime),
-        "Out Time": getTime(item.OutTime),
-        Date: getDate(item.InTime),
-      }));
+      // const data = exportedData.map((item) => ({
+      //   "Employee ID": item.employee_id,
+      //   "Employee Name": item.username,
+      //   "In Time": getTime(item.InTime),
+      //   "Out Time": getTime(item.OutTime),
+      //   Date: getDate(item.date),
+      // }));
+
+      const data = exportedData.map((item, index) => {
+        const rowData = {};
+        selectedOptions.forEach((columnKey) => {
+          const selectedColumn = columns.find(
+            (column) => column.key === columnKey
+          );
+          const columnModifier = selectedColumn?.modifier;
+          rowData[selectedColumn.title] = columnModifier
+            ? columnModifier(item, index)
+            : item[columnKey] ?? "";
+        });
+        return rowData;
+      });
 
       setTimeout(() => {
         exportToCSV(data, "attendance-report");
@@ -550,13 +613,27 @@ const AttendanceManage = () => {
         setDataToExport(exportedData);
       }
 
-      const data = exportedData.map((item) => ({
-        "Employee ID": item.employee_id,
-        "Employee Name": item.username,
-        "In Time": getTime(item.InTime),
-        "Out Time": getTime(item.OutTime),
-        Date: getDate(item.InTime),
-      }));
+      // const data = exportedData.map((item) => ({
+      //   "Employee ID": item.employee_id,
+      //   "Employee Name": item.username,
+      //   "In Time": getTime(item.InTime),
+      //   "Out Time": getTime(item.OutTime),
+      //   Date: getDate(item.InTime),
+      // }));
+
+      const data = exportedData.map((item, index) => {
+        const rowData = {};
+        selectedOptions.forEach((columnKey) => {
+          const selectedColumn = columns.find(
+            (column) => column.key === columnKey
+          );
+          const columnModifier = selectedColumn?.modifier;
+          rowData[selectedColumn.title] = columnModifier
+            ? columnModifier(item, index)
+            : item[columnKey] ?? "";
+        });
+        return rowData;
+      });
 
       setTimeout(() => {
         exportToExcel(data, "attendance-report");
@@ -744,7 +821,11 @@ const AttendanceManage = () => {
                 <Popover.Target>
                   <Button
                     variant="light"
-                    rightSection={<MdKeyboardArrowDown size={18} />}
+                    rightSection={<MdKeyboardArrowDown size={20} />}
+                    classNames={{
+                      root: "column_visibility_btn",
+                      section: "column_visibility_btn_section",
+                    }}
                   >
                     Visible Columns
                   </Button>
