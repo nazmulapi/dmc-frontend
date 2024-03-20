@@ -16,7 +16,7 @@ import { DataTable } from "mantine-datatable";
 import { toast } from "react-toastify";
 import { fetcher } from "../../../lib/fetch";
 import { deleteItem } from "../../../lib/submit";
-import { sortBy } from "../../../lib/helper";
+import { sortBy, convertTimeTo12HourFormat } from "../../../lib/helper";
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 import { getData } from "../../../lib/fetch";
 import EditShift from "./EditShift";
@@ -131,8 +131,12 @@ const ShiftManager = () => {
       const data = exportedData.map((item, index) => ({
         sl: index + 1,
         shift_name: item?.shift_name || "",
-        shift_beginning: item?.shift_beginning || "",
-        shift_end: item?.shift_end || "",
+        shift_beginning: item?.shift_beginning
+          ? convertTimeTo12HourFormat(item?.shift_beginning)
+          : "",
+        shift_end: item?.shift_end
+          ? convertTimeTo12HourFormat(item?.shift_end)
+          : "",
         total_time: item?.total_time || "",
       }));
 
@@ -177,8 +181,12 @@ const ShiftManager = () => {
       const data = exportedData.map((item, index) => ({
         SL: index + 1,
         "Shift Name": item?.shift_name || "",
-        "Shift Beginning": item?.shift_beginning || "",
-        "Shift End": item?.shift_end || "",
+        "Shift Beginning": item?.shift_beginning
+          ? convertTimeTo12HourFormat(item?.shift_beginning)
+          : "",
+        "Shift End": item?.shift_end
+          ? convertTimeTo12HourFormat(item?.shift_end)
+          : "",
         "Total Time": item?.total_time || "",
       }));
 
@@ -226,8 +234,12 @@ const ShiftManager = () => {
       const data = exportedData.map((item, index) => ({
         SL: index + 1,
         "Shift Name": item?.shift_name || "",
-        "Shift Beginning": item?.shift_beginning || "",
-        "Shift End": item?.shift_end || "",
+        "Shift Beginning": item?.shift_beginning
+          ? convertTimeTo12HourFormat(item?.shift_beginning)
+          : "",
+        "Shift End": item?.shift_end
+          ? convertTimeTo12HourFormat(item?.shift_end)
+          : "",
         "Total Time": item?.total_time || "",
       }));
 
@@ -374,12 +386,15 @@ const ShiftManager = () => {
                 title: "Shift Beginning",
                 sortable: true,
                 // width: 150
+                render: ({ shift_beginning }) =>
+                  convertTimeTo12HourFormat(shift_beginning),
               },
               {
                 accessor: "shift_end",
                 title: "Shift End",
                 sortable: true,
                 // width: 150
+                render: ({ shift_end }) => convertTimeTo12HourFormat(shift_end),
               },
               {
                 accessor: "total_time",

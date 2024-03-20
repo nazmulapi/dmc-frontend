@@ -35,7 +35,7 @@ const CreateShift = () => {
       valid = false;
     }
 
-    if (formData?.shift_tardiness_hour?.trim() <= 0) {
+    if (formData?.shift_tardiness_hour <= 0) {
       newErrors.shift_tardiness_hour =
         "Shift tardiness hour might be more than 0";
       valid = false;
