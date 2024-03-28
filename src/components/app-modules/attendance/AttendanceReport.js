@@ -300,6 +300,13 @@ const AttendanceManage = () => {
     },
     {
       // for table
+      accessor: "group_id",
+      title: "Group",
+      // for export
+      key: "group_name",
+    },
+    {
+      // for table
       accessor: "department_name",
       title: "Department",
       // for export
@@ -381,6 +388,10 @@ const AttendanceManage = () => {
       value: "username",
     },
     {
+      label: "Group",
+      value: "group_name",
+    },
+    {
       label: "Department",
       value: "department_name",
     },
@@ -434,7 +445,7 @@ const AttendanceManage = () => {
     );
 
     setSelectedOptions(reorderedOptions.map((column) => column.value));
-    setSelectedOptions(updatedKeys);
+    // setSelectedOptions(updatedKeys);
   };
 
   // file export
@@ -679,6 +690,7 @@ const AttendanceManage = () => {
               isLoading={false}
               isClearable={true}
               isSearchable={true}
+              instanceId="select_group_id"
               value={selectFormValues.group_id}
               options={groups}
               onChange={(selectedOption) =>
@@ -696,6 +708,7 @@ const AttendanceManage = () => {
               isLoading={false}
               isClearable={true}
               isSearchable={true}
+              instanceId="select_department_id"
               value={selectFormValues.department_id}
               options={departments}
               onChange={(selectedOption) =>
@@ -713,6 +726,7 @@ const AttendanceManage = () => {
               isLoading={false}
               isClearable={true}
               isSearchable={true}
+              instanceId="select_designation_id"
               value={selectFormValues.designation_id}
               options={designations}
               onChange={(selectedOption) =>
@@ -730,6 +744,7 @@ const AttendanceManage = () => {
               isLoading={false}
               isClearable={true}
               isSearchable={true}
+              instanceId="select_year"
               value={selectFormValues.year}
               options={years}
               onChange={(selectedOption) =>
@@ -747,6 +762,7 @@ const AttendanceManage = () => {
               isLoading={false}
               isClearable={true}
               isSearchable={true}
+              instanceId="select_month"
               value={selectFormValues.month}
               options={months}
               onChange={(selectedOption) =>

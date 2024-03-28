@@ -665,6 +665,7 @@ const ManageInfo = () => {
             verticalSpacing="sm"
             fz="sm"
             verticalAlign="center"
+            idAccessor="r_clsf_record_id"
             columns={[
               {
                 title: "#",
@@ -693,21 +694,21 @@ const ManageInfo = () => {
                 // visibleMediaQuery: aboveXs,
               },
               {
-                accessor: "InTime",
+                accessor: "logdate",
                 title: "Date",
                 noWrap: true,
                 sortable: true,
                 // visibleMediaQuery: aboveXs,
-                render: ({ InTime }) => getDate(InTime),
+                render: ({ logdate }) => getDate(logdate),
               },
               {
-                accessor: "",
+                accessor: "InTime",
                 title: "Time",
                 // visibleMediaQuery: aboveXs,
                 render: ({ InTime }) => getTime(InTime),
               },
               {
-                accessor: "",
+                accessor: "Type",
                 title: "Type",
                 // visibleMediaQuery: aboveXs,
                 render: ({ Type }) => Type,

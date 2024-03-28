@@ -27,7 +27,7 @@ const AddDevice = () => {
     const newErrors = {};
 
     if (!formData?.device_id?.trim()) {
-      newErrors.device_id = "Device name is required";
+      newErrors.device_id = "Device ID is required";
       valid = false;
     }
 

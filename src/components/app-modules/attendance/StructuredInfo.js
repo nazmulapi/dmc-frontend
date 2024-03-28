@@ -686,6 +686,7 @@ const ManageInfo = () => {
             verticalSpacing="sm"
             fz="sm"
             verticalAlign="center"
+            idAccessor="ID"
             columns={[
               {
                 title: "#",

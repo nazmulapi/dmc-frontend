@@ -55,7 +55,13 @@ const Navbar = () => {
             href="/dashboard"
             className="main_logo text-decoration-none d-flex justify-content-start align-items-center"
           >
-            <Image src={Logo} className="" alt="logo" />
+            <Image
+              src={Logo}
+              className=""
+              alt="logo"
+              // priority={true}
+              loading="lazy"
+            />
           </Link>
         </div>
 

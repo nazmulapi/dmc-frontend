@@ -370,6 +370,7 @@ const DeviceManager = () => {
             verticalSpacing="sm"
             fz="sm"
             verticalAlign="center"
+            idAccessor="device_id"
             columns={[
               {
                 accessor: "",
@@ -419,15 +420,19 @@ const DeviceManager = () => {
                 title: "Actions",
                 // width: "0%",
                 render: (item) => (
-                  <button
-                    className="border-0 rounded-1"
-                    onClick={() => {
-                      setSelectedDevice(item);
-                      setShow(true);
-                    }}
-                  >
-                    <RiDeleteBin6Line color="#DB3545" />
-                  </button>
+                  <>
+                    <EditDevice item={item} setItem={setData} />
+
+                    <button
+                      className="border-0 rounded-1"
+                      onClick={() => {
+                        setSelectedDevice(item);
+                        setShow(true);
+                      }}
+                    >
+                      <RiDeleteBin6Line color="#DB3545" />
+                    </button>
+                  </>
                 ),
               },
             ]}
