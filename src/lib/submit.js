@@ -197,3 +197,102 @@ export const syncManual = async (route) => {
     };
   }
 };
+
+export const uploadCSV = async (route, data) => {
+  try {
+    let token = Cookies.get(authTokenKey);
+
+    const headers = {
+      Authorization: `Bearer ${token ? token : ""}`,
+    };
+
+    // headers["Content-Type"] = "multipart/form-data";
+
+    const response = await fetch(apiBaseUrl + route, {
+      method: "POST",
+      headers: headers,
+      body: data,
+    });
+
+    // console.log(response);
+
+    // if (!response.ok) {
+    //   console.error("Error");
+    //   // throw new Error("Failed to submit data");
+
+    //   return {
+    //     error: true,
+    //     message: "Failed to submit data",
+    //   };
+    // }
+
+    // console.log("Successful");
+    // console.log(response.json());
+
+    const responseData = await response.json();
+
+    return responseData;
+  } catch (error) {
+    console.error("Failed: ", error);
+    // throw error;
+    return {
+      error: true,
+      message: "An error occurred. Please try again later.",
+    };
+  }
+};
+
+export const update = async (route, data, hasFile = false) => {
+  try {
+    let token = Cookies.get(authTokenKey);
+    // console.log(token);
+    // console.log(data);
+    // for (var pair of data.entries()) {
+    //   console.log(pair[0] + ": " + pair[1]);
+    // }
+    // return data;
+
+    const headers = {
+      Authorization: `Bearer ${token ? token : ""}`,
+    };
+
+    if (!hasFile) {
+      headers["Content-Type"] = "application/json";
+    }
+    // else {
+    //   headers["Content-Type"] = "multipart/form-data";
+    // }
+
+    const response = await fetch(apiBaseUrl + route, {
+      method: "PUT",
+      headers: headers,
+      body: hasFile ? data : JSON.stringify(data),
+    });
+
+    // console.log(response);
+
+    if (!response.ok) {
+      console.error("Error");
+      // throw new Error("Failed to submit data");
+
+      return {
+        error: true,
+        message: "Failed to submit data",
+      };
+    }
+
+    // console.log("Successful");
+    // console.log(response.json());
+
+    const responseData = await response.json();
+
+    return responseData;
+  } catch (error) {
+    console.error("Failed: ", error);
+    // throw error;
+    return {
+      error: true,
+      message: "An error occurred. Please try again later.",
+    };
+  }
+};

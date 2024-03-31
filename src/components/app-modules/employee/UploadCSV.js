@@ -1,40 +1,24 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import useSWR from "swr";
+import React, { useState } from "react";
 import Link from "next/link";
-// import Button from "react-bootstrap/Button";
-import Select from "react-select";
+import { DataTable } from "mantine-datatable";
 import Spinner from "react-bootstrap/Spinner";
-import { Row, Col } from "react-bootstrap";
 import classEase from "classease";
 import { toast } from "react-toastify";
-import { DataTable } from "mantine-datatable";
-import { Select as MantineSelect } from "@mantine/core";
-import { Flex, Group, Button, Tooltip, Input } from "@mantine/core";
-import {
-  BsFileEarmarkPdf,
-  BsFileEarmarkText,
-  BsFileEarmarkExcel,
-} from "react-icons/bs";
-import { MdRefresh } from "react-icons/md";
-
-import EditEmployee from "./EditEmployee";
-import BulkShiftAssign from "./BulkShiftAssign";
-import { submit } from "../../../lib/submit";
-import { fetcher } from "../../../lib/fetch";
-import { getStoragePath } from "../../../lib/helper";
-import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
-import { constants } from "../../../lib/config";
+import { Button } from "@mantine/core";
+import { uploadCSV } from "../../../lib/submit";
 
 const ManageInfo = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadingSuccess, setUploadingSuccess] = useState("");
-  const [validationError, setValidationError] = useState(null);
+  const [didUploadedOperation, setDidUploadedOperation] = useState(false);
+  // const [validationError, setValidationError] = useState("");
+  const [failedEmployees, setFailedEmployees] = useState([]);
+  const [successfulEmployees, setSuccessfulEmployees] = useState([]);
 
   const handleFileChange = (event) => {
-    setValidationError(null);
+    // setValidationError(null);
     const files = event.target.files;
     // Convert files to an array
     const filesArray = Array.from(files);
@@ -42,16 +26,13 @@ const ManageInfo = () => {
   };
 
   const validateFiles = () => {
-    let valid = true;
-    const newErrors = {};
+    let invalid = false;
 
     // Basic validation: Check if exactly two files are selected
     if (uploadedFiles.length !== 2) {
-      setValidationError(
-        "Please select exactly two files: 'zip_file.zip' and 'csv_file.csv'."
-      );
-      valid = false;
-      return valid;
+      invalid =
+        "Please select exactly two files: 'zip_file.zip' and 'csv_file.csv'.";
+      return invalid;
     }
 
     // Validate file names
@@ -60,42 +41,28 @@ const ManageInfo = () => {
 
     for (const requiredFileName of requiredFileNames) {
       if (!fileNames.includes(requiredFileName)) {
-        setValidationError(`Missing required file: ${requiredFileName}`);
-        valid = false;
+        invalid = `Missing required file: ${requiredFileName}`;
         break;
-
-        // return valid;
       }
     }
 
-    return valid;
+    return invalid;
   };
 
   const handleFileSubmit = async (e) => {
     e.preventDefault();
-    setUploadingSuccess("");
+    // setFailedEmployees([]);
+    // setSuccessfulEmployees([]);
+    // setUploadingSuccess("");
+    setIsUploading(true);
 
-    const valid = validateFiles();
+    const invalid = validateFiles();
 
-    if (!valid) {
-      toast.error(validationError);
-      return;
-    }
-
-    if (valid) {
-      setIsUploading(true);
-
+    if (invalid !== false) {
+      setIsUploading(false);
+      toast.error(invalid);
+    } else {
       const formData = new FormData();
-
-      // // Append each file to the formData
-      // for (const file of uploadedFiles) {
-      //   formData.append("files", file);
-      // }
-
-      // // Append each file with its corresponding key
-      // for (let i = 0; i < uploadedFiles.length; i++) {
-      //   formData.append(`file${i + 1}`, uploadedFiles[i]);
-      // }
 
       uploadedFiles.forEach((file) => {
         const key = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
@@ -106,25 +73,48 @@ const ManageInfo = () => {
 
       // return;
 
-      const response = await submit("/employee_csv/", formData, true);
+      const response = await uploadCSV("/employee_csv/", formData, true);
 
       console.log(response);
       setIsUploading(false);
+      setDidUploadedOperation(true);
       // return;
 
-      if (response?.uploaded) {
-        toast.success("CSV and ZIP uploaded successfully");
-        // setSuccess("Employee created successfully");
-        // setIsLoading(false);
-        // setErrors({});
-        // setFormValues(initialValues);
+      if (response?.succeeded_employee_id?.length) {
+        setSuccessfulEmployees(response?.succeeded_employee_id);
       } else {
-        toast.error(response?.message || "Something went wrong!");
-        // setSuccess("Something went wrong!");
-        // setIsLoading(false);
-        // setErrors({});
-        // setFormValues(initialValues);
+        setSuccessfulEmployees([]);
       }
+
+      if (response?.failed_employee_id?.length) {
+        setFailedEmployees(response?.failed_employee_id);
+      } else {
+        setFailedEmployees([]);
+      }
+
+      if (response?.error) {
+        toast.error(response?.message);
+      } else if (response?.status === 201) {
+        toast.success("Files uploaded successfully");
+      }
+
+      // else if (response?.status === 400) {
+      //   toast.error("Failed to upload files");
+      // }
+
+      // if (response?.uploaded) {
+      //   toast.success("CSV and ZIP uploaded successfully");
+      //   // setSuccess("Employee created successfully");
+      //   // setIsLoading(false);
+      //   // setErrors({});
+      //   // setFormValues(initialValues);
+      // } else {
+      //   toast.error(response?.message || "Something went wrong!");
+      //   // setSuccess("Something went wrong!");
+      //   // setIsLoading(false);
+      //   // setErrors({});
+      //   // setFormValues(initialValues);
+      // }
     }
   };
 
@@ -175,13 +165,6 @@ const ManageInfo = () => {
                   </div>
                 )}
               </Button>
-
-              {/* <input
-                    type="submit"
-                    className="form-control form_border_focus rounded-1 theme_color fw-semibold text-white ms-3"
-                    value="import"
-                    disabled={isUploading}
-                  /> */}
             </div>
             <div className="ms-2 d-flex align-items-center">
               <a className="me-2" href="/csv_file.csv" download="csv_file.csv">
@@ -194,6 +177,146 @@ const ManageInfo = () => {
           </div>
         </form>
       </div>
+
+      {didUploadedOperation && (
+        <>
+          <div className="mt-5">
+            <h4>Successful Employees</h4>
+            {successfulEmployees.length > 0 ? (
+              <div className="datatable-box">
+                <div className="datatable-wrapper">
+                  <DataTable
+                    style={{
+                      height:
+                        !successfulEmployees || successfulEmployees.length === 0
+                          ? "300px"
+                          : "auto",
+                    }}
+                    classNames={{
+                      root: "datatable",
+                      table: "datatable_table",
+                      header: "datatable_header",
+                      pagination: "datatable_pagination",
+                    }}
+                    borderColor="#e0e6ed66"
+                    rowBorderColor="#e0e6ed66"
+                    c={{ dark: "#ffffff", light: "#0E1726" }}
+                    highlightOnHover
+                    horizontalSpacing="sm"
+                    verticalSpacing="sm"
+                    fz="sm"
+                    verticalAlign="center"
+                    columns={[
+                      {
+                        title: "#",
+                        accessor: "",
+                        noWrap: true,
+                        sortable: false,
+                        render: (_, index) => index + 1,
+                      },
+                      {
+                        accessor: "employee_id",
+                        title: "Employee ID",
+                      },
+                      {
+                        accessor: "username",
+                        title: "Employee Name",
+                      },
+                      {
+                        accessor: "email",
+                        title: "Email",
+                        render: ({ email }) => email || "N/A",
+                      },
+                      {
+                        accessor: "password",
+                        title: "Password",
+                        render: ({ password }) => password || "N/A",
+                      },
+                      {
+                        accessor: "phone_number",
+                        title: "Phone Number",
+                        render: ({ phone_number }) => phone_number || "N/A",
+                      },
+                    ]}
+                    records={successfulEmployees}
+                    totalRecords={successfulEmployees?.length}
+                  />
+                </div>
+              </div>
+            ) : (
+              <p>No records found</p>
+            )}
+          </div>
+
+          <div className="mt-5">
+            <h4 className="mb-2">Failed Employees</h4>
+            {failedEmployees.length > 0 ? (
+              <div className="datatable-box">
+                <div className="datatable-wrapper">
+                  <DataTable
+                    style={{
+                      height:
+                        !failedEmployees || failedEmployees.length === 0
+                          ? "300px"
+                          : "auto",
+                    }}
+                    classNames={{
+                      root: "datatable",
+                      table: "datatable_table",
+                      header: "datatable_header",
+                      pagination: "datatable_pagination",
+                    }}
+                    borderColor="#e0e6ed66"
+                    rowBorderColor="#e0e6ed66"
+                    c={{ dark: "#ffffff", light: "#0E1726" }}
+                    highlightOnHover
+                    horizontalSpacing="sm"
+                    verticalSpacing="sm"
+                    fz="sm"
+                    verticalAlign="center"
+                    columns={[
+                      {
+                        title: "#",
+                        accessor: "",
+                        noWrap: true,
+                        sortable: false,
+                        render: (_, index) => index + 1,
+                      },
+                      {
+                        accessor: "employee_id",
+                        title: "Employee ID",
+                      },
+                      {
+                        accessor: "username",
+                        title: "Employee Name",
+                      },
+                      {
+                        accessor: "email",
+                        title: "Email",
+                        render: ({ email }) => email || "N/A",
+                      },
+                      {
+                        accessor: "password",
+                        title: "Password",
+                        render: ({ password }) => password || "N/A",
+                      },
+                      {
+                        accessor: "phone_number",
+                        title: "Phone Number",
+                        render: ({ phone_number }) => phone_number || "N/A",
+                      },
+                    ]}
+                    records={failedEmployees}
+                    totalRecords={failedEmployees?.length}
+                  />
+                </div>
+              </div>
+            ) : (
+              <p>No records found</p>
+            )}
+          </div>
+        </>
+      )}
     </>
   );
 };

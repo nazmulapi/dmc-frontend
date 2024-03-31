@@ -7,13 +7,13 @@ import { FaRegEdit } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
-import { submit } from "../../../lib/submit";
+import { update } from "../../../lib/submit";
 
-const EditModal = ({ show, onHide, item, setItem }) => {
-  console.log(item);
+const EditModal = ({ show, onHide, item, mutate }) => {
+  // console.log(item);
 
   const [formValues, setFormValues] = useState({
-    device_id: item.device_id,
+    // device_id: item.device_id,
     device_ip: item.device_ip,
     device_name: item.device_name,
     username: item.username,
@@ -29,7 +29,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
   useEffect(() => {
     setFormValues((prev) => ({
       ...prev,
-      device_id: item.device_id,
+      // device_id: item.device_id,
       device_ip: item.device_ip,
       device_name: item.device_name,
       username: item.username,
@@ -43,10 +43,10 @@ const EditModal = ({ show, onHide, item, setItem }) => {
     let valid = true;
     const newErrors = {};
 
-    if (!formValues?.device_id?.trim()) {
-      newErrors.device_id = "Device ID is required";
-      valid = false;
-    }
+    // if (!formValues?.device_id?.trim()) {
+    //   newErrors.device_id = "Device ID is required";
+    //   valid = false;
+    // }
 
     if (!formValues?.device_ip?.trim()) {
       newErrors.device_ip = "Device IP is required";
@@ -108,17 +108,18 @@ const EditModal = ({ show, onHide, item, setItem }) => {
     if (valid) {
       setIsLoading(true);
 
-      const response = await submit(`/device/${item.device_id}/`, formValues);
+      const response = await update(`/devices/${item.device_id}/`, formValues);
 
       console.log(response);
 
       if (response?.device_id) {
         setTimeout(() => {
-          setItem((prevData) =>
-            prevData.map((i) =>
-              i.device_id === formValues.device_id ? formValues : i
-            )
-          );
+          // setItem((prevData) =>
+          //   prevData.map((i) =>
+          //     i.device_id === item.device_id ? formValues : i
+          //   )
+          // );
+          mutate();
           setSuccess("Device updated successfully");
           setIsLoading(false);
           // setErrors({});
@@ -159,7 +160,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
               type="text"
               placeholder="Enter device name"
               name="device_id"
-              value={formValues.device_id}
+              value={item.device_id}
               onChange={(e) => handleInputChange(e)}
               className={classEase(
                 "rounded-1 form_border_focus form-control",
@@ -167,9 +168,9 @@ const EditModal = ({ show, onHide, item, setItem }) => {
               )}
               readOnly
             />
-            {errors.device_id && (
+            {/* {errors.device_id && (
               <div className="invalid-feedback">{errors.device_id}</div>
-            )}
+            )} */}
           </div>
 
           <div className="mb-3">
@@ -302,7 +303,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
   );
 };
 
-const Edit = ({ item, setItem }) => {
+const Edit = ({ item, mutate }) => {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -320,7 +321,7 @@ const Edit = ({ item, setItem }) => {
         show={modalShow}
         onHide={() => setModalShow(false)}
         item={item}
-        setItem={setItem}
+        mutate={mutate}
       />
     </>
   );

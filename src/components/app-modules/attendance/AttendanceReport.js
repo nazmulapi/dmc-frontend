@@ -302,6 +302,7 @@ const AttendanceManage = () => {
       // for table
       accessor: "group_id",
       title: "Group",
+      render: ({ group_name }) => group_name,
       // for export
       key: "group_name",
     },
@@ -337,10 +338,12 @@ const AttendanceManage = () => {
       // for table
       accessor: "OutTime",
       title: "Out Time",
-      render: ({ OutTime }) => getTime(OutTime),
+      render: ({ InTime, OutTime }) =>
+        InTime === OutTime ? "N/A" : getTime(OutTime),
       // for export
       key: "OutTime",
-      modifier: ({ OutTime }) => getTime(OutTime),
+      modifier: ({ InTime, OutTime }) =>
+        InTime === OutTime ? "N/A" : getTime(OutTime),
     },
     {
       // for table

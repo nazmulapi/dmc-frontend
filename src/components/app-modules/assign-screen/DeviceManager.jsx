@@ -30,7 +30,7 @@ const DeviceManager = () => {
 
   const [data, setData] = useState([]);
 
-  const { error, isLoading } = useSWR(`/devices/`, fetcher, {
+  const { error, isLoading, mutate } = useSWR(`/devices/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
     onSuccess: (fetchedData) => {
@@ -421,7 +421,7 @@ const DeviceManager = () => {
                 // width: "0%",
                 render: (item) => (
                   <>
-                    <EditDevice item={item} setItem={setData} />
+                    <EditDevice item={item} mutate={mutate} />
 
                     <button
                       className="border-0 rounded-1"
