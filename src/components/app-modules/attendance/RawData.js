@@ -30,7 +30,7 @@ const ManageInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "InTime",
+    columnAccessor: "logdate",
     direction: "desc", // desc
   });
 
@@ -690,7 +690,7 @@ const ManageInfo = () => {
               {
                 accessor: "device_id",
                 title: "Device",
-                sortable: true,
+                sortable: false,
                 // visibleMediaQuery: aboveXs,
               },
               {

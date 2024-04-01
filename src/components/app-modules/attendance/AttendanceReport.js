@@ -38,7 +38,7 @@ const AttendanceManage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "InTime",
+    columnAccessor: "date",
     direction: "desc", // desc
   });
 
@@ -339,16 +339,17 @@ const AttendanceManage = () => {
       accessor: "OutTime",
       title: "Out Time",
       render: ({ InTime, OutTime }) =>
-        InTime === OutTime ? "N/A" : getTime(OutTime),
+        !OutTime || InTime === OutTime ? "N/A" : getTime(OutTime),
       // for export
       key: "OutTime",
       modifier: ({ InTime, OutTime }) =>
-        InTime === OutTime ? "N/A" : getTime(OutTime),
+        !OutTime || InTime === OutTime ? "N/A" : getTime(OutTime),
     },
     {
       // for table
       accessor: "date",
       title: "Date",
+      sortable: true,
       render: ({ date }) => getDate(date),
       // for export
       key: "date",

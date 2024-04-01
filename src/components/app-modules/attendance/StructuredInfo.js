@@ -710,7 +710,7 @@ const ManageInfo = () => {
               {
                 accessor: "device_id",
                 title: "Device",
-                sortable: true,
+                sortable: false,
                 // visibleMediaQuery: aboveXs,
               },
               {
