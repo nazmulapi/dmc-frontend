@@ -424,7 +424,7 @@ const DeviceManager = () => {
                     <EditDevice item={item} mutate={mutate} />
 
                     <button
-                      className="border-0 rounded-1"
+                      className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
                       onClick={() => {
                         setSelectedDevice(item);
                         setShow(true);

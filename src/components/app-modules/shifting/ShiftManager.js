@@ -366,11 +366,11 @@ const ShiftManager = () => {
             verticalAlign="center"
             idAccessor="shift_id"
             columns={[
-              {
-                accessor: "",
-                title: "#",
-                render: (_, index) => index + 1,
-              },
+              // {
+              //   accessor: "",
+              //   title: "#",
+              //   render: (_, index) => index + 1,
+              // },
               {
                 accessor: "shift_id",
                 title: "Shift ID",
@@ -408,26 +408,26 @@ const ShiftManager = () => {
                 title: "Tardiness Hour",
                 // width: 130,
               },
-              {
-                accessor: "actions",
-                title: "Actions",
-                // width: "0%",
-                render: (item) => (
-                  <>
-                    {/* <EditShift item={item} setItem={setData} /> */}
+              // {
+              //   accessor: "actions",
+              //   title: "Actions",
+              //   // width: "0%",
+              //   render: (item) => (
+              //     <>
+              //       {/* <EditShift item={item} setItem={setData} /> */}
 
-                    <button
-                      className="border-0 rounded-1"
-                      onClick={() => {
-                        setSelectedShift(item);
-                        setShow(true);
-                      }}
-                    >
-                      <RiDeleteBin6Line color="#DB3545" />
-                    </button>
-                  </>
-                ),
-              },
+              //       <button
+              //         className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
+              //         onClick={() => {
+              //           setSelectedShift(item);
+              //           setShow(true);
+              //         }}
+              //       >
+              //         <RiDeleteBin6Line color="#DB3545" />
+              //       </button>
+              //     </>
+              //   ),
+              // },
             ]}
             fetching={isLoading}
             records={filteredData}

@@ -80,7 +80,15 @@ const AttendanceManage = () => {
   // const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  let apiUrl = `/attendance_log/?employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+  let apiUrl = `/attendance_log/?permanent=${true}&employee_id=${
+    formData.employee_id
+  }&group_id=${formData.group_id}&department_id=${
+    formData.department_id
+  }&designation_id=${
+    formData.designation_id
+  }&page=${currentPage}&page_size=${pageSize}&column_accessor=${
+    sortStatus.columnAccessor
+  }&direction=${sortStatus.direction}`;
 
   if (formData.year || formData.month) {
     apiUrl += `&date=${formData.year}-${formData.month}`;

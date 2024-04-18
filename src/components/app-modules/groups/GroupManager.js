@@ -340,11 +340,11 @@ const GroupManager = () => {
             fz="sm"
             verticalAlign="center"
             columns={[
-              {
-                accessor: "",
-                title: "#",
-                render: (_, index) => index + 1,
-              },
+              // {
+              //   accessor: "",
+              //   title: "#",
+              //   render: (_, index) => index + 1,
+              // },
               {
                 accessor: "group_id",
                 title: "Group ID",
@@ -371,7 +371,7 @@ const GroupManager = () => {
                     <EditGroup item={item} setItem={setData} />
 
                     <button
-                      className="border-0 rounded-1"
+                      className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
                       onClick={() => {
                         setSelectedGroup(item);
                         setShow(true);

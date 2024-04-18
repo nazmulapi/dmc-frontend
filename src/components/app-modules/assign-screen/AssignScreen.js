@@ -392,7 +392,7 @@ const AssignDevice = () => {
                 // width: "0%",
                 render: (item) => (
                   <button
-                    className="border-0 rounded-1"
+                    className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
                     onClick={() => {
                       setSelected(item);
                       setShow(true);

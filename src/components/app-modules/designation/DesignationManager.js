@@ -334,19 +334,19 @@ const DesignationManager = () => {
             verticalAlign="center"
             columns={[
               {
-                accessor: "",
-                title: "#",
-                render: (_, index) => index + 1,
+                accessor: "id",
+                title: "Designation ID",
+                // render: (_, index) => index + 1,
               },
               {
                 accessor: "designation",
-                title: "Designation",
+                title: "Designation Title",
                 sortable: true,
                 // width: 150
               },
               {
                 accessor: "description",
-                title: "Designation Details",
+                title: "Description",
                 sortable: true,
                 // width: 150
               },
@@ -360,7 +360,7 @@ const DesignationManager = () => {
                     <EditDesignation item={item} setItem={setData} />
 
                     <button
-                      className="border-0 rounded-1"
+                      className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
                       onClick={() => {
                         setSelectedDesignation(item);
                         setShow(true);

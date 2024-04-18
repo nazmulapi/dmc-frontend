@@ -35,12 +35,84 @@ export const exportToPDF = (headers, rows, fileName) => {
     // console.log(tableHeaders, tableData);
     // return;
     // Create PDF and export
-    const doc = new jsPDF();
-    autoTable(doc, {
+    const pdf = new jsPDF();
+
+    // const addMargin = (doc, margin) => {
+    //   doc.setLineWidth(margin); // Set the margin width
+    //   doc.line(
+    //     margin,
+    //     margin,
+    //     doc.internal.pageSize.getWidth() - margin,
+    //     margin
+    //   ); // Top line
+    //   doc.line(
+    //     margin,
+    //     margin,
+    //     margin,
+    //     doc.internal.pageSize.getHeight() - margin
+    //   ); // Left line
+    //   doc.line(
+    //     doc.internal.pageSize.getWidth() - margin,
+    //     margin,
+    //     doc.internal.pageSize.getWidth() - margin,
+    //     doc.internal.pageSize.getHeight() - margin
+    //   ); // Right line
+    //   doc.line(
+    //     margin,
+    //     doc.internal.pageSize.getHeight() - margin,
+    //     doc.internal.pageSize.getWidth() - margin,
+    //     doc.internal.pageSize.getHeight() - margin
+    //   ); // Bottom line
+    // };
+
+    // // Add margin only on the first page
+    // addMargin(pdf, 100); // Adjust the margin size as needed
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    const logoWidth = 50; // Adjust according to your logo size
+    const logoHeight = 49; // Adjust according to your logo size
+
+    const logoX = (pageWidth - logoWidth) / 2;
+    const logoY = (pageHeight - logoHeight - 10) / 2; // Adjust -10 to fine-tune vertical positioning
+
+    pdf.addImage("/logo.png", "PNG", logoX, logoY, logoWidth, logoHeight);
+
+    const text = "Dhaka Medical College Hospital";
+    const textWidth =
+      (pdf.getStringUnitWidth(text) * pdf.internal.getFontSize()) /
+      pdf.internal.scaleFactor;
+    const textX = (pageWidth - textWidth) / 2;
+    const textY = logoY + logoHeight + 10; // Adjust +10 to provide spacing between logo and text
+
+    pdf.text(text, textX, textY);
+
+    autoTable(pdf, {
       head: [tableHeaders],
       body: tableData,
+      // columnStyles: {
+      //   1: {
+      //     fillColor: [41, 128, 185],
+      //     minCellWidth: 50,
+      //   },
+      // },
+      margin: { top: 0, left: 13 },
     });
-    doc.save(fileName + ".pdf");
+
+    const totalPages = pdf.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      pdf.line(10, 283, 200, 283);
+      pdf.setPage(i);
+      pdf.setFont("Newsreader");
+      pdf.text(
+        `Page ${i} of ${totalPages}`,
+        185,
+        pdf.internal.pageSize.getHeight() - 5
+      );
+    }
+
+    pdf.save(fileName + ".pdf");
   } else {
     console.error("Employee data is null or undefined");
   }

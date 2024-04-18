@@ -334,19 +334,19 @@ const DepartmentManager = () => {
             verticalAlign="center"
             columns={[
               {
-                accessor: "",
-                title: "#",
-                render: (_, index) => index + 1,
+                accessor: "id",
+                title: "Department ID",
+                // render: (_, index) => index + 1,
               },
               {
                 accessor: "department",
-                title: "Department",
+                title: "Department Name",
                 sortable: true,
                 // width: 150
               },
               {
                 accessor: "description",
-                title: "Department Details",
+                title: "Description",
                 sortable: true,
                 // width: 150
               },
@@ -359,7 +359,7 @@ const DepartmentManager = () => {
                   <>
                     <EditDepartment item={item} setItem={setData} />
                     <button
-                      className="border-0 rounded-1"
+                      className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
                       onClick={() => {
                         setSelectedDepartment(item);
                         setShow(true);

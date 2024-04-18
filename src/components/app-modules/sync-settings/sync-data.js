@@ -34,7 +34,7 @@ const Manage = () => {
 
   // Sync log data
   const [logState, setLogState] = useState({
-    selectedOption: "1",
+    selectedOption: "2",
     inputValue: "",
     isLoading: false,
     success: "",
@@ -43,11 +43,18 @@ const Manage = () => {
   const logApiUrl = `/log/${
     logState?.selectedOption === "1"
       ? logState.inputValue
-      : logState.inputValue * 60
+      : logState?.selectedOption === "2"
+      ? logState.inputValue * 60
+      : logState?.selectedOption === "3"
+      ? logState.inputValue * 24 * 60
+      : 0
   }`;
 
   const handleSyncLog = async (e) => {
     e.preventDefault();
+
+    // console.log(logApiUrl);
+    // return;
     setLogState((prev) => ({ ...prev, success: "", isLoading: true }));
 
     const response = await syncManual(logApiUrl);
@@ -96,6 +103,7 @@ const Manage = () => {
 
   const handleSyncMis = async (e) => {
     e.preventDefault();
+    return;
     setMisState((prev) => ({ ...prev, success: "", isLoading: true }));
 
     const response = await syncManual(logApiUrl);
@@ -170,8 +178,9 @@ const Manage = () => {
                   }))
                 }
               >
-                <option value="1">Minutes</option>
+                {/* <option value="1">Minutes</option> */}
                 <option value="2">Hours</option>
+                <option value="3">Days</option>
               </select>
             </div>
           </Col>
@@ -295,7 +304,7 @@ const Manage = () => {
                   "btn btn-primary rounded-1 text-capitalize d-flex justify-content-center align-items-center",
                   misState?.isLoading ? "loading" : ""
                 )}
-                // onClick={handleSyncMis}
+                onClick={handleSyncMis}
                 // className="text-capitalize px-4 py-2 bg-primary text-white border-0 mt-1 float-end rounded-1"
                 disabled={misState?.isLoading}
               >

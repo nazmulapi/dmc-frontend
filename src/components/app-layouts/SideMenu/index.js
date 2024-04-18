@@ -161,14 +161,14 @@ const Page = () => {
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
-                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
+                    {/* <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
                         href="/employee-shift"
                         className="text-decoration-none text-white side_font"
                       >
                         Create Shift
                       </Link>
-                    </li>
+                    </li> */}
                     <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
                         href="/shift-info"
@@ -207,20 +207,29 @@ const Page = () => {
                     </li>
                     <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
+                        href="/stored-attendance-report"
+                        className="text-decoration-none text-white side_font"
+                      >
+                        {/* Stored Attendance Report */}
+                        Live Sync Attendance
+                      </Link>
+                    </li>
+                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
+                      <Link
                         href="/raw-employee"
                         className="text-decoration-none text-white side_font"
                       >
                         Raw Data
                       </Link>
                     </li>
-                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
+                    {/* <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
                         href="/attendance"
                         className="text-decoration-none text-white side_font"
                       >
                         Structured Data
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </Accordion.Body>
               </Accordion.Item>
