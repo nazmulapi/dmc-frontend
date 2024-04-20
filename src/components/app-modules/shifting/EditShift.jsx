@@ -3,17 +3,20 @@
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { Row } from "react-bootstrap";
 import { FaRegEdit } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
-import { submit } from "../../../lib/submit";
+import { update } from "../../../lib/submit";
 
-const EditModal = ({ show, onHide, item, setItem }) => {
+const EditModal = ({ show, onHide, item, mutate }) => {
   const [formValues, setFormValues] = useState({
-    id: item.id,
-    designation: item.designation,
-    description: item.description,
+    id: item.shift_id,
+    shift_name: item.shift_name,
+    shift_beginning: item.shift_beginning,
+    shift_end: item.shift_end,
+    shift_tardiness_minutes: item.shift_tardiness_minutes,
   });
 
   const [errors, setErrors] = useState({});
@@ -21,11 +24,17 @@ const EditModal = ({ show, onHide, item, setItem }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setSuccess("");
+  }, [show]);
+
+  useEffect(() => {
     setFormValues((prev) => ({
       ...prev,
-      id: item.id,
-      designation: item.designation,
-      description: item.description,
+      id: item.shift_id,
+      shift_name: item.shift_name,
+      shift_beginning: item.shift_beginning,
+      shift_end: item.shift_end,
+      shift_tardiness_minutes: item.shift_tardiness_minutes,
     }));
   }, [item]);
 
@@ -33,13 +42,24 @@ const EditModal = ({ show, onHide, item, setItem }) => {
     let valid = true;
     const newErrors = {};
 
-    if (!formValues?.designation?.trim()) {
-      newErrors.designation = "Designation is required";
+    if (!formValues?.shift_name?.trim()) {
+      newErrors.shift_name = "Name is required";
       valid = false;
     }
 
-    if (!formValues?.description?.trim()) {
-      newErrors.description = "Description is required";
+    if (!formValues?.shift_beginning?.trim()) {
+      newErrors.shift_beginning = "Shift beginning time is required";
+      valid = false;
+    }
+
+    if (formValues?.shift_tardiness_minutes <= 0) {
+      newErrors.shift_tardiness_minutes =
+        "Shift tardiness minutes might be more than 0";
+      valid = false;
+    }
+
+    if (!formValues?.shift_end?.trim()) {
+      newErrors.shift_end = "Shift end time is required";
       valid = false;
     }
 
@@ -48,7 +68,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
     return valid;
   };
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     setSuccess("");
 
     const { name, value } = e.target;
@@ -76,16 +96,17 @@ const EditModal = ({ show, onHide, item, setItem }) => {
     if (valid) {
       setIsLoading(true);
 
-      const response = await submit(`/designation/${item.id}/`, formValues);
+      const response = await update(`/shift/${item.shift_id}/`, formValues);
 
       // console.log(response);
 
-      if (response?.id) {
+      if (response?.shift_id) {
         setTimeout(() => {
-          setItem((prevData) =>
-            prevData.map((i) => (i.id === formValues.id ? formValues : i))
-          );
-          setSuccess("Designation updated successfully");
+          // setItem((prevData) =>
+          //   prevData.map((i) => (i.id === formValues.id ? formValues : i))
+          // );
+          mutate();
+          setSuccess("Shift updated successfully");
           setIsLoading(false);
           // setErrors({});
           // setFormValues(initialValues);
@@ -111,50 +132,99 @@ const EditModal = ({ show, onHide, item, setItem }) => {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Edit Employee
-        </Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Edit Shift</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={(e) => handleSubmit(e)}>
-          <div className="mb-3">
-            <label htmlFor="exampleFormControlInput1" className="form-label">
-              Designation
-            </label>
-            <input
-              type="text"
-              placeholder="Enter designation"
-              name="designation"
-              value={formValues.designation}
-              onChange={(e) => handleInputChange(e)}
-              className={classEase(
-                "rounded-1 form_border_focus form-control",
-                errors.designation && "is-invalid"
+          <Row>
+            <div className="mb-3">
+              <label htmlFor="" className="form-label">
+                Shift Name
+              </label>
+              <input
+                type="text"
+                className={`form-control rounded-1 form_border_focus ${
+                  errors.shift_name ? "is-invalid" : ""
+                }`}
+                placeholder="Enter shift name"
+                name="shift_name"
+                value={formValues.shift_name}
+                onChange={handleChange}
+                // readOnly
+              />
+              {errors.shift_name && (
+                <div className="invalid-feedback">{errors.shift_name}</div>
               )}
-            />
-            {errors.designation && (
-              <div className="invalid-feedback">{errors.designation}</div>
-            )}
-          </div>
+            </div>
 
-          <div className="mb-3">
-            <label htmlFor="" className="form-label">
-              Designation Details
-            </label>
-            <textarea
-              name="description"
-              value={formValues.description}
-              className={classEase(
-                "rounded-1 form_border_focus form-control",
-                errors.description && "is-invalid"
+            <div className="mb-3">
+              <label htmlFor="" className="form-label">
+                Start Time <span className="text-danger"> *</span>
+              </label>
+              <input
+                type="time"
+                className={`form-control rounded-1 form_border_focus ${
+                  errors.shift_beginning ? "is-invalid" : ""
+                }`}
+                name="shift_beginning"
+                id=""
+                placeholder="Enter Start Time"
+                value={formValues.shift_beginning}
+                onChange={handleChange}
+                // step="1"
+              />
+              {errors.shift_beginning && (
+                <div className="invalid-feedback">{errors.shift_beginning}</div>
               )}
-              onChange={(e) => handleInputChange(e)}
-              rows="3"
-            ></textarea>
-            {errors.description && (
-              <div className="invalid-feedback">{errors.description}</div>
-            )}
-          </div>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="" className="form-label">
+                End Time<span className="text-danger"> *</span>
+              </label>
+              <input
+                type="time"
+                className={`form-control rounded-1 form_border_focus ${
+                  errors.shift_end ? "is-invalid" : ""
+                }`}
+                name="shift_end"
+                id=""
+                placeholder="Enter Start Time"
+                value={formValues.shift_end}
+                onChange={handleChange}
+                // step="1"
+              />
+              {errors.shift_end && (
+                <div className="invalid-feedback">{errors.shift_end}</div>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="" className="form-label">
+                Shift Tardiness Minutes<span className="text-danger"> *</span>
+              </label>
+              <input
+                type="number"
+                className={`form-control rounded-1 form_border_focus ${
+                  errors.shift_tardiness_minutes ? "is-invalid" : ""
+                }`}
+                name="shift_tardiness_minutes"
+                id=""
+                placeholder="Enter Start Time"
+                value={formValues.shift_tardiness_minutes}
+                onChange={handleChange}
+                // step="1"
+              />
+              {errors.shift_tardiness_minutes && (
+                <div className="invalid-feedback">
+                  {errors.shift_tardiness_minutes}
+                </div>
+              )}
+            </div>
+          </Row>
+          {/* <button className="button-16 fw-semibold" role="button">
+            <span className="text">Create</span>
+          </button> */}
 
           {success && success !== "" && (
             <div className="success-feedback mb-3">{success}</div>
@@ -191,7 +261,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
   );
 };
 
-const Edit = ({ item, setItem }) => {
+const Edit = ({ item, mutate }) => {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -209,7 +279,7 @@ const Edit = ({ item, setItem }) => {
         show={modalShow}
         onHide={() => setModalShow(false)}
         item={item}
-        setItem={setItem}
+        mutate={mutate}
       />
     </>
   );

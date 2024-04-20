@@ -295,20 +295,20 @@ const Page = () => {
                         Sync Log Data
                       </Link>
                     </li>
-                    <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
+                    {/* <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
                         href="/sync-now"
                         className="text-decoration-none text-white side_font"
                       >
                         Sync Now
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </Accordion.Body>
               </Accordion.Item>
 
               {/* Settings item 2 */}
-              <Accordion.Item eventKey="6" className="">
+              {/* <Accordion.Item eventKey="6" className="">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <IoSettingsOutline className="text-light sidenav-icon" />
                   <span className="text-capitalize side_font">Settings</span>
@@ -325,7 +325,7 @@ const Page = () => {
                     </li>
                   </ul>
                 </Accordion.Body>
-              </Accordion.Item>
+              </Accordion.Item> */}
             </Accordion>
           </div>
         </div>

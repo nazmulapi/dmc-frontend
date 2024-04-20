@@ -19,7 +19,8 @@ const EditModal = ({ show, onHide, item, mutate }) => {
     username: item.username,
     password: item.password,
     location: item.location,
-    active_status: item.active_status,
+    // active_status: item.active_status,
+    is_active: item.is_active,
   });
 
   const [errors, setErrors] = useState({});
@@ -35,7 +36,8 @@ const EditModal = ({ show, onHide, item, mutate }) => {
       username: item.username,
       password: item.password,
       location: item.location,
-      active_status: item.active_status,
+      // active_status: item.active_status,
+      is_active: item.is_active,
     }));
   }, [item]);
 
@@ -86,7 +88,7 @@ const EditModal = ({ show, onHide, item, mutate }) => {
     if (type === "checkbox") {
       setFormValues((prev) => ({
         ...prev,
-        [name]: e.target.checked ? "active" : "inactive",
+        [name]: e.target.checked,
       }));
     } else {
       setFormValues((prev) => ({
@@ -257,8 +259,8 @@ const EditModal = ({ show, onHide, item, mutate }) => {
             <input
               id="deviceStatus"
               type="checkbox"
-              name="active_status"
-              checked={formValues.active_status === "active"}
+              name="is_active"
+              checked={formValues.is_active}
               // value={formValues.is_active}
               onChange={(e) => handleInputChange(e)}
               className="form-check-input"

@@ -7,7 +7,14 @@ import { DataTable } from "mantine-datatable";
 import BSButton from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
-import { Flex, Group, Button, Input, CloseButton } from "@mantine/core";
+import {
+  Flex,
+  Group,
+  Button,
+  Input,
+  CloseButton,
+  Select as MantineSelect,
+} from "@mantine/core";
 import { RiDeleteBin6Line, RiFileExcel2Line } from "react-icons/ri";
 import { BsFileEarmarkPdf, BsFileEarmarkText } from "react-icons/bs";
 import { GoSearch } from "react-icons/go";
@@ -23,6 +30,10 @@ import EditDevice from "./EditDevice";
 const DeviceManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [activeFilter, setActiveFilter] = useState("All");
+  const isActiveQueryParam =
+    activeFilter === "All" ? "" : `is_active=${activeFilter === "Active"}`;
+
   const [sortStatus, setSortStatus] = useState({
     columnAccessor: "device_name",
     direction: "asc",
@@ -30,14 +41,18 @@ const DeviceManager = () => {
 
   const [data, setData] = useState([]);
 
-  const { error, isLoading, mutate } = useSWR(`/devices/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-    onSuccess: (fetchedData) => {
-      // Update local state when data is successfully fetched
-      setData(sortBy(fetchedData, "device_name"));
-    },
-  });
+  const { error, isLoading, mutate } = useSWR(
+    `/devices/?${isActiveQueryParam}`,
+    fetcher,
+    {
+      errorRetryCount: 2,
+      keepPreviousData: true,
+      onSuccess: (fetchedData) => {
+        // Update local state when data is successfully fetched
+        setData(sortBy(fetchedData, "device_name"));
+      },
+    }
+  );
 
   useEffect(() => {
     const sorted = sortBy(data, sortStatus.columnAccessor);
@@ -118,7 +133,7 @@ const DeviceManager = () => {
 
       // console.log(exportedData);
 
-      // active_status
+      // is_active
       // device_id
       // device_ip
       // device_name
@@ -145,7 +160,7 @@ const DeviceManager = () => {
         username: item?.username || "",
         password: item?.password || "",
         location: item?.location || "",
-        active_status: item?.active_status === "active" ? "Active" : "Inactive",
+        is_active: item?.is_active ? "Active" : "Inactive",
       }));
 
       setTimeout(() => {
@@ -194,7 +209,7 @@ const DeviceManager = () => {
         "Device Username": item?.username || "",
         "Device Password": item?.password || "",
         Location: item?.location || "",
-        Status: item?.active_status === "active" ? "Active" : "Inactive",
+        Status: item?.is_active ? "Active" : "Inactive",
       }));
 
       setTimeout(() => {
@@ -246,7 +261,7 @@ const DeviceManager = () => {
         "Device Username": item?.username || "",
         "Device Password": item?.password || "",
         Location: item?.location || "",
-        Status: item?.active_status === "active" ? "Active" : "Inactive",
+        Status: item?.is_active ? "Active" : "Inactive",
       }));
 
       setTimeout(() => {
@@ -283,7 +298,7 @@ const DeviceManager = () => {
       <section className="datatable-box">
         <div className="d-flex justify-content-between mb-4">
           <div className="">
-            <div className="row g-3 align-items-center">
+            <div className="row g-3 d-flex flex-row flex-nowrap align-items-center">
               <div className="col-auto">
                 <Input
                   leftSection={<GoSearch size={16} />}
@@ -300,6 +315,20 @@ const DeviceManager = () => {
                   }
                 />
               </div>
+              <MantineSelect
+                classNames={{
+                  root: "active_status_select",
+                }}
+                data={["All", "Active", "Inactive"]}
+                // value={pageSize.toString()}
+                // onChange={(_value, option) => handlePageSizeChange(_value)}
+                withCheckIcon={false}
+                defaultValue="All"
+                onChange={(value) => setActiveFilter(value)}
+                allowDeselect={false}
+                checkIconPosition="left"
+                // rightSection={<></>}
+              />
             </div>
           </div>
           <Group justify="center" gap="xs">
@@ -410,10 +439,9 @@ const DeviceManager = () => {
                 title: "Location",
               },
               {
-                accessor: "active_status",
+                accessor: "is_active",
                 title: "Status",
-                render: (item) =>
-                  item?.active_status === "active" ? "Active" : "Inactive",
+                render: (item) => (item?.is_active ? "Active" : "Inactive"),
               },
               {
                 accessor: "actions",
@@ -423,7 +451,7 @@ const DeviceManager = () => {
                   <>
                     <EditDevice item={item} mutate={mutate} />
 
-                    <button
+                    {/* <button
                       className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
                       onClick={() => {
                         setSelectedDevice(item);
@@ -431,7 +459,7 @@ const DeviceManager = () => {
                       }}
                     >
                       <RiDeleteBin6Line color="#DB3545" />
-                    </button>
+                    </button> */}
                   </>
                 ),
               },

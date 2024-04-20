@@ -26,16 +26,16 @@ const ShiftManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "shift_name",
+    columnAccessor: "shift_id",
     direction: "asc",
   });
 
-  const { error, isLoading } = useSWR(`/shift/`, fetcher, {
+  const { error, isLoading, mutate } = useSWR(`/shift/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
     onSuccess: (fetchedData) => {
       // Update local state when data is successfully fetched
-      setData(sortBy(fetchedData, "shift_name"));
+      setData(sortBy(fetchedData, "shift_id"));
     },
   });
 
@@ -404,30 +404,30 @@ const ShiftManager = () => {
               },
 
               {
-                accessor: "shift_tardiness_hour",
-                title: "Tardiness Hour",
+                accessor: "shift_tardiness_minutes",
+                title: "Tardiness Minutes",
                 // width: 130,
               },
-              // {
-              //   accessor: "actions",
-              //   title: "Actions",
-              //   // width: "0%",
-              //   render: (item) => (
-              //     <>
-              //       {/* <EditShift item={item} setItem={setData} /> */}
+              {
+                accessor: "actions",
+                title: "Actions",
+                // width: "0%",
+                render: (item) => (
+                  <>
+                    <EditShift item={item} mutate={mutate} />
 
-              //       <button
-              //         className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
-              //         onClick={() => {
-              //           setSelectedShift(item);
-              //           setShow(true);
-              //         }}
-              //       >
-              //         <RiDeleteBin6Line color="#DB3545" />
-              //       </button>
-              //     </>
-              //   ),
-              // },
+                    {/* <button
+                      className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
+                      onClick={() => {
+                        setSelectedShift(item);
+                        setShow(true);
+                      }}
+                    >
+                      <RiDeleteBin6Line color="#DB3545" />
+                    </button> */}
+                  </>
+                ),
+              },
             ]}
             fetching={isLoading}
             records={filteredData}

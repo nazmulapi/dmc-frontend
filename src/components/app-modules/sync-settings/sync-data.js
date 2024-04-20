@@ -151,7 +151,7 @@ const Manage = () => {
   };
 
   const [misState, setMisState] = useState({
-    selectedOption: "1",
+    selectedOption: "2",
     inputValue: "",
     isLoading: false,
     success: "",
@@ -269,8 +269,9 @@ const Manage = () => {
                 }
               >
                 {/* <option value="">select menu</option> */}
-                <option value="1">Minutes</option>
+                {/* <option value="1">Minutes</option> */}
                 <option value="2">Hours</option>
+                <option value="3">Days</option>
               </select>
             </div>
           </Col>

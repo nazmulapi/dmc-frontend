@@ -10,7 +10,7 @@ import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
 import useSWR from "swr";
 import { fetcher } from "../../../lib/fetch";
-import { submit } from "../../../lib/submit";
+import { update } from "../../../lib/submit";
 
 function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
   // console.log(employee);
@@ -264,7 +264,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
       // setIsLoading(false);
       // return;
 
-      const response = await submit(
+      const response = await update(
         `/employee/${employee.employee_id}/`,
         formData,
         true
