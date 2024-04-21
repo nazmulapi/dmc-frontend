@@ -6,7 +6,14 @@ import Link from "next/link";
 import BSButton from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
-import { Flex, Group, Button, Input, CloseButton } from "@mantine/core";
+import {
+  Flex,
+  Group,
+  Button,
+  Input,
+  CloseButton,
+  Select as MantineSelect,
+} from "@mantine/core";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line, RiFileExcel2Line } from "react-icons/ri";
 import { BsFileEarmarkPdf, BsFileEarmarkText } from "react-icons/bs";
@@ -25,19 +32,27 @@ const GroupManager = () => {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [activeFilter, setActiveFilter] = useState("All");
+  const isActiveQueryParam =
+    activeFilter === "All" ? "" : `is_active=${activeFilter === "Active"}`;
+
   const [sortStatus, setSortStatus] = useState({
     columnAccessor: "shift_name",
     direction: "asc",
   });
 
-  const { error, isLoading } = useSWR(`/empgrp/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-    onSuccess: (fetchedData) => {
-      // Update local state when data is successfully fetched
-      setData(sortBy(fetchedData, "group_name"));
-    },
-  });
+  const { error, isLoading } = useSWR(
+    `/empgrp/?${isActiveQueryParam}`,
+    fetcher,
+    {
+      errorRetryCount: 2,
+      keepPreviousData: true,
+      onSuccess: (fetchedData) => {
+        // Update local state when data is successfully fetched
+        setData(sortBy(fetchedData, "group_name"));
+      },
+    }
+  );
 
   useEffect(() => {
     const sorted = sortBy(data, sortStatus.columnAccessor);
@@ -252,7 +267,7 @@ const GroupManager = () => {
       <section className="datatable-box">
         <div className="d-flex justify-content-between mb-4">
           <div className="">
-            <div className="row g-3 align-items-center">
+            <div className="row g-3 d-flex flex-row flex-nowrap align-items-center">
               <div className="col-auto">
                 <Input
                   leftSection={<GoSearch size={16} />}
@@ -269,6 +284,20 @@ const GroupManager = () => {
                   }
                 />
               </div>
+              <MantineSelect
+                classNames={{
+                  root: "active_status_select",
+                }}
+                data={["All", "Active", "Inactive"]}
+                // value={pageSize.toString()}
+                // onChange={(_value, option) => handlePageSizeChange(_value)}
+                withCheckIcon={false}
+                defaultValue="All"
+                onChange={(value) => setActiveFilter(value)}
+                allowDeselect={false}
+                checkIconPosition="left"
+                // rightSection={<></>}
+              />
             </div>
           </div>
           <Group justify="center" gap="xs">
@@ -361,7 +390,11 @@ const GroupManager = () => {
                 sortable: true,
                 // width: 150
               },
-
+              {
+                accessor: "is_active",
+                title: "Status",
+                render: (item) => (item?.is_active ? "Active" : "Inactive"),
+              },
               {
                 accessor: "actions",
                 title: "Actions",
@@ -370,7 +403,7 @@ const GroupManager = () => {
                   <>
                     <EditGroup item={item} setItem={setData} />
 
-                    <button
+                    {/* <button
                       className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
                       onClick={() => {
                         setSelectedGroup(item);
@@ -378,7 +411,7 @@ const GroupManager = () => {
                       }}
                     >
                       <RiDeleteBin6Line color="#DB3545" />
-                    </button>
+                    </button> */}
                   </>
                 ),
               },

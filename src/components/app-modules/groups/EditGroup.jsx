@@ -7,13 +7,14 @@ import { FaRegEdit } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
-import { submit } from "../../../lib/submit";
+import { update } from "../../../lib/submit";
 
 const EditModal = ({ show, onHide, item, setItem }) => {
   const [formValues, setFormValues] = useState({
     id: item.group_id,
     group_name: item.group_name,
     Remaks: item.Remaks,
+    is_active: item.is_active,
   });
 
   const [errors, setErrors] = useState({});
@@ -26,6 +27,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
       group_id: item.group_id,
       group_name: item.group_name,
       Remaks: item.Remaks,
+      is_active: item.is_active,
     }));
   }, [item]);
 
@@ -76,7 +78,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
     if (valid) {
       setIsLoading(true);
 
-      const response = await submit(`/empgrp/${item.group_id}/`, formValues);
+      const response = await update(`/empgrp/${item.group_id}/`, formValues);
 
       // console.log(response);
 

@@ -6,7 +6,14 @@ import Link from "next/link";
 import BSButton from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
-import { Flex, Group, Button, Input, CloseButton } from "@mantine/core";
+import {
+  Flex,
+  Group,
+  Button,
+  Input,
+  CloseButton,
+  Select as MantineSelect,
+} from "@mantine/core";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line, RiFileExcel2Line } from "react-icons/ri";
 import { BsFileEarmarkPdf, BsFileEarmarkText } from "react-icons/bs";
@@ -25,19 +32,27 @@ const ShiftManager = () => {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [activeFilter, setActiveFilter] = useState("All");
+  const isActiveQueryParam =
+    activeFilter === "All" ? "" : `is_active=${activeFilter === "Active"}`;
+
   const [sortStatus, setSortStatus] = useState({
     columnAccessor: "shift_id",
     direction: "asc",
   });
 
-  const { error, isLoading, mutate } = useSWR(`/shift/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-    onSuccess: (fetchedData) => {
-      // Update local state when data is successfully fetched
-      setData(sortBy(fetchedData, "shift_id"));
-    },
-  });
+  const { error, isLoading, mutate } = useSWR(
+    `/shift/?${isActiveQueryParam}`,
+    fetcher,
+    {
+      errorRetryCount: 2,
+      keepPreviousData: true,
+      onSuccess: (fetchedData) => {
+        // Update local state when data is successfully fetched
+        setData(sortBy(fetchedData, "shift_id"));
+      },
+    }
+  );
 
   useEffect(() => {
     const sorted = sortBy(data, sortStatus.columnAccessor);
@@ -125,7 +140,7 @@ const ShiftManager = () => {
         "Shift Name",
         "Shift Beginning",
         "Shift End",
-        "Total Time",
+        // "Total Time",
       ];
 
       const data = exportedData.map((item, index) => ({
@@ -187,7 +202,7 @@ const ShiftManager = () => {
         "Shift End": item?.shift_end
           ? convertTimeTo12HourFormat(item?.shift_end)
           : "",
-        "Total Time": item?.total_time || "",
+        // "Total Time": item?.total_time || "",
       }));
 
       setTimeout(() => {
@@ -240,7 +255,7 @@ const ShiftManager = () => {
         "Shift End": item?.shift_end
           ? convertTimeTo12HourFormat(item?.shift_end)
           : "",
-        "Total Time": item?.total_time || "",
+        // "Total Time": item?.total_time || "",
       }));
 
       setTimeout(() => {
@@ -277,7 +292,7 @@ const ShiftManager = () => {
       <section className="datatable-box">
         <div className="d-flex justify-content-between mb-4">
           <div className="">
-            <div className="row g-3 align-items-center">
+            <div className="row g-3 d-flex flex-row flex-nowrap align-items-center">
               <div className="col-auto">
                 <Input
                   leftSection={<GoSearch size={16} />}
@@ -294,6 +309,20 @@ const ShiftManager = () => {
                   }
                 />
               </div>
+              <MantineSelect
+                classNames={{
+                  root: "active_status_select",
+                }}
+                data={["All", "Active", "Inactive"]}
+                // value={pageSize.toString()}
+                // onChange={(_value, option) => handlePageSizeChange(_value)}
+                withCheckIcon={false}
+                defaultValue="All"
+                onChange={(value) => setActiveFilter(value)}
+                allowDeselect={false}
+                checkIconPosition="left"
+                // rightSection={<></>}
+              />
             </div>
           </div>
           <Group justify="center" gap="xs">
@@ -396,17 +425,22 @@ const ShiftManager = () => {
                 // width: 150
                 render: ({ shift_end }) => convertTimeTo12HourFormat(shift_end),
               },
-              {
-                accessor: "total_time",
-                title: "Total Time",
-                // sortable: true,
-                // width: 150
-              },
+              // {
+              //   accessor: "total_time",
+              //   title: "Total Time",
+              //   // sortable: true,
+              //   // width: 150
+              // },
 
               {
                 accessor: "shift_tardiness_minutes",
                 title: "Tardiness Minutes",
                 // width: 130,
+              },
+              {
+                accessor: "is_active",
+                title: "Status",
+                render: (item) => (item?.is_active ? "Active" : "Inactive"),
               },
               {
                 accessor: "actions",

@@ -34,6 +34,10 @@ const ManageInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
 
+  const [activeFilter, setActiveFilter] = useState("All");
+  const isActiveQueryParam =
+    activeFilter === "All" ? "" : `is_active=${activeFilter === "Active"}`;
+
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
@@ -79,7 +83,7 @@ const ManageInfo = () => {
 
     // return `/employee/?page=${currentPage}&page_size=${pageSize}&employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&shift_id=${shift_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
 
-    return `/employee/?page=${currentPage}&page_size=${pageSize}&employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+    return `/employee/?page=${currentPage}&page_size=${pageSize}&employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}&${isActiveQueryParam}`;
   };
 
   const {
@@ -566,23 +570,40 @@ const ManageInfo = () => {
       <section className="datatable-box">
         <div className="d-flex justify-content-between mb-4">
           <div className="d-flex justify-content-start align-items-center">
-            <Flex
-              gap="7"
-              justify="flex-start"
-              align="center"
-              direction="row"
-              wrap="wrap"
-            >
-              <span>Show</span>
-              <MantineSelect
-                className="records_per_page"
-                data={["10", "20", "30", "40"]}
-                value={pageSize.toString()}
-                onChange={(_value, option) => handlePageSizeChange(_value)}
-                withCheckIcon={false}
-              />
-              <span>entries</span>
-            </Flex>
+            <div className="row g-3 d-flex flex-row flex-nowrap align-items-center">
+              <Flex
+                gap="7"
+                justify="flex-start"
+                align="center"
+                direction="row"
+                wrap="wrap"
+              >
+                <span>Show</span>
+                <MantineSelect
+                  className="records_per_page"
+                  data={["10", "20", "30", "40"]}
+                  value={pageSize.toString()}
+                  onChange={(_value, option) => handlePageSizeChange(_value)}
+                  withCheckIcon={false}
+                />
+                <span>entries</span>
+
+                <MantineSelect
+                  classNames={{
+                    root: "active_status_select",
+                  }}
+                  data={["All", "Active", "Inactive"]}
+                  // value={pageSize.toString()}
+                  // onChange={(_value, option) => handlePageSizeChange(_value)}
+                  withCheckIcon={false}
+                  defaultValue="All"
+                  onChange={(value) => setActiveFilter(value)}
+                  allowDeselect={false}
+                  checkIconPosition="left"
+                  // rightSection={<></>}
+                />
+              </Flex>
+            </div>
 
             {selectedRecords?.length ? (
               <div className="bulk_buttons">

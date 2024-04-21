@@ -7,13 +7,14 @@ import { FaRegEdit } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
-import { submit } from "../../../lib/submit";
+import { update } from "../../../lib/submit";
 
 const EditModal = ({ show, onHide, item, setItem }) => {
   const [formValues, setFormValues] = useState({
     id: item.id,
     designation: item.designation,
     description: item.description,
+    is_active: item.is_active,
   });
 
   const [errors, setErrors] = useState({});
@@ -26,6 +27,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
       id: item.id,
       designation: item.designation,
       description: item.description,
+      is_active: item.is_active,
     }));
   }, [item]);
 
@@ -76,7 +78,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
     if (valid) {
       setIsLoading(true);
 
-      const response = await submit(`/designation/${item.id}/`, formValues);
+      const response = await update(`/designation/${item.id}/`, formValues);
 
       // console.log(response);
 
@@ -119,7 +121,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
         <Form onSubmit={(e) => handleSubmit(e)}>
           <div className="mb-3">
             <label htmlFor="exampleFormControlInput1" className="form-label">
-              Designation
+              Designation Title
             </label>
             <input
               type="text"
@@ -139,7 +141,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
 
           <div className="mb-3">
             <label htmlFor="" className="form-label">
-              Designation Details
+              Description
             </label>
             <textarea
               name="description"
