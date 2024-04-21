@@ -329,14 +329,14 @@ const AttendanceManage = () => {
       accessor: "InTime",
       title: "In Time",
       noWrap: true,
-      render: ({ InTime, delay_minutes }) => (
-        <span className={delay_minutes && delay_minutes >= 60 && "text-danger"}>
+      render: ({ InTime, late_minutes }) => (
+        <span className={late_minutes > 0 && "text-danger"}>
           {getTime(InTime)}
         </span>
       ),
       // for export
       key: "InTime",
-      modifier: ({ InTime, delay_minutes }) => getTime(InTime),
+      modifier: ({ InTime, late_minutes }) => getTime(InTime),
     },
     {
       // for table
