@@ -340,7 +340,12 @@ const ManageInfo = () => {
       }));
 
       setTimeout(() => {
-        exportToPDF(headers, data, "attendance-structured-data");
+        exportToPDF(
+          headers,
+          data,
+          "Attendance Structured Data",
+          "attendance-structured-data"
+        );
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,

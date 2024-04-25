@@ -265,7 +265,7 @@ const EditModal = ({ show, onHide, item, mutate }) => {
               onChange={(e) => handleInputChange(e)}
               className="form-check-input"
             />
-            <label className="mb-2 ms-2" htmlFor="employeeStatus">
+            <label className="mb-2 ms-2" htmlFor="deviceStatus">
               Active
             </label>
           </div>

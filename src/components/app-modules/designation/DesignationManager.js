@@ -41,7 +41,7 @@ const DesignationManager = () => {
     direction: "asc",
   });
 
-  const { error, isLoading } = useSWR(
+  const { error, isLoading, mutate } = useSWR(
     `/designation/?${isActiveQueryParam}`,
     fetcher,
     {
@@ -117,26 +117,34 @@ const DesignationManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/designation/`;
+        const url = `/designation/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
         setDataToExport(exportedData);
       }
 
-      const headers = ["SL", "Designation Title", "Designation Details"];
+      const headers = [
+        "Designation ID",
+        "Designation Title",
+        "Description",
+        "Status",
+      ];
 
       const data = exportedData.map((item, index) => ({
-        sl: index + 1,
+        // sl: index + 1,
+        id: item?.id,
         designation: item?.designation || "",
         description: item?.description || "",
+        status: item?.is_active ? "Active" : "Inactive",
       }));
 
       setTimeout(() => {
-        exportToPDF(headers, data, "designations");
+        exportToPDF(headers, data, "Designations", "designations");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -163,21 +171,34 @@ const DesignationManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/designation/`;
+        const url = `/designation/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
         setDataToExport(exportedData);
       }
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Designation Title": item?.designation || "",
-        "Designation Details": item?.description || "",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              // SL: index + 1,
+              "Designation ID": item?.id,
+              "Designation Title": item?.designation || "",
+              Description: item?.description || "",
+              Status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                "Designation ID": "",
+                "Designation Title": "",
+                Description: "",
+                Status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToCSV(data, "designations");
@@ -206,10 +227,11 @@ const DesignationManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/designation/`;
+        const url = `/designation/?${isActiveQueryParam}`;
         const response = await getData(url);
         // console.log(response);
         // return;
@@ -220,11 +242,23 @@ const DesignationManager = () => {
 
       // console.log(exportedData);
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Designation Title": item?.designation || "",
-        "Designation Details": item?.description || "",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              // SL: index + 1,
+              "Designation ID": item?.id,
+              "Designation Title": item?.designation || "",
+              Description: item?.description || "",
+              Status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                "Designation ID": "",
+                "Designation Title": "",
+                Description: "",
+                Status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToExcel(data, "designations");
@@ -390,7 +424,7 @@ const DesignationManager = () => {
                 // width: "0%",
                 render: (item) => (
                   <>
-                    <EditDesignation item={item} setItem={setData} />
+                    <EditDesignation item={item} mutate={mutate} />
 
                     {/* <button
                       className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"

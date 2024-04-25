@@ -322,7 +322,12 @@ const ManageInfo = () => {
       }));
 
       setTimeout(() => {
-        exportToPDF(headers, data, "attendance-raw-data");
+        exportToPDF(
+          headers,
+          data,
+          "Attendance Raw Data",
+          "attendance-raw-data"
+        );
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,

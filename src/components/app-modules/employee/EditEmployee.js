@@ -275,7 +275,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
 
       // return;
 
-      if (response?.employee_id) {
+      if (response?.status === "success") {
         setTimeout(() => {
           // setData((prevData) => {
           //   const d = prevData.map((i) =>
@@ -298,7 +298,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
         }, 1000);
       } else {
         setTimeout(() => {
-          setSuccess("Something went wrong!");
+          setSuccess(response?.message || "Something went wrong!");
           setIsLoading(false);
           // setErrors({});
           // setFormValues(initialValues);

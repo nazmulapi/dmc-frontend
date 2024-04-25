@@ -561,7 +561,12 @@ const AttendanceManage = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "attendance-report");
+        exportToPDF(
+          headers,
+          data,
+          "Live Sync Attendance",
+          "live-sync-attendance"
+        );
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,

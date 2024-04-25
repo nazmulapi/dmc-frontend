@@ -553,7 +553,7 @@ const AttendanceManage = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "attendance-report");
+        exportToPDF(headers, data, "Attendance Report", "attendance-report");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,

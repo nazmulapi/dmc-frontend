@@ -281,7 +281,7 @@ const ManageInfo = () => {
     } = formData;
 
     // let url = `/employee/?employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&shift_id=${shift_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
-    let url = `/employee/?employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+    let url = `/employee/?employee_id=${employee_id}&group_id=${group_id}&department=${department_id}&designation=${designation_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}&${isActiveQueryParam}`;
 
     return url;
   };
@@ -326,7 +326,7 @@ const ManageInfo = () => {
       }));
 
       setTimeout(() => {
-        exportToPDF(headers, data, "employee");
+        exportToPDF(headers, data, "Employees", "employees");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,

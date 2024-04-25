@@ -117,10 +117,11 @@ const ShiftManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/shift/`;
+        const url = `/shift/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
@@ -136,15 +137,17 @@ const ShiftManager = () => {
       // total_time
 
       const headers = [
-        "SL",
+        "Shift ID",
         "Shift Name",
         "Shift Beginning",
         "Shift End",
-        // "Total Time",
+        "Tardiness Minutes",
+        "Status",
       ];
 
       const data = exportedData.map((item, index) => ({
-        sl: index + 1,
+        // sl: index + 1,
+        id: item?.shift_id,
         shift_name: item?.shift_name || "",
         shift_beginning: item?.shift_beginning
           ? convertTimeTo12HourFormat(item?.shift_beginning)
@@ -152,11 +155,12 @@ const ShiftManager = () => {
         shift_end: item?.shift_end
           ? convertTimeTo12HourFormat(item?.shift_end)
           : "",
-        total_time: item?.total_time || "",
+        shift_tardiness_minutes: item?.shift_tardiness_minutes || "",
+        status: item?.is_active ? "Active" : "Inactive",
       }));
 
       setTimeout(() => {
-        exportToPDF(headers, data, "shifts");
+        exportToPDF(headers, data, "Shifts", "shifts");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -183,27 +187,42 @@ const ShiftManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/shift/`;
+        const url = `/shift/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
         setDataToExport(exportedData);
       }
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Shift Name": item?.shift_name || "",
-        "Shift Beginning": item?.shift_beginning
-          ? convertTimeTo12HourFormat(item?.shift_beginning)
-          : "",
-        "Shift End": item?.shift_end
-          ? convertTimeTo12HourFormat(item?.shift_end)
-          : "",
-        // "Total Time": item?.total_time || "",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              // SL: index + 1,
+              "Shift ID": item?.shift_id,
+              "Shift Name": item?.shift_name || "",
+              "Shift Beginning": item?.shift_beginning
+                ? convertTimeTo12HourFormat(item?.shift_beginning)
+                : "",
+              "Shift End": item?.shift_end
+                ? convertTimeTo12HourFormat(item?.shift_end)
+                : "",
+              "Tardiness Minutes": item?.shift_tardiness_minutes || "",
+              Status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                "Shift ID": "",
+                "Shift Name": "",
+                "Shift Beginning": "",
+                "Shift End": "",
+                "Tardiness Minutes": "",
+                Status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToCSV(data, "shifts");
@@ -232,10 +251,11 @@ const ShiftManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/shift/`;
+        const url = `/shift/?${isActiveQueryParam}`;
         const response = await getData(url);
         // console.log(response);
         // return;
@@ -246,17 +266,31 @@ const ShiftManager = () => {
 
       console.log(exportedData);
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Shift Name": item?.shift_name || "",
-        "Shift Beginning": item?.shift_beginning
-          ? convertTimeTo12HourFormat(item?.shift_beginning)
-          : "",
-        "Shift End": item?.shift_end
-          ? convertTimeTo12HourFormat(item?.shift_end)
-          : "",
-        // "Total Time": item?.total_time || "",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              // SL: index + 1,
+              "Shift ID": item?.shift_id,
+              "Shift Name": item?.shift_name || "",
+              "Shift Beginning": item?.shift_beginning
+                ? convertTimeTo12HourFormat(item?.shift_beginning)
+                : "",
+              "Shift End": item?.shift_end
+                ? convertTimeTo12HourFormat(item?.shift_end)
+                : "",
+              "Tardiness Minutes": item?.shift_tardiness_minutes || "",
+              Status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                "Shift ID": "",
+                "Shift Name": "",
+                "Shift Beginning": "",
+                "Shift End": "",
+                "Tardiness Minutes": "",
+                Status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToExcel(data, "shifts");

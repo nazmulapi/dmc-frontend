@@ -41,7 +41,7 @@ const DepartmentManager = () => {
     direction: "asc",
   });
 
-  const { error, isLoading } = useSWR(
+  const { error, isLoading, mutate } = useSWR(
     `/department/?${isActiveQueryParam}`,
     fetcher,
     {
@@ -117,26 +117,34 @@ const DepartmentManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/department/`;
+        const url = `/department/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
         setDataToExport(exportedData);
       }
 
-      const headers = ["SL", "Department Title", "Department Details"];
+      const headers = [
+        "Department ID",
+        "Department Name",
+        "Description",
+        "Status",
+      ];
 
       const data = exportedData.map((item, index) => ({
-        sl: index + 1,
+        // sl: index + 1,
+        id: item?.id,
         department: item?.department || "",
         description: item?.description || "",
+        status: item?.is_active ? "Active" : "Inactive",
       }));
 
       setTimeout(() => {
-        exportToPDF(headers, data, "departments");
+        exportToPDF(headers, data, "Departments", "departments");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -163,21 +171,34 @@ const DepartmentManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/department/`;
+        const url = `/department/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
         setDataToExport(exportedData);
       }
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Department Title": item?.department || "",
-        "Department Details": item?.description || "",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              // SL: index + 1,
+              "Department ID": item?.id,
+              "Department Name": item?.department || "",
+              Description: item?.description || "",
+              Status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                "Department ID": "",
+                "Department Name": "",
+                Description: "",
+                Status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToCSV(data, "departments");
@@ -206,10 +227,11 @@ const DepartmentManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/department/`;
+        const url = `/department/?${isActiveQueryParam}`;
         const response = await getData(url);
         // console.log(response);
         // return;
@@ -220,11 +242,23 @@ const DepartmentManager = () => {
 
       // console.log(exportedData);
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Department Title": item?.department || "",
-        "Department Details": item?.description || "",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              // SL: index + 1,
+              "Department ID": item?.id,
+              "Department Name": item?.department || "",
+              Description: item?.description || "",
+              Status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                "Department ID": "",
+                "Department Name": "",
+                Description: "",
+                Status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToExcel(data, "departments");
@@ -390,7 +424,7 @@ const DepartmentManager = () => {
                 // width: "0%",
                 render: (item) => (
                   <>
-                    <EditDepartment item={item} setItem={setData} />
+                    <EditDepartment item={item} mutate={mutate} />
                     {/* <button
                       className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
                       onClick={() => {

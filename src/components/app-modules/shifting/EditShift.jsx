@@ -17,6 +17,7 @@ const EditModal = ({ show, onHide, item, mutate }) => {
     shift_beginning: item.shift_beginning,
     shift_end: item.shift_end,
     shift_tardiness_minutes: item.shift_tardiness_minutes,
+    is_active: item.is_active,
   });
 
   const [errors, setErrors] = useState({});
@@ -35,6 +36,7 @@ const EditModal = ({ show, onHide, item, mutate }) => {
       shift_beginning: item.shift_beginning,
       shift_end: item.shift_end,
       shift_tardiness_minutes: item.shift_tardiness_minutes,
+      is_active: item.is_active,
     }));
   }, [item]);
 
@@ -71,17 +73,24 @@ const EditModal = ({ show, onHide, item, mutate }) => {
   const handleChange = (e) => {
     setSuccess("");
 
-    const { name, value } = e.target;
+    const { name, type, value } = e.target;
 
     setErrors({
       ...errors,
       [name]: "",
     });
 
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (type === "checkbox") {
+      setFormValues((prev) => ({
+        ...prev,
+        [name]: e.target.checked,
+      }));
+    } else {
+      setFormValues((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -220,6 +229,21 @@ const EditModal = ({ show, onHide, item, mutate }) => {
                   {errors.shift_tardiness_minutes}
                 </div>
               )}
+            </div>
+
+            <div className="mb-2">
+              <input
+                id="shiftStatus"
+                type="checkbox"
+                name="is_active"
+                checked={formValues.is_active}
+                // value={formValues.is_active}
+                onChange={(e) => handleChange(e)}
+                className="form-check-input"
+              />
+              <label className="mb-2 ms-2" htmlFor="shiftStatus">
+                Active
+              </label>
             </div>
           </Row>
           {/* <button className="button-16 fw-semibold" role="button">

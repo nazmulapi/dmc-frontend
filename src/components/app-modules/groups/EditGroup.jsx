@@ -9,7 +9,7 @@ import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
 import { update } from "../../../lib/submit";
 
-const EditModal = ({ show, onHide, item, setItem }) => {
+const EditModal = ({ show, onHide, item, mutate }) => {
   const [formValues, setFormValues] = useState({
     id: item.group_id,
     group_name: item.group_name,
@@ -53,17 +53,24 @@ const EditModal = ({ show, onHide, item, setItem }) => {
   const handleInputChange = (e) => {
     setSuccess("");
 
-    const { name, value } = e.target;
+    const { name, type, value } = e.target;
 
     setErrors({
       ...errors,
       [name]: "",
     });
 
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (type === "checkbox") {
+      setFormValues((prev) => ({
+        ...prev,
+        [name]: e.target.checked,
+      }));
+    } else {
+      setFormValues((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -84,11 +91,12 @@ const EditModal = ({ show, onHide, item, setItem }) => {
 
       if (response?.group_id) {
         setTimeout(() => {
-          setItem((prevData) =>
-            prevData.map((i) =>
-              i.group_id === formValues.group_id ? formValues : i
-            )
-          );
+          // setItem((prevData) =>
+          //   prevData.map((i) =>
+          //     i.group_id === formValues.group_id ? formValues : i
+          //   )
+          // );
+          mutate();
           setSuccess("Group updated successfully");
           setIsLoading(false);
           // setErrors({});
@@ -158,6 +166,21 @@ const EditModal = ({ show, onHide, item, setItem }) => {
             )}
           </div>
 
+          <div className="mb-2">
+            <input
+              id="groupStatus"
+              type="checkbox"
+              name="is_active"
+              checked={formValues.is_active}
+              // value={formValues.is_active}
+              onChange={(e) => handleInputChange(e)}
+              className="form-check-input"
+            />
+            <label className="mb-2 ms-2" htmlFor="groupStatus">
+              Active
+            </label>
+          </div>
+
           {success && success !== "" && (
             <div className="success-feedback mb-3">{success}</div>
           )}
@@ -193,7 +216,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
   );
 };
 
-const Edit = ({ item, setItem }) => {
+const Edit = ({ item, mutate }) => {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -211,7 +234,7 @@ const Edit = ({ item, setItem }) => {
         show={modalShow}
         onHide={() => setModalShow(false)}
         item={item}
-        setItem={setItem}
+        mutate={mutate}
       />
     </>
   );

@@ -121,10 +121,11 @@ const DeviceManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/devices/`;
+        const url = `/devices/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
@@ -164,7 +165,7 @@ const DeviceManager = () => {
       }));
 
       setTimeout(() => {
-        exportToPDF(headers, data, "devices");
+        exportToPDF(headers, data, "All Devices", "devices");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -191,26 +192,41 @@ const DeviceManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/devices/`;
+        const url = `/devices/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
         setDataToExport(exportedData);
       }
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Device ID": item?.device_id || "",
-        "Device IP": item?.device_ip || "",
-        "Device Name": item?.device_name || "",
-        "Device Username": item?.username || "",
-        "Device Password": item?.password || "",
-        Location: item?.location || "",
-        Status: item?.is_active ? "Active" : "Inactive",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              SL: index + 1,
+              "Device ID": item?.device_id || "",
+              "Device IP": item?.device_ip || "",
+              "Device Name": item?.device_name || "",
+              "Device Username": item?.username || "",
+              "Device Password": item?.password || "",
+              Location: item?.location || "",
+              Status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                SL: "",
+                "Device ID": "",
+                "Device IP": "",
+                "Device Name": "",
+                "Device Username": "",
+                "Device Password": "",
+                Location: "",
+                Status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToCSV(data, "devices");
@@ -239,10 +255,11 @@ const DeviceManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/devices/`;
+        const url = `/devices/?${isActiveQueryParam}`;
         const response = await getData(url);
         // console.log(response);
         // return;
@@ -253,16 +270,30 @@ const DeviceManager = () => {
 
       console.log(exportedData);
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Device ID": item?.device_id || "",
-        "Device IP": item?.device_ip || "",
-        "Device Name": item?.device_name || "",
-        "Device Username": item?.username || "",
-        "Device Password": item?.password || "",
-        Location: item?.location || "",
-        Status: item?.is_active ? "Active" : "Inactive",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              SL: index + 1,
+              "Device ID": item?.device_id || "",
+              "Device IP": item?.device_ip || "",
+              "Device Name": item?.device_name || "",
+              "Device Username": item?.username || "",
+              "Device Password": item?.password || "",
+              Location: item?.location || "",
+              Status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                SL: "",
+                "Device ID": "",
+                "Device IP": "",
+                "Device Name": "",
+                "Device Username": "",
+                "Device Password": "",
+                Location: "",
+                Status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToExcel(data, "devices");

@@ -10,7 +10,7 @@ const capitalizeFirstLetter = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-export const exportToPDF = (headers, rows, fileName) => {
+export const exportToPDF = (headers, rows, reportTitle, fileName) => {
   // Check if employeeData is not null or undefined
 
   if (rows) {
@@ -36,9 +36,52 @@ export const exportToPDF = (headers, rows, fileName) => {
     // return;
     // Create PDF and export
     const doc = new jsPDF();
+
+    const imagePath = "./logo.png";
+    const imageType = "PNG";
+    const text = "Dhaka Medical College Hospital";
+    const imageWidth = 20;
+    const imageHeight = 20;
+
+    const docWidth = doc.internal.pageSize.getWidth();
+
+    const imageXPos = (docWidth - imageWidth) / 2;
+    const imageYPos = 10;
+
+    // Add logo centered at the top
+    doc.addImage(
+      imagePath,
+      imageType,
+      imageXPos,
+      imageYPos,
+      imageWidth,
+      imageHeight
+    );
+
+    doc.setTextColor(107, 107, 107);
+
+    const fontSizeText = 14;
+    doc.setFontSize(fontSizeText);
+
+    const textWidth =
+      (doc.getStringUnitWidth(text) * fontSizeText) / doc.internal.scaleFactor;
+    const textXPos = (docWidth - textWidth) / 2;
+
+    const fontSizeTitle = 12;
+    const reportTitleWidth =
+      (doc.getStringUnitWidth(reportTitle) * fontSizeTitle) /
+      doc.internal.scaleFactor;
+    const reportTitleXPos = (docWidth - reportTitleWidth) / 2;
+
+    doc.text(text, textXPos, imageYPos + imageHeight + 8);
+
+    doc.setFontSize(fontSizeTitle);
+    doc.text(reportTitle, reportTitleXPos, imageYPos + imageHeight + 15);
+
     autoTable(doc, {
       head: [tableHeaders],
       body: tableData,
+      startY: imageYPos + imageHeight + 22,
     });
     doc.save(fileName + ".pdf");
   } else {

@@ -9,7 +9,7 @@ import Spinner from "react-bootstrap/Spinner";
 import classEase from "classease";
 import { update } from "../../../lib/submit";
 
-const EditModal = ({ show, onHide, item, setItem }) => {
+const EditModal = ({ show, onHide, item, mutate }) => {
   const [formValues, setFormValues] = useState({
     id: item.id,
     designation: item.designation,
@@ -53,7 +53,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
   const handleInputChange = (e) => {
     setSuccess("");
 
-    const { name, value } = e.target;
+    const { name, type, value } = e.target;
 
     setErrors({
       ...errors,
@@ -62,7 +62,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
 
     setFormValues((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? e.target.checked : value,
     }));
   };
 
@@ -84,9 +84,10 @@ const EditModal = ({ show, onHide, item, setItem }) => {
 
       if (response?.id) {
         setTimeout(() => {
-          setItem((prevData) =>
-            prevData.map((i) => (i.id === formValues.id ? formValues : i))
-          );
+          // setItem((prevData) =>
+          //   prevData.map((i) => (i.id === formValues.id ? formValues : i))
+          // );
+          mutate();
           setSuccess("Designation updated successfully");
           setIsLoading(false);
           // setErrors({});
@@ -158,6 +159,21 @@ const EditModal = ({ show, onHide, item, setItem }) => {
             )}
           </div>
 
+          <div className="mb-2">
+            <input
+              id="designationStatus"
+              type="checkbox"
+              name="is_active"
+              checked={formValues.is_active}
+              // value={formValues.is_active}
+              onChange={(e) => handleInputChange(e)}
+              className="form-check-input"
+            />
+            <label className="mb-2 ms-2" htmlFor="designationStatus">
+              Active
+            </label>
+          </div>
+
           {success && success !== "" && (
             <div className="success-feedback mb-3">{success}</div>
           )}
@@ -193,7 +209,7 @@ const EditModal = ({ show, onHide, item, setItem }) => {
   );
 };
 
-const Edit = ({ item, setItem }) => {
+const Edit = ({ item, mutate }) => {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -211,7 +227,7 @@ const Edit = ({ item, setItem }) => {
         show={modalShow}
         onHide={() => setModalShow(false)}
         item={item}
-        setItem={setItem}
+        mutate={mutate}
       />
     </>
   );

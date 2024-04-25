@@ -41,7 +41,7 @@ const GroupManager = () => {
     direction: "asc",
   });
 
-  const { error, isLoading } = useSWR(
+  const { error, isLoading, mutate } = useSWR(
     `/empgrp/?${isActiveQueryParam}`,
     fetcher,
     {
@@ -122,10 +122,11 @@ const GroupManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/empgrp/`;
+        const url = `/empgrp/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
@@ -134,16 +135,18 @@ const GroupManager = () => {
 
       // console.log(exportedData);
 
-      const headers = ["SL", "Group Name", "Remaks"];
+      const headers = ["Group ID", "Group Name", "Remarks", "Status"];
 
       const data = exportedData.map((item, index) => ({
-        sl: index + 1,
+        // sl: index + 1,
+        id: item?.group_id,
         group_name: item?.group_name || "",
-        Remaks: item?.Remaks || "",
+        Remarks: item?.Remaks || "",
+        status: item?.is_active ? "Active" : "Inactive",
       }));
 
       setTimeout(() => {
-        exportToPDF(headers, data, "groups");
+        exportToPDF(headers, data, "Groups", "groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -170,21 +173,34 @@ const GroupManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/empgrp/`;
+        const url = `/empgrp/?${isActiveQueryParam}`;
         const response = await getData(url);
         exportedData = response?.data;
         // Cache the data
         setDataToExport(exportedData);
       }
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Group Name": item?.group_name || "",
-        Remaks: item?.Remaks || "",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              // SL: index + 1,
+              "Group ID": item?.group_id,
+              "Group Name": item?.group_name || "",
+              Remarks: item?.Remaks || "",
+              status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                "Group ID": "",
+                "Group Name": "",
+                Remarks: "",
+                status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToCSV(data, "groups");
@@ -213,10 +229,11 @@ const GroupManager = () => {
     }));
 
     try {
-      let exportedData = dataToExport; // Use cached data if available
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
       if (!exportedData) {
-        const url = `/empgrp/`;
+        const url = `/empgrp/?${isActiveQueryParam}`;
         const response = await getData(url);
         // console.log(response);
         // return;
@@ -227,11 +244,23 @@ const GroupManager = () => {
 
       // console.log(exportedData);
 
-      const data = exportedData.map((item, index) => ({
-        SL: index + 1,
-        "Group Name": item?.group_name || "",
-        Remaks: item?.Remaks || "",
-      }));
+      const data =
+        exportedData && exportedData.length
+          ? exportedData.map((item, index) => ({
+              // SL: index + 1,
+              "Group ID": item?.group_id,
+              "Group Name": item?.group_name || "",
+              Remarks: item?.Remaks || "",
+              status: item?.is_active ? "Active" : "Inactive",
+            }))
+          : [
+              {
+                "Group ID": "",
+                "Group Name": "",
+                Remarks: "",
+                status: "",
+              },
+            ];
 
       setTimeout(() => {
         exportToExcel(data, "groups");
@@ -386,7 +415,7 @@ const GroupManager = () => {
               },
               {
                 accessor: "Remaks",
-                title: "Remaks",
+                title: "Remarks",
                 sortable: true,
                 // width: 150
               },
@@ -401,7 +430,7 @@ const GroupManager = () => {
                 // width: "0%",
                 render: (item) => (
                   <>
-                    <EditGroup item={item} setItem={setData} />
+                    <EditGroup item={item} mutate={mutate} />
 
                     {/* <button
                       className="bg-transparent border-0 px-1 py-0 m-0 btn btn-primary"
