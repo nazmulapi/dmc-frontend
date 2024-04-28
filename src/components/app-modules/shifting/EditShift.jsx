@@ -54,9 +54,9 @@ const EditModal = ({ show, onHide, item, mutate }) => {
       valid = false;
     }
 
-    if (formValues?.shift_tardiness_minutes <= 0) {
+    if (formValues?.shift_tardiness_minutes < 0) {
       newErrors.shift_tardiness_minutes =
-        "Shift tardiness minutes might be more than 0";
+        "Shift tardiness minutes might not be less than 0";
       valid = false;
     }
 
@@ -159,7 +159,8 @@ const EditModal = ({ show, onHide, item, mutate }) => {
                 name="shift_name"
                 value={formValues.shift_name}
                 onChange={handleChange}
-                // readOnly
+                readOnly={formValues.shift_name === "General Shift"}
+                // disabled={formValues.shift_name === "General Shift"}
               />
               {errors.shift_name && (
                 <div className="invalid-feedback">{errors.shift_name}</div>
