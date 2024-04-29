@@ -291,7 +291,7 @@ const AttendanceManage = () => {
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
       // for export
       key: "title",
-      modifier: (_, index) => (currentPage - 1) * pageSize + index + 1,
+      modifier: (_, index) => index + 1,
     },
     {
       // for table
