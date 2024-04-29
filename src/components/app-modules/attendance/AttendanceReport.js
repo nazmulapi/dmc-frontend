@@ -80,7 +80,15 @@ const AttendanceManage = () => {
   // const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  let apiUrl = `/attendance_log/?employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+  let apiUrl = `/attendance_log/?permanent=${true}&employee_id=${
+    formData.employee_id
+  }&group_id=${formData.group_id}&department_id=${
+    formData.department_id
+  }&designation_id=${
+    formData.designation_id
+  }&page=${currentPage}&page_size=${pageSize}&column_accessor=${
+    sortStatus.columnAccessor
+  }&direction=${sortStatus.direction}`;
 
   if (formData.year || formData.month) {
     apiUrl += `&date=${formData.year}-${formData.month}`;
@@ -337,6 +345,10 @@ const AttendanceManage = () => {
       // for export
       key: "InTime",
       modifier: ({ InTime, late_minutes }) => getTime(InTime),
+      pdfModifier: ({ InTime, late_minutes }) =>
+        late_minutes > 0
+          ? "is_text_danger_" + getTime(InTime)
+          : getTime(InTime),
     },
     {
       // for table
@@ -485,7 +497,13 @@ const AttendanceManage = () => {
   const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/attendance_log/?employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
+    let url = `/attendance_log/?permanent=${true}&employee_id=${
+      formData.employee_id
+    }&group_id=${formData.group_id}&department_id=${
+      formData.department_id
+    }&designation_id=${formData.designation_id}&column_accessor=${
+      sortStatus.columnAccessor
+    }&direction=${sortStatus.direction}`;
 
     if (formData.year || formData.month) {
       url += `&date=${formData.year}-${formData.month}`;
@@ -544,8 +562,11 @@ const AttendanceManage = () => {
           const selectedColumn = columns.find(
             (column) => column.key === columnKey
           );
+          const pdfModifier = selectedColumn?.pdfModifier;
           const columnModifier = selectedColumn?.modifier;
-          rowData[columnKey] = columnModifier
+          rowData[columnKey] = pdfModifier
+            ? pdfModifier(item, index)
+            : columnModifier
             ? columnModifier(item, index)
             : item[columnKey] ?? "";
         });

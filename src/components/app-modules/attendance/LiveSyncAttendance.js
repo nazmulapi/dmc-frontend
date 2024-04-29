@@ -80,15 +80,7 @@ const AttendanceManage = () => {
   // const [pageSize, setPageSize] = useState(10);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  let apiUrl = `/attendance_log/?permanent=${true}&employee_id=${
-    formData.employee_id
-  }&group_id=${formData.group_id}&department_id=${
-    formData.department_id
-  }&designation_id=${
-    formData.designation_id
-  }&page=${currentPage}&page_size=${pageSize}&column_accessor=${
-    sortStatus.columnAccessor
-  }&direction=${sortStatus.direction}`;
+  let apiUrl = `/attendance_log/?employee_id=${formData.employee_id}&group_id=${formData.group_id}&department_id=${formData.department_id}&designation_id=${formData.designation_id}&page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`;
 
   if (formData.year || formData.month) {
     apiUrl += `&date=${formData.year}-${formData.month}`;
@@ -345,6 +337,10 @@ const AttendanceManage = () => {
       // for export
       key: "InTime",
       modifier: ({ InTime, late_minutes }) => getTime(InTime),
+      pdfModifier: ({ InTime, late_minutes }) =>
+        late_minutes > 0
+          ? "is_text_danger_" + getTime(InTime)
+          : getTime(InTime),
     },
     {
       // for table
@@ -552,8 +548,11 @@ const AttendanceManage = () => {
           const selectedColumn = columns.find(
             (column) => column.key === columnKey
           );
+          const pdfModifier = selectedColumn?.pdfModifier;
           const columnModifier = selectedColumn?.modifier;
-          rowData[columnKey] = columnModifier
+          rowData[columnKey] = pdfModifier
+            ? pdfModifier(item, index)
+            : columnModifier
             ? columnModifier(item, index)
             : item[columnKey] ?? "";
         });
@@ -627,7 +626,7 @@ const AttendanceManage = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "attendance-report");
+        exportToCSV(data, "live-sync-attendance");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -687,7 +686,7 @@ const AttendanceManage = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "attendance-report");
+        exportToExcel(data, "live-sync-attendance");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -708,12 +707,12 @@ const AttendanceManage = () => {
   return (
     <>
       <div className="page-top">
-        <h3 className="page-title text-capitalize">Attendance Report</h3>
+        <h3 className="page-title text-capitalize">Live Sync Attendance</h3>
         <ul className="breadcrumb">
           <li className="breadcrumb-item">
             <Link href="/dashboard">Dashboard</Link>
           </li>
-          <li className="breadcrumb-item">Attendance Report</li>
+          <li className="breadcrumb-item">Live Sync Attendance</li>
         </ul>
       </div>
 

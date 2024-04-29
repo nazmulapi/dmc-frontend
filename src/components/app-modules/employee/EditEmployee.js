@@ -22,6 +22,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
     department: employee.department,
     designation: employee.designation,
     is_active: Boolean(employee.is_active),
+    is_staff: Boolean(employee.is_staff),
   });
 
   const [selectFormValues, setSelectFormValues] = useState({
@@ -39,6 +40,7 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
       department: employee.department,
       designation: employee.designation,
       is_active: Boolean(employee.is_active),
+      is_staff: Boolean(employee.is_staff),
     }));
 
     setSelectFormValues((prev) => ({
@@ -446,18 +448,36 @@ function MyVerticallyCenteredModal({ show, onHide, employee, mutate }) {
                 )} */}
           </div>
 
-          <label className="mt-2 mb-2 me-1" htmlFor="activeStatus">
-            Active
-          </label>
-
           {/* {console.log(formValues.is_active)} */}
-          <input
-            id="activeStatus"
-            type="checkbox"
-            name="is_active"
-            checked={formValues.is_active}
-            onChange={(e) => handleInputChange(e)}
-          />
+
+          <div className="mb-2 mt-2 d-flex">
+            <div className="form-check me-2">
+              <input
+                id="activeStatus"
+                type="checkbox"
+                name="is_active"
+                checked={formValues.is_active}
+                onChange={(e) => handleInputChange(e)}
+                className="form-check-input"
+              />
+              <label className="form-check-label" htmlFor="activeStatus">
+                Active
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                id="employee_role_staff"
+                type="checkbox"
+                name="is_staff"
+                checked={formValues.is_staff}
+                onChange={(e) => handleInputChange(e)}
+                className="form-check-input"
+              />
+              <label className="form-check-label" htmlFor="employee_role_staff">
+                Is staff
+              </label>
+            </div>
+          </div>
 
           {success && success !== "" && (
             <div className="success-feedback mb-3">{success}</div>

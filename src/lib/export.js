@@ -82,6 +82,17 @@ export const exportToPDF = (headers, rows, reportTitle, fileName) => {
       head: [tableHeaders],
       body: tableData,
       startY: imageYPos + imageHeight + 22,
+      willDrawCell: (data) => {
+        const cellValue = data.cell.raw; // Get the raw value of the cell
+
+        if (
+          typeof cellValue === "string" &&
+          cellValue.startsWith("is_text_danger_")
+        ) {
+          doc.setTextColor(210, 43, 43);
+          data.cell.text = cellValue.substring("is_text_danger_".length);
+        }
+      },
     });
     doc.save(fileName + ".pdf");
   } else {

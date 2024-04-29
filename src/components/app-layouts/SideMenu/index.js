@@ -207,16 +207,15 @@ const Page = () => {
                     </li>
                     <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/stored-attendance-report"
+                        href="/live-sync-attendance"
                         className="text-decoration-none text-white side_font"
                       >
-                        {/* Stored Attendance Report */}
                         Live Sync Attendance
                       </Link>
                     </li>
                     <li className="text-capitalize text-white text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/raw-employee"
+                        href="/raw-data"
                         className="text-decoration-none text-white side_font"
                       >
                         Raw Data
