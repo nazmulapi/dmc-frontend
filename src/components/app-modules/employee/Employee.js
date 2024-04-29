@@ -52,11 +52,13 @@ const AddEmployee = () => {
     keepPreviousData: true,
   });
 
-  const departments = departmentsData?.map((item) => ({
-    name: "department",
-    label: item.department,
-    value: item.id,
-  }));
+  const departments = departmentsData
+    ?.filter((item) => item.is_active)
+    .map((item) => ({
+      name: "department",
+      label: item.department,
+      value: item.id,
+    }));
 
   const {
     data: designationsData,
@@ -67,11 +69,13 @@ const AddEmployee = () => {
     keepPreviousData: true,
   });
 
-  const designations = designationsData?.map((item) => ({
-    name: "designation",
-    label: item.designation,
-    value: item.id,
-  }));
+  const designations = designationsData
+    ?.filter((item) => item.is_active)
+    .map((item) => ({
+      name: "designation",
+      label: item.designation,
+      value: item.id,
+    }));
 
   // const {
   //   data: shiftsData,
@@ -97,11 +101,13 @@ const AddEmployee = () => {
     keepPreviousData: true,
   });
 
-  const groups = groupsData?.map((item) => ({
-    name: "group_id",
-    label: item.group_name,
-    value: item.group_id,
-  }));
+  const groups = groupsData
+    ?.filter((item) => item.is_active)
+    .map((item) => ({
+      name: "group_id",
+      label: item.group_name,
+      value: item.group_id,
+    }));
 
   const validateForm = () => {
     let valid = true;
