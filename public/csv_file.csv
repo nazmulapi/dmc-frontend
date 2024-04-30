@@ -1,11 +1,3 @@
-﻿employee_id,employee_name,email,phone_number,shift_id,group_id,designation_id,department_id
-test_dmc11,aa,a@gmail.com,01795623311',24,17,1,2
-test_dmc21,ba,b@gmail.com,01795623311',24,17,1,2
-test_dmc31,ca,c@gmail.com,01795623311',24,17,1,2
-test_dmc41,da,d@gmail.com,01795623311',24,17,1,2
-test_dmc51,ea,e@gmail.com,01795623311',24,17,1,2
-test_dmc61,fa,f@gmail.com,01795623311',24,17,1,2
-test_dmc71,ga,g@gmail.com,01795623311',24,17,1,2
-test_dmc81,ha,h@gmail.com,01795623311',24,17,1,2
-test_dmc82,ia,i@gmail.com,01795623311',24,17,1,2
-test_dmc91,ja,j@gmail.com,01795623311',24,17,1,2
+﻿employee_id,employee_name,email,phone_number,designation_id,department_id,group_id,is_staff
+Test_0112,Test_0112,test_112@gmail.com,01795623308',2,1,2,1
+Test_0113,Test_0113,test_113@gmail.com,01795623309',4,3,2,0
